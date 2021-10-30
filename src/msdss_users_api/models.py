@@ -1,15 +1,22 @@
-from fastapi_users import models
+import fastapi_users
+import fastapi_users.models
+import fastapi_users.db
 
-class DefaultUser(models.BaseUser):
+from typing import List
+
+class User(fastapi_users.models.BaseUser):
     pass
 
-class DefaultUserCreate(models.BaseUserCreate):
+class UserCreate(fastapi_users.models.BaseUserCreate):
     pass
 
-class DefaultUserUpdate(models.BaseUserUpdate):
+class UserUpdate(fastapi_users.models.BaseUserUpdate):
     pass
 
-class DefaultUserDB(User, models.BaseUserDB):
+class UserDB(User, fastapi_users.models.BaseUserDB):
     pass
 
-# models.BaseUser.__fields__
+class UserManager(fastapi_users.BaseUserManager[UserCreate, UserDB]):
+    user_db_model = UserDB
+    reset_password_token_secret = 'secret'
+    verification_token_secret = 'secret'
