@@ -18,5 +18,5 @@ class UserDB(User, fastapi_users.models.BaseUserDB):
 
 class UserManager(fastapi_users.BaseUserManager[UserCreate, UserDB]):
     user_db_model = UserDB
-    reset_password_token_secret = 'secret'
-    verification_token_secret = 'secret'
+    reset_password_token_secret = 'msdss-secret'
+    verification_token_secret = 'msdss-secret'

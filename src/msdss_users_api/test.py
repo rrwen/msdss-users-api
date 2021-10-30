@@ -12,44 +12,39 @@ from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 from .auth import *
 from .models import *
 
+from msdss_base_database import Database
 from msdss_base_database.tools import get_database_url
 
-SECRET = "SECRET"
-
-DATABASE_URL = get_database_url('postgresql', user='msdss', password='msdss123', database='msdss')
+DATABASE_URL = get_database_url()
 database = databases.Database(DATABASE_URL)
+
+engine=Database()._connection
 Base: DeclarativeMeta = declarative_base()
-
-
-class UserTable(Base, SQLAlchemyBaseUserTable):
-    pass
-
-engine = sqlalchemy.create_engine(
-    DATABASE_URL
-)
 Base.metadata.create_all(engine)
+# class UserTable(Base, fastapi_users.db.SQLAlchemyBaseUserTable):
+#     pass
 
-users = UserTable.__table__
+def get_user_db(user_db_model=UserDB, async_database=database):
+    table = Database()._get_table('user')
+    def out():
+        yield SQLAlchemyUserDatabase(user_db_model, async_database, table)
+    return out
 
+def get_user_manager(secret, base_model=UserManager):
 
-def get_user_db():
-    yield SQLAlchemyUserDatabase(UserDB, database, users)
+    model = pydantic.create_model('UserManager', verification_token_secret=secret, __base__=base_model)
 
-# def get_func(secret):
+    def out(user_db=Depends(get_user_db())):
+        yield model(user_db)
+    return out
 
-#     m = pydantic.create_model('UserManager', verification_token_secret=secret, __base__=UserManager)
-
-#     def get_user_manager(user_db=Depends(get_user_db)):
-#         yield m(user_db)
-#     return get_user_manager
-
-def get_user_manager(user_db=Depends(get_user_db)):
-    yield UserManager(user_db)
+# def get_user_manager(user_db=Depends(get_user_db)):
+#     yield UserManager(user_db)
 
 jwt_authentication = get_jwt_auth('secret')
 
 fastapi_users = FastAPIUsers(
-    get_user_manager,
+    get_user_manager('secret'),
     [jwt_authentication],
     User,
     UserCreate,
@@ -63,3 +58,11 @@ app.include_router(
     prefix="/auth",
     tags=["auth"],
 )
+
+@app.on_event('startup')
+async def startup_event():
+    await database.connect()
+
+@app.on_event('shutdown')
+async def shutdown_event():
+    await database.disconnect()
