@@ -12,7 +12,10 @@ from .tools import *
 
 class UsersAPI(API):
     """
-    Users API class for managing users. Extends the :class:`msdss_base_api:msdss_base_api.core.API` class.
+    Users API class for managing users.
+    
+    * Extends the :class:`msdss_base_api:msdss_base_api.core.API` class
+    * Users will be stored in a table named ``user``
 
     Parameters
     ----------
@@ -33,61 +36,50 @@ class UsersAPI(API):
     users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers` or None
         FastAPI Users object. See `FastAPIUsers object <https://fastapi-users.github.io/fastapi-users/configuration/routers/>`_.
         If ``None``, then one will be setup based on other parameters.
-    users_api=None,
-
-    use_auth_router=True,
-
-    use_register_router=True,
-
-    use_verify_router=True,
-
-    use_reset_password_router=True,
-
-    use_users_router=True,
-
-    setup_startup=True,
-
-    setup_shutdown=True,
-
-    auth_router_auth='jwt',
-
-    auth_router_kwargs={},
-
-    auth_router_include_kwargs={
-        'prefix': '/auth/jwt',
-        'tags': ['auth']
-    },
-
-    register_router_kwargs={},
-
-    register_router_include_kwargs={
-        'prefix': '/auth',
-        'tags': ['auth']
-    },
-
-    verify_router_kwargs={},
-
-    verify_router_include_kwargs={
-        'prefix': '/auth',
-        'tags': ['auth']
-    },
-
-    reset_password_router_kwargs={},
-
-    reset_password_router_include_kwargs={
-        'prefix': '/auth',
-        'tags': ['auth']
-    },
-
-    users_router_kwargs={},
-
-    users_router_include_kwargs={
-        'prefix': '/users',
-        'tags': ['users']
-    },
-
+    users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers` or None
+        A FastAPIUsers object to setup routes with. If ``None``, one will be setup using the params.
+    use_auth_router : bool
+        Whether to include the Fast API Users api route.
+    use_register_router : bool
+        Whether to include the Fast API Users register route.
+    use_verify_router : bool
+        Whether to include the Fast API Users verify route.
+    use_reset_password_router : bool
+        Whether to include the Fast API Users reset password route.
+    use_users_router : bool
+        Whether to include the Fast API Users users route.
+    use_jwt_auth : bool
+        Whether to use JWT auth or not.
+    use_cookie_auth : bool
+        Whether to use cookie auth or not.
+    setup_startup : bool
+        Whether to setup a startup event to connect databases.
+    setup_shutdown : bool
+        Whether to setup a shutdown event to close databases.
+    auth_router_auth: 'jwt' or 'cookie'
+        FastAPI Users auth method for the auth router. See `Auth router <https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/>`_.
+    auth_router_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_auth_router`. See `Auth router <https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/>`_.
+    auth_router_include_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users auth router.
+    register_router_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_register_router`. See `Register router <https://fastapi-users.github.io/fastapi-users/configuration/routers/register/>`_.
+    register_router_include_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users register router.
+    verify_router_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_verify_router`. See `Verify router <https://fastapi-users.github.io/fastapi-users/configuration/routers/verify/>`_.
+    verify_router_include_kwarg : dict
+        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users verify router.
+    reset_password_router_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_reset_password_router`. See `Reset password router <https://fastapi-users.github.io/fastapi-users/configuration/routers/reset/>`_.
+    reset_password_router_include_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users reset password router.
+    users_router_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_users_router`. See `Users router <https://fastapi-users.github.io/fastapi-users/configuration/routers/users/>`_.
+    users_router_include_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users users router.
     reset_password_token_secret : str,
-        Secret used to secure verification tokens. If ``None``, it will default to param ``secret``.
+        Secret used to secure password reset tokens. If ``None``, it will default to param ``secret``.
     verification_token_secret : str or None
         Secret used to secure verification tokens. If ``None``, it will default to param ``secret``.
     cookie_secret : str or None
@@ -128,6 +120,16 @@ class UsersAPI(API):
         The path of the file with environmental variables.
     key_path : str
         The path of the key file for the ``env_file``.
+    secret_key : str
+        The environmental variable name for ``secret``.
+    jwt_secret_key : str
+        The environmental variable name for ``jwt_secret``.
+    cookie_secret_key : str
+        The environmental variable name for ``cookie_secret``.
+    reset_password_token_secret_key : str
+        The environmental variable name for ``reset_password_token_secret``.
+    verification_token_secret_key : str
+        The environmental variable name for ``verification_token_secret``.
     driver_key : str
         The environmental variable name for ``driver``.
     user_key : str
@@ -147,6 +149,10 @@ class UsersAPI(API):
     ----------
     users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers`
         Configured FastAPI Users object. See `FastAPIUsers object <https://fastapi-users.github.io/fastapi-users/configuration/routers/>`_.
+    _database_engine : :func:`sqlalchemy:sqlalchemy.create_engine`
+        Engine from parameter ``database_engine``.
+    _async_database : :class:`databases:databases.Database`
+        Async database from parameter ``async_database``.
 
     Author
     ------
@@ -155,19 +161,19 @@ class UsersAPI(API):
     Example
     -------
     .. jupyter-execute::
+        :hide-output:
 
-        from msdss_base_api.core import API
-        app = API()
-
-        # Add route via function
-        def hello_world():
-            return "hello world!"
-        app.add_route("GET", "/", hello_world)
-
-        # Add route via decorator
-        @app.add("GET", "/two")
-        def hello_world2():
-            return "hello world 2!"
+        from msdss_users_api import UsersAPI
+        app = UsersAPI(
+            secret='secret-phrase',
+            jwt_secret='secret-phrase-02',
+            driver='postgresql',
+            user='msdss',
+            password='msdss123',
+            host='localhost',
+            port='5432',
+            database='msdss'
+        )
 
         # Run the app with app.start()
         # API is hosted at http://localhost:8000
@@ -188,6 +194,8 @@ class UsersAPI(API):
         use_verify_router=True,
         use_reset_password_router=True,
         use_users_router=True,
+        use_jwt_auth=True,
+        use_cookie_auth=False,
         setup_startup=True,
         setup_shutdown=True,
         auth_router_auth='jwt',
@@ -285,7 +293,12 @@ class UsersAPI(API):
         # (UserAPI_auth_combine) Combine cookie and jwt auths if needed
         jwt_auth = [jwt_auth] if not isinstance(jwt_auth, list) else jwt_auth
         cookie_auth = [cookie_auth] if not isinstance(cookie_auth, list) else cookie_auth
-        auth = [a for a in cookie_auth + jwt_auth if a is not None]
+        auth = []
+        if use_jwt_auth:
+            auth = auth + jwt_auth
+        if use_cookie_auth:
+            auth = auth + cookie_auth
+        auth = [a for a in auth if a is not None]
         
         # (UserAPI_func) Setup required functions
         get_user_db = create_user_db_func(database_engine, async_database, sqlalchemy_base=Base, user_table_model=UserTable, user_db_model=UserDB) if get_user_db is None else get_user_db

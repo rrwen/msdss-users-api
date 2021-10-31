@@ -288,8 +288,16 @@
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">msdss</span><span class="o">-</span><span class="n">users</span><span class="o">-</span><span class="n">api</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.8</span>
 <span class="n">conda</span> <span class="n">activate</span> <span class="n">msdss</span><span class="o">-</span><span class="n">users</span><span class="o">-</span><span class="n">api</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">msdss</span><span class="o">-</span><span class="n">users</span><span class="o">-</span><span class="n">api</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">msdss</span><span class="o">-</span><span class="n">users</span><span class="o">-</span><span class="n">api</span><span class="p">[</span><span class="n">postgresql</span><span class="p">]</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Optionally, you can also install other databases supported by <code class="docutils literal notranslate"><span class="pre">sqlalchemy</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">msdss</span><span class="o">-</span><span class="n">users</span><span class="o">-</span><span class="n">api</span><span class="p">[</span><span class="n">mysql</span><span class="p">]</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">msdss</span><span class="o">-</span><span class="n">users</span><span class="o">-</span><span class="n">api</span><span class="p">[</span><span class="n">sqlite</span><span class="p">]</span>
+</pre></div>
+</div>
 </div>
 </section>
 

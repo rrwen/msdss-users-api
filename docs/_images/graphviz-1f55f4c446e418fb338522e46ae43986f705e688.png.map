@@ -1,0 +1,14 @@
+<map id="methods" name="methods">
+<area shape="rect" id="node1" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" title="User" alt="" coords="1001,268,1073,316"/>
+<area shape="rect" id="node2" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" title="UserCreate" alt="" coords="871,268,977,316"/>
+<area shape="rect" id="node3" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" title="UserUpdate" alt="" coords="737,268,847,316"/>
+<area shape="rect" id="node4" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" title="UserDB" alt="" coords="629,268,712,316"/>
+<area shape="poly" id="node14" href="https://fastapi-users.github.io/fastapi-users/" title="FastAPI Users" alt="" coords="538,580,534,573,521,566,502,561,479,557,452,556,425,557,402,561,383,566,370,573,366,580,370,587,383,594,402,599,425,603,452,604,479,603,502,599,521,594,534,587"/>
+<area shape="rect" id="node5" href="https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/" title="UserTable" alt="" coords="507,268,605,316"/>
+<area shape="rect" id="node6" href="https://fastapi-users.github.io/fastapi-users/configuration/user-manager/" title="UserManager" alt="" coords="361,268,482,316"/>
+<area shape="rect" id="node9" href="https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/" title="JWTAuthentication" alt="" coords="567,412,734,460"/>
+<area shape="rect" id="node10" href="https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/" title="CookieAuthentication" alt="" coords="361,412,543,460"/>
+<area shape="poly" id="node11" href="https://rrwen.github.io/msdss-base-api/" title="msdss&#45;base&#45;api" alt="" coords="542,724,538,717,525,710,505,705,480,701,452,700,424,701,399,705,379,710,366,717,362,724,366,731,379,738,399,743,424,747,452,748,480,747,505,743,525,738,538,731"/>
+<area shape="poly" id="node12" href="https://rrwen.github.io/msdss-base-database/" title="msdss&#45;base&#45;database" alt="" coords="507,148,501,141,485,134,459,129,426,125,389,124,353,125,320,129,294,134,277,141,271,148,277,155,294,162,320,167,353,171,389,172,426,171,459,167,485,162,501,155"/>
+<area shape="poly" id="node13" href="https://pypi.org/project/databases/" title="databases" alt="" coords="247,148,244,141,235,134,221,129,204,125,185,124,166,125,149,129,136,134,127,141,124,148,127,155,136,162,149,167,166,171,185,172,204,171,221,167,235,162,244,155"/>
+</map>

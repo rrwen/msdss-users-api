@@ -282,9 +282,40 @@
             
   <section id="quick-start">
 <h1 id="quickstart--page-root">Quick Start<a class="headerlink" href="#quickstart--page-root" title="Permalink to this headline">¶</a></h1>
-<ol class="loweralpha simple" start="24">
-<li></li>
-</ol>
+<p>After installing the package, set up environment variables using <code class="docutils literal notranslate"><span class="pre">msdss-dotenv</span></code> in a command line terminal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="n">init</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_SECRET</span> <span class="n">secret</span><span class="o">-</span><span class="n">phrase</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_JWT_SECRET</span> <span class="n">secret</span><span class="o">-</span><span class="n">phrase</span><span class="o">-</span><span class="mi">02</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can generate a strong <code class="docutils literal notranslate"><span class="pre">secret-phrase</span></code> and <code class="docutils literal notranslate"><span class="pre">secret-phrase-02</span></code> with: <code class="docutils literal notranslate"><span class="pre">openssl</span> <span class="pre">rand</span> <span class="pre">-hex</span> <span class="pre">32</span></code></p>
+</div>
+<p>Then setup the database environment variables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_DATABASE_DRIVER</span> <span class="n">postgresql</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_DATABASE_USER</span> <span class="n">msdss</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_DATABASE_PASSWORD</span> <span class="n">msdss123</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_DATABASE_HOST</span> <span class="n">localhost</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_DATABASE_PORT</span> <span class="mi">5432</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_DATABASE_NAME</span> <span class="n">msdss</span>
+</pre></div>
+</div>
+<p>In Python, use the package via <a class="reference internal" href="reference/usersapi.html#msdss_users_api.core.UsersAPI" title="msdss_users_api.core.UsersAPI"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.core.UsersAPI</span></code></a>:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">msdss_users_api</span> <span class="kn">import</span> <span class="n">UsersAPI</span>
+<span class="linenos">2</span><span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">()</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="c1"># Run the app with app.start()</span>
+<span class="linenos">5</span><span class="c1"># API is hosted at http://localhost:8000</span>
+<span class="linenos">6</span><span class="c1"># app.start()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
 </section>
 
 
