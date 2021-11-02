@@ -142,6 +142,8 @@ class UsersAPI(API):
         The environmental variable name for ``port``.
     database_key : str
         The environmental variable name for ``database``.
+    log_warnings : bool
+        Whether to log warnings or not.
     *args, **kwargs
         Additional arguments passed to :class:`fastapi_users:fastapi_users.FastAPIUsers`.
 
@@ -259,6 +261,7 @@ class UsersAPI(API):
         host_key='MSDSS_DATABASE_HOST',
         port_key='MSDSS_DATABASE_PORT',
         database_key='MSDSS_DATABASE_NAME',
+        log_warnings=True,
         *args, **kwargs):
         super().__init__()
 
@@ -277,6 +280,10 @@ class UsersAPI(API):
             host = os.getenv(host_key, host)
             port = os.getenv(port_key, port)
             database = os.getenv(database_key, database)
+        
+        # (UserAPI_warn) Warn if default secret is used
+        if secret == 'msdss-secret' and log_warnings:
+            self.logger.warning('Default secret was used - please change secret phrase!')
 
         # (UserAPI_vars) Setup vars
         jwt_secret = secret if jwt_secret is None else jwt_secret
@@ -319,7 +326,6 @@ class UsersAPI(API):
         if use_auth_router:
 
             # (UsersAPI_router_auth_method) Set method of auth for route
-            print(str(jwt_auth))
             if auth_router_auth == 'jwt':
                 auth_router_auth = jwt_auth[0]
             elif auth_router_auth == 'cookie':

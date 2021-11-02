@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.core &#8212; 0.0.0</title>
+    <title>msdss_users_api.core &#8212; 0.0.1</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -84,11 +84,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.0.0"
+        <a href="../../index.html" title="0.0.1"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.0.0 logo">
+                   alt="0.0.1 logo">
           
         </a>
       </div>
@@ -171,7 +171,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.0</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.1</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -184,13 +184,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.0.0" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.0.1" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.0.0">msdss-users-api</a>
+       title="0.0.1">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -410,6 +410,8 @@
 <span class="sd">        The environmental variable name for ``port``.</span>
 <span class="sd">    database_key : str</span>
 <span class="sd">        The environmental variable name for ``database``.</span>
+<span class="sd">    log_warnings : bool</span>
+<span class="sd">        Whether to log warnings or not.</span>
 <span class="sd">    *args, **kwargs</span>
 <span class="sd">        Additional arguments passed to :class:`fastapi_users:fastapi_users.FastAPIUsers`.</span>
 
@@ -527,6 +529,7 @@
         <span class="n">host_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_HOST'</span><span class="p">,</span>
         <span class="n">port_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_PORT'</span><span class="p">,</span>
         <span class="n">database_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_NAME'</span><span class="p">,</span>
+        <span class="n">log_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -545,6 +548,10 @@
             <span class="n">host</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">host_key</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
             <span class="n">port</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">port_key</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
             <span class="n">database</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">database_key</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
+        
+        <span class="c1"># (UserAPI_warn) Warn if default secret is used</span>
+        <span class="k">if</span> <span class="n">secret</span> <span class="o">==</span> <span class="s1">'msdss-secret'</span> <span class="ow">and</span> <span class="n">log_warnings</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'Default secret was used - please change secret phrase!'</span><span class="p">)</span>
 
         <span class="c1"># (UserAPI_vars) Setup vars</span>
         <span class="n">jwt_secret</span> <span class="o">=</span> <span class="n">secret</span> <span class="k">if</span> <span class="n">jwt_secret</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">jwt_secret</span>
@@ -587,7 +594,6 @@
         <span class="k">if</span> <span class="n">use_auth_router</span><span class="p">:</span>
 
             <span class="c1"># (UsersAPI_router_auth_method) Set method of auth for route</span>
-            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">jwt_auth</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">auth_router_auth</span> <span class="o">==</span> <span class="s1">'jwt'</span><span class="p">:</span>
                 <span class="n">auth_router_auth</span> <span class="o">=</span> <span class="n">jwt_auth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">auth_router_auth</span> <span class="o">==</span> <span class="s1">'cookie'</span><span class="p">:</span>
