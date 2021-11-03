@@ -316,7 +316,8 @@ class UsersAPI(API):
         
         # (UserAPI_func) Setup required functions
         get_user_db = create_user_db_func(database_engine, async_database, sqlalchemy_base=Base, user_table_model=UserTable, user_db_model=UserDB) if get_user_db is None else get_user_db
-        get_user_manager = create_user_manager_func(get_user_db, secret, reset_password_token_secret=reset_password_token_secret, verification_token_secret=verification_token_secret) if get_user_manager is None else get_user_manager
+        user_manager_model = create_user_manager_model(secret, reset_password_token_secret=reset_password_token_secret, verification_token_secret=verification_token_secret)
+        get_user_manager = create_user_manager_func(get_user_db, user_manager_model) if get_user_manager is None else get_user_manager
 
         # (UserAPI_api) Setup users api obj
         users_api = FastAPIUsers(
@@ -373,7 +374,7 @@ class UsersAPI(API):
         if setup_jwt_refresh:
             @self.add('POST', jwt_refresh_path)
             async def refresh_jwt(response: Response, user=Depends(users_api.current_user(active=True))):
-                return await auth_router_auth.get_login_response(user, response)
+                return await auth_router_auth.get_login_response(user, response, )
 
         # (UserAPI_attr) Add attributes
         self.users_api = users_api
