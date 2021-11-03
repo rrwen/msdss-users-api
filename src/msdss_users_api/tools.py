@@ -19,17 +19,8 @@ def create_user_db_func(engine, async_database, sqlalchemy_base=Base, user_table
 
 def create_user_manager_func(
     get_user_db,
-    user_manager_model=None,
-    *args, **kwargs):
+    user_manager_model=None):
 
-    # (create_user_manager_func_model) Construct user manager model
-    model = pydantic.create_model(
-        'UserManager',
-        reset_password_token_secret=reset_password_token_secret,
-        verification_token_secret=verification_token_secret,
-        __base__=base_user_manager_model, *args, **kwargs)
-
-    # (create_user_manager_func_return) Return get_user_manager func
     def out(user_db=Depends(get_user_db)):
         yield user_manager_model(user_db)
     return out

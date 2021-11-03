@@ -107,6 +107,8 @@ class UsersAPI(API):
         UserDB model for FastAPI Users. See :class:`msdss_users_api.models.UserDB`.
     UserTable : :class:`msdss_users_api.models.UserTable`
         UserTable model for FastAPI Users. See :class:`msdss_users_api.models.UserTable`.
+    UserManager : :class:`msdss_users_api.models.UserManager`
+        UserManager model for FastAPI Users. See :class:`msdss_users_api.models.UserManager`.
     database_engine : :func:`sqlalchemy:sqlalchemy.create_engine` or  None
         SQLAlchemy engine object. If ``None``, one will be created from the database connection params.
     async_database : :class:`databases:databases.Database` or None
@@ -248,6 +250,7 @@ class UsersAPI(API):
         UserUpdate=UserUpdate,
         UserDB=UserDB,
         UserTable=UserTable,
+        UserManager=None,
         database_engine=None,
         async_database=None,
         get_user_db=None,
@@ -316,8 +319,8 @@ class UsersAPI(API):
         
         # (UserAPI_func) Setup required functions
         get_user_db = create_user_db_func(database_engine, async_database, sqlalchemy_base=Base, user_table_model=UserTable, user_db_model=UserDB) if get_user_db is None else get_user_db
-        user_manager_model = create_user_manager_model(secret, reset_password_token_secret=reset_password_token_secret, verification_token_secret=verification_token_secret)
-        get_user_manager = create_user_manager_func(get_user_db, user_manager_model) if get_user_manager is None else get_user_manager
+        UserManager = create_user_manager_model(secret, reset_password_token_secret=reset_password_token_secret, verification_token_secret=verification_token_secret) if UserManager is None else UserManager
+        get_user_manager = create_user_manager_func(get_user_db, UserManager) if get_user_manager is None else get_user_manager
 
         # (UserAPI_api) Setup users api obj
         users_api = FastAPIUsers(
@@ -374,7 +377,7 @@ class UsersAPI(API):
         if setup_jwt_refresh:
             @self.add('POST', jwt_refresh_path)
             async def refresh_jwt(response: Response, user=Depends(users_api.current_user(active=True))):
-                return await auth_router_auth.get_login_response(user, response, )
+                return await auth_router_auth.get_login_response(user, response, UserManager)
 
         # (UserAPI_attr) Add attributes
         self.users_api = users_api
