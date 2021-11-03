@@ -185,7 +185,7 @@ class UsersAPI(API):
         )
 
         # Run the app with app.start()
-        # API is hosted at http://localhost:8000
+        # Try API at http://localhost:8000/docs
         # app.start()
     """
     def __init__(
@@ -383,3 +383,56 @@ class UsersAPI(API):
         self.users_api = users_api
         self._database_engine = database_engine
         self._async_database = async_database
+
+    def get_current_user(self, *args, **kwargs):
+        """
+        Get a dependency function to retrieve the current authenticated user.
+
+        Parameters
+        ----------
+        *args, **kwargs
+            Additional arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.current_user`. See `current_user <https://fastapi-users.github.io/fastapi-users/usage/current-user/>`_.
+
+        Return
+        ------
+        func
+            A function to retrieve the current authenticated user. Useful for adding protected routes accessible only by authenticated users.
+
+        Author
+        ------
+        Richard Wen <rrwen.dev@gmail.com>
+
+        Example
+        -------
+        .. jupyter-execute::
+            :hide-output:
+
+            from fastapi import Depends
+            from msdss_users_api import UsersAPI
+            from msdss_users_api.models import User
+
+            app = UsersAPI(
+                secret='secret-phrase',
+                jwt_secret='secret-phrase-02',
+                driver='postgresql',
+                user='msdss',
+                password='msdss123',
+                host='localhost',
+                port='5432',
+                database='msdss'
+            )
+
+            # Get a function dependency for the current active user
+            current_active_user = app.get_current_user(active=True)
+
+            # Add a protected route
+            @app.add('GET', '/protected-route')
+            def protected_route(user: User = Depends(current_active_user)):
+                return f"Hello, {user.email}"
+
+            # Run the app with app.start()
+            # Try API at http://localhost:8000/docs
+            # app.start()
+        """
+        out = self.users_api.current_user(*args, **kwargs)
+        return out

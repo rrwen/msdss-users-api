@@ -47,7 +47,7 @@
   
   
   
-    <title>UsersAPI &#8212; 0.0.3</title>
+    <title>UsersAPI &#8212; 0.0.4</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -86,11 +86,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="0.0.3"
+        <a href="../index.html" title="0.0.4"
            class="md-header-nav__button md-logo">
           
               <img src="../_static/logo.svg" height="26"
-                   alt="0.0.3 logo">
+                   alt="0.0.4 logo">
           
         </a>
       </div>
@@ -173,7 +173,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">0.0.3</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">0.0.4</a></li>
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">API Reference</a></li>
       </ul>
     </div>
@@ -186,13 +186,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="0.0.3" class="md-nav__button md-logo">
+    <a href="../index.html" title="0.0.4" class="md-nav__button md-logo">
       
         <img src="../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../index.html"
-       title="0.0.3">msdss-users-api</a>
+       title="0.0.4">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -253,7 +253,14 @@
               <div class="md-sidebar__inner">
                 
 <nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#reference-usersapi--page-root" class="md-nav__link">UsersAPI</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#get-current-user" class="md-nav__link">get_current_user</a>
+        </li></ul>
+            </nav>
+        </li>
     
 <li class="md-nav__item"><a class="md-nav__extra_link" href="../_sources/reference/usersapi.rst.txt">Show Source</a> </li>
 
@@ -403,7 +410,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <span class="linenos">11</span><span class="p">)</span>
 <span class="linenos">12</span>
 <span class="linenos">13</span><span class="c1"># Run the app with app.start()</span>
-<span class="linenos">14</span><span class="c1"># API is hosted at http://localhost:8000</span>
+<span class="linenos">14</span><span class="c1"># Try API at http://localhost:8000/docs</span>
 <span class="linenos">15</span><span class="c1"># app.start()</span>
 </pre></div>
 </div>
@@ -412,6 +419,66 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </div>
 </div>
 </dd></dl>
+<section id="get-current-user">
+<h2 id="get-current-user">get_current_user<a class="headerlink" href="#get-current-user" title="Permalink to this headline">¶</a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="msdss_users_api.core.UsersAPI.get_current_user">
+<span class="sig-prename descclassname"><span class="pre">UsersAPI.</span></span><span class="sig-name descname"><span class="pre">get_current_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/core.html#UsersAPI.get_current_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.core.UsersAPI.get_current_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a dependency function to retrieve the current authenticated user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Additional arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">fastapi_users:fastapi_users.FastAPIUsers.current_user()</span></code>. See <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/usage/current-user/">current_user</a>.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Additional arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">fastapi_users:fastapi_users.FastAPIUsers.current_user()</span></code>. See <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/usage/current-user/">current_user</a>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A function to retrieve the current authenticated user. Useful for adding protected routes accessible only by authenticated users.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>func</p>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">msdss_users_api</span> <span class="kn">import</span> <span class="n">UsersAPI</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">msdss_users_api.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">(</span>
+<span class="linenos"> 6</span>    <span class="n">secret</span><span class="o">=</span><span class="s1">'secret-phrase'</span><span class="p">,</span>
+<span class="linenos"> 7</span>    <span class="n">jwt_secret</span><span class="o">=</span><span class="s1">'secret-phrase-02'</span><span class="p">,</span>
+<span class="linenos"> 8</span>    <span class="n">driver</span><span class="o">=</span><span class="s1">'postgresql'</span><span class="p">,</span>
+<span class="linenos"> 9</span>    <span class="n">user</span><span class="o">=</span><span class="s1">'msdss'</span><span class="p">,</span>
+<span class="linenos">10</span>    <span class="n">password</span><span class="o">=</span><span class="s1">'msdss123'</span><span class="p">,</span>
+<span class="linenos">11</span>    <span class="n">host</span><span class="o">=</span><span class="s1">'localhost'</span><span class="p">,</span>
+<span class="linenos">12</span>    <span class="n">port</span><span class="o">=</span><span class="s1">'5432'</span><span class="p">,</span>
+<span class="linenos">13</span>    <span class="n">database</span><span class="o">=</span><span class="s1">'msdss'</span>
+<span class="linenos">14</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="c1"># Get a function dependency for the current active user</span>
+<span class="linenos">17</span><span class="n">current_active_user</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span><span class="c1"># Add a protected route</span>
+<span class="linenos">20</span><span class="nd">@app</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'/protected-route'</span><span class="p">)</span>
+<span class="linenos">21</span><span class="k">def</span> <span class="nf">protected_route</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">current_active_user</span><span class="p">)):</span>
+<span class="linenos">22</span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">"Hello, </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2">"</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="c1"># Run the app with app.start()</span>
+<span class="linenos">25</span><span class="c1"># Try API at http://localhost:8000/docs</span>
+<span class="linenos">26</span><span class="c1"># app.start()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</dd></dl>
+</section>
 </section>
 
 

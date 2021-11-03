@@ -14,7 +14,7 @@ After installing the package, set up environment variables using ``msdss-dotenv`
     You can generate a strong ``secret-phrase`` and ``secret-phrase-02`` with: 
     
     .. code::
-        
+
         openssl rand -hex 32
 
 Then setup the database environment variables:
@@ -38,4 +38,5 @@ In Python, use the package via :class:`msdss_users_api.core.UsersAPI`:
 
     # Run the app with app.start()
     # API is hosted at http://localhost:8000
+    # Try API at http://localhost:8000/docs
     # app.start()
