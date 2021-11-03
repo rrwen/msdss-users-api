@@ -11,7 +11,11 @@ After installing the package, set up environment variables using ``msdss-dotenv`
 
 .. note::
 
-    You can generate a strong ``secret-phrase`` and ``secret-phrase-02`` with: ``openssl rand -hex 32``
+    You can generate a strong ``secret-phrase`` and ``secret-phrase-02`` with: 
+    
+    .. code::
+        
+        openssl rand -hex 32
 
 Then setup the database environment variables:
 

@@ -1,6 +1,7 @@
 import databases
 import os
 
+from fastapi import Depends, Response
 from fastapi_users import FastAPIUsers
 from fastapi_users.authentication import CookieAuthentication, JWTAuthentication
 from msdss_base_api import API
@@ -56,6 +57,8 @@ class UsersAPI(API):
         Whether to setup a startup event to connect databases.
     setup_shutdown : bool
         Whether to setup a shutdown event to close databases.
+    setup_jwt_refresh : bool
+        Whether to setup a token refresh route at ``jwt_refresh_path``. This is setup according to the FastAPI Users `JWT authentication guide <https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/>`_.
     auth_router_auth: 'jwt' or 'cookie'
         FastAPI Users auth method for the auth router. See `Auth router <https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/>`_.
     auth_router_kwargs : dict
@@ -90,6 +93,8 @@ class UsersAPI(API):
         Secret used to secure JWT tokens. If ``None``, it will default to param ``secret``.
     jwt_kwargs : dict
         Dictionary of keyword arguments passed to :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication`.  See `JWTAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/>`_.
+    jwt_refresh_path : str
+        Path to setup refresh token if ``setup_jwt_refresh`` is ``True``.
     Base : class
         Class returned from :func:`sqlalchemy:sqlalchemy.orm.declarative_base`.
     User : :class:`msdss_users_api.models.User`
@@ -107,9 +112,9 @@ class UsersAPI(API):
     async_database : :class:`databases:databases.Database` or None
         Async database object from ``databases``. If ``None``, one will be created from database connection params.
     get_user_db : func or None
-        Function for getting the FastAPI Users DB object. If ``None``, one will be setup from params. See ``FastAPI Users database config <https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/>``_.
+        Function for getting the FastAPI Users DB object. If ``None``, one will be setup from params. See ``FastAPI Users database config <https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/>`_.
     get_user_manager : func or None
-        Function for getting the FastAPI UserManager object. If ``None``, one will be setup from params. See ``FastAPI Users UserManager <https://fastapi-users.github.io/fastapi-users/configuration/user-manager/>``_.
+        Function for getting the FastAPI UserManager object. If ``None``, one will be setup from params. See ``FastAPI Users UserManager <https://fastapi-users.github.io/fastapi-users/configuration/user-manager/>`_.
     cookie_auth : :class:`fastapi_users:fastapi_users.authentication.CookieAuthentication` or None
         A cookie authentication object from FastAPI Users. See `CookieAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/>`_.
     jwt_auth : :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication` or None
@@ -200,6 +205,7 @@ class UsersAPI(API):
         use_cookie_auth=False,
         setup_startup=True,
         setup_shutdown=True,
+        setup_jwt_refresh=True,
         auth_router_auth='jwt',
         auth_router_kwargs={},
         auth_router_include_kwargs={
@@ -235,6 +241,7 @@ class UsersAPI(API):
             'lifetime_seconds': 3600,
             'tokenUrl': 'auth/jwt/login'
         },
+        jwt_refresh_path='/auth/jwt/refresh',
         Base=Base,
         User=User,
         UserCreate=UserCreate,
@@ -361,6 +368,12 @@ class UsersAPI(API):
             @self.on('shutdown')
             async def during_shutdown():
                 await async_database.disconnect()
+
+        # (UserAPI_route_refresh) Setup refresh token path
+        if setup_jwt_refresh:
+            @self.add('POST', jwt_refresh_path)
+            async def refresh_jwt(response: Response, user=Depends(users_api.current_user(active=True))):
+                return await auth_router_auth.get_login_response(user, response)
 
         # (UserAPI_attr) Add attributes
         self.users_api = users_api
