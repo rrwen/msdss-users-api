@@ -307,13 +307,25 @@
 <p>In Python, use the package via <a class="reference internal" href="reference/usersapi.html#msdss_users_api.core.UsersAPI" title="msdss_users_api.core.UsersAPI"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.core.UsersAPI</span></code></a>:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">msdss_users_api</span> <span class="kn">import</span> <span class="n">UsersAPI</span>
-<span class="linenos">2</span><span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">()</span>
-<span class="linenos">3</span>
-<span class="linenos">4</span><span class="c1"># Run the app with app.start()</span>
-<span class="linenos">5</span><span class="c1"># API is hosted at http://localhost:8000</span>
-<span class="linenos">6</span><span class="c1"># Try API at http://localhost:8000/docs</span>
-<span class="linenos">7</span><span class="c1"># app.start()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">msdss_users_api</span> <span class="kn">import</span> <span class="n">UsersAPI</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">msdss_users_api.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="c1"># Create app using env vars</span>
+<span class="linenos"> 6</span><span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">()</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="c1"># Get a function dependency for the current active user</span>
+<span class="linenos"> 9</span><span class="n">current_active_user</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="c1"># Add a protected route</span>
+<span class="linenos">12</span><span class="nd">@app</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'/protected-route'</span><span class="p">)</span>
+<span class="linenos">13</span><span class="k">def</span> <span class="nf">protected_route</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">current_active_user</span><span class="p">)):</span>
+<span class="linenos">14</span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">"Hello, </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2">"</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="c1"># Run the app with app.start()</span>
+<span class="linenos">17</span><span class="c1"># API is hosted at http://localhost:8000</span>
+<span class="linenos">18</span><span class="c1"># Try API at http://localhost:8000/docs</span>
+<span class="linenos">19</span><span class="c1"># app.start()</span>
 </pre></div>
 </div>
 </div>

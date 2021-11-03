@@ -33,8 +33,20 @@ In Python, use the package via :class:`msdss_users_api.core.UsersAPI`:
 .. jupyter-execute::
     :hide-output:
 
+    from fastapi import Depends
     from msdss_users_api import UsersAPI
+    from msdss_users_api.models import User
+
+    # Create app using env vars
     app = UsersAPI()
+
+    # Get a function dependency for the current active user
+    current_active_user = app.get_current_user(active=True)
+
+    # Add a protected route
+    @app.add('GET', '/protected-route')
+    def protected_route(user: User = Depends(current_active_user)):
+        return f"Hello, {user.email}"
 
     # Run the app with app.start()
     # API is hosted at http://localhost:8000
