@@ -320,7 +320,7 @@
 <span class="linenos">11</span><span class="c1"># Add a protected route</span>
 <span class="linenos">12</span><span class="nd">@app</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'/protected-route'</span><span class="p">)</span>
 <span class="linenos">13</span><span class="k">def</span> <span class="nf">protected_route</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">current_active_user</span><span class="p">)):</span>
-<span class="linenos">14</span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">"Hello, </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2">"</span>
+<span class="linenos">14</span>    <span class="k">return</span> <span class="sa">f</span><span class="s1">'Hello, </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s1">'</span>
 <span class="linenos">15</span>
 <span class="linenos">16</span><span class="c1"># Run the app with app.start()</span>
 <span class="linenos">17</span><span class="c1"># API is hosted at http://localhost:8000</span>

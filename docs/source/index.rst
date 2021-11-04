@@ -1,5 +1,5 @@
 msdss-users-api
-==============
+===============
 
 User management API for the Modular Spatial Decision Support Systems (MSDSS) framework.
 

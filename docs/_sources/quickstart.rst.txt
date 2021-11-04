@@ -46,7 +46,7 @@ In Python, use the package via :class:`msdss_users_api.core.UsersAPI`:
     # Add a protected route
     @app.add('GET', '/protected-route')
     def protected_route(user: User = Depends(current_active_user)):
-        return f"Hello, {user.email}"
+        return f'Hello, {user.email}'
 
     # Run the app with app.start()
     # API is hosted at http://localhost:8000

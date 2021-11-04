@@ -261,6 +261,8 @@
         <li class="md-nav__item"><a href="#create-user-db-func" class="md-nav__link">create_user_db_func</a>
         </li>
         <li class="md-nav__item"><a href="#create-user-manager-func" class="md-nav__link">create_user_manager_func</a>
+        </li>
+        <li class="md-nav__item"><a href="#create-user-manager-model" class="md-nav__link">create_user_manager_model</a>
         </li></ul>
             </nav>
         </li>
@@ -285,14 +287,151 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="msdss_users_api.tools.create_user_db_func">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_db_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">engine</span></em>, <em class="sig-param"><span class="pre">async_database</span></em>, <em class="sig-param"><span class="pre">sqlalchemy_base=&lt;class</span> <span class="pre">'sqlalchemy.orm.decl_api.Base'&gt;</span></em>, <em class="sig-param"><span class="pre">user_table_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserTable'&gt;</span></em>, <em class="sig-param"><span class="pre">user_db_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserDB'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_db_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_db_func" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create a function to return the the database adapter dependency.</p>
+<p>See <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/">SQLAlchemy configuration</a> for FastAPI Users,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>engine</strong> (<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/connections.html#sqlalchemy.engine.Engine" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.engine.Engine</span></code></a>) – SQLAlchemy engine object to use for creating tables.</p></li>
+<li><p><strong>async_database</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code>) – The async database object to use for managing users. See <a class="reference external" href="https://pypi.org/project/databases/">databases</a>.</p></li>
+<li><p><strong>sqlalchemy_base</strong> (<a class="reference external" href="https://docs.sqlalchemy.org/en/14/orm/mapping_api.html#sqlalchemy.orm.declarative_base" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.orm.declarative_base()</span></code></a>) – The base class from sqlalchemy. See <a class="reference external" href="https://docs.sqlalchemy.org/en/14/orm/mapping_api.html#sqlalchemy.orm.declarative_base" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.orm.declarative_base()</span></code></a>.</p></li>
+<li><p><strong>user_table_model</strong> (<a class="reference internal" href="models.html#msdss_users_api.models.UserTable" title="msdss_users_api.models.UserTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserTable</span></code></a>) – The user table model to use for the database dependency. See <a class="reference internal" href="models.html#msdss_users_api.models.UserTable" title="msdss_users_api.models.UserTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserTable</span></code></a>.</p></li>
+<li><p><strong>user_db_model</strong> (<a class="reference internal" href="models.html#msdss_users_api.models.UserDB" title="msdss_users_api.models.UserDB"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserDB</span></code></a>) – The user database model for the database dependency. See <a class="reference internal" href="models.html#msdss_users_api.models.UserDB" title="msdss_users_api.models.UserDB"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserDB</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A function yielding a <code class="xref py py-class docutils literal notranslate"><span class="pre">fastapi_users:fastapi_users.db.SQLAlchemyUserDatabase</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>func</p>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">databases</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">msdss_base_database</span> <span class="kn">import</span> <span class="n">Database</span>
+<span class="linenos"> 4</span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="n">create_user_db_func</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># Create a database object</span>
+<span class="linenos"> 7</span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="c1"># Get the engine object from the database</span>
+<span class="linenos">10</span><span class="n">engine</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">_connection</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="c1"># Get the async database</span>
+<span class="linenos">13</span><span class="n">async_database</span> <span class="o">=</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="c1"># Get the user db func</span>
+<span class="linenos">16</span><span class="n">get_user_db</span> <span class="o">=</span> <span class="n">create_user_db_func</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">async_database</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</dd></dl>
 </section>
 <section id="create-user-manager-func">
 <h2 id="create-user-manager-func">create_user_manager_func<a class="headerlink" href="#create-user-manager-func" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="msdss_users_api.tools.create_user_manager_func">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_manager_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">get_user_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_manager_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_manager_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_manager_func" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_manager_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">get_user_db</span></em>, <em class="sig-param"><span class="pre">user_manager_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserManager'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_manager_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_manager_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a function to return the the user manager class.</p>
+<p>See <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/user-manager/">UserManager configuration</a> for FastAPI Users,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>get_user_db</strong> (<em>func</em>) – Function for the user database dependency. See <a class="reference internal" href="#msdss_users_api.tools.create_user_db_func" title="msdss_users_api.tools.create_user_db_func"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_func()</span></code></a>.</p></li>
+<li><p><strong>user_manager_model</strong> (<a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a>) – The user manager model from FastAPI Users. See <a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a> and <a class="reference internal" href="#msdss_users_api.tools.create_user_manager_model" title="msdss_users_api.tools.create_user_manager_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_manager_model()</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A function yielding a configured <a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>func</p>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">databases</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">msdss_base_database</span> <span class="kn">import</span> <span class="n">Database</span>
+<span class="linenos"> 4</span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># Create a database object</span>
+<span class="linenos"> 7</span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="c1"># Get the engine object from the database</span>
+<span class="linenos">10</span><span class="n">engine</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">_connection</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="c1"># Get the async database</span>
+<span class="linenos">13</span><span class="n">async_database</span> <span class="o">=</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="c1"># Get the user db func</span>
+<span class="linenos">16</span><span class="n">get_user_db</span> <span class="o">=</span> <span class="n">create_user_db_func</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">async_database</span><span class="p">)</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="c1"># Create a user manager model</span>
+<span class="linenos">19</span><span class="n">UserManager</span> <span class="o">=</span> <span class="n">create_user_manager_model</span><span class="p">(</span><span class="s1">'msdss-secret'</span><span class="p">)</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="c1"># Get the user manager func</span>
+<span class="linenos">22</span><span class="n">get_user_manager</span> <span class="o">=</span> <span class="n">create_user_manager_func</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</dd></dl>
+</section>
+<section id="create-user-manager-model">
+<h2 id="create-user-manager-model">create_user_manager_model<a class="headerlink" href="#create-user-manager-model" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="msdss_users_api.tools.create_user_manager_model">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_manager_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">secret</span></em>, <em class="sig-param"><span class="pre">reset_password_token_secret=None</span></em>, <em class="sig-param"><span class="pre">verification_token_secret=None</span></em>, <em class="sig-param"><span class="pre">base_user_manager_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserManager'&gt;</span></em>, <em class="sig-param"><span class="pre">*args</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_manager_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_manager_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a function to return the the user manager class.</p>
+<p>See <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/user-manager/">UserManager configuration</a> for FastAPI Users,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Secret to use for reset password tokens and verification tokens encryption.</p></li>
+<li><p><strong>reset_password_token_secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Secret to use for reset password token encryption. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then it will default to param <code class="docutils literal notranslate"><span class="pre">secret</span></code>.</p></li>
+<li><p><strong>verification_token_secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Secret to use for verification tokens encryption. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then it will default to param <code class="docutils literal notranslate"><span class="pre">secret</span></code>.</p></li>
+<li><p><strong>base_user_manager_model</strong> (<a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a>) – The user manager model from FastAPI Users. See <a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a>.</p></li>
+<li><p><strong>*args</strong> – Additional arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">pydantic:pydantic.create_model()</span></code>. See <a class="reference external" href="https://pydantic-docs.helpmanual.io/usage/models/#dynamic-model-creation">pydantic dynamic model creation</a>.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Additional arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">pydantic:pydantic.create_model()</span></code>. See <a class="reference external" href="https://pydantic-docs.helpmanual.io/usage/models/#dynamic-model-creation">pydantic dynamic model creation</a>.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A function yielding a configured <a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>func</p>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="n">create_user_manager_model</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">UserManager</span> <span class="o">=</span> <span class="n">create_user_manager_model</span><span class="p">(</span><span class="s1">'msdss-secret'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</dd></dl>
 </section>
 </section>
 

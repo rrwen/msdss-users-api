@@ -81,7 +81,7 @@ class UsersAPI(API):
         Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_users_router`. See `Users router <https://fastapi-users.github.io/fastapi-users/configuration/routers/users/>`_.
     users_router_include_kwargs : dict
         Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users users router.
-    reset_password_token_secret : str,
+    reset_password_token_secret : str
         Secret used to secure password reset tokens. If ``None``, it will default to param ``secret``.
     verification_token_secret : str or None
         Secret used to secure verification tokens. If ``None``, it will default to param ``secret``.
@@ -428,7 +428,7 @@ class UsersAPI(API):
             # Add a protected route
             @app.add('GET', '/protected-route')
             def protected_route(user: User = Depends(current_active_user)):
-                return f"Hello, {user.email}"
+                return f'Hello, {user.email}'
 
             # Run the app with app.start()
             # Try API at http://localhost:8000/docs
