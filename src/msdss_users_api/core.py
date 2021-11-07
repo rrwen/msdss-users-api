@@ -39,19 +39,19 @@ class UsersAPI(API):
         If ``None``, then one will be setup based on other parameters.
     users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers` or None
         A FastAPIUsers object to setup routes with. If ``None``, one will be setup using the params.
-    use_auth_router : bool
+    enable_auth_router : bool
         Whether to include the Fast API Users api route.
-    use_register_router : bool
+    enable_register_router : bool
         Whether to include the Fast API Users register route.
-    use_verify_router : bool
+    enable_verify_router : bool
         Whether to include the Fast API Users verify route.
-    use_reset_password_router : bool
+    enable_reset_password_router : bool
         Whether to include the Fast API Users reset password route.
-    use_users_router : bool
+    enable_users_router : bool
         Whether to include the Fast API Users users route.
-    use_jwt_auth : bool
+    enable_jwt_auth : bool
         Whether to use JWT auth or not.
-    use_cookie_auth : bool
+    enable_cookie_auth : bool
         Whether to use cookie auth or not.
     setup_startup : bool
         Whether to setup a startup event to connect databases.
@@ -198,13 +198,13 @@ class UsersAPI(API):
         port='5432',
         database='msdss',
         users_api=None,
-        use_auth_router=True,
-        use_register_router=True,
-        use_verify_router=True,
-        use_reset_password_router=True,
-        use_users_router=True,
-        use_jwt_auth=True,
-        use_cookie_auth=False,
+        enable_auth_router=True,
+        enable_register_router=True,
+        enable_verify_router=True,
+        enable_reset_password_router=True,
+        enable_users_router=True,
+        enable_jwt_auth=True,
+        enable_cookie_auth=False,
         setup_startup=True,
         setup_shutdown=True,
         auth_router_auth='jwt',
@@ -311,9 +311,9 @@ class UsersAPI(API):
         jwt_auth = [jwt_auth] if not isinstance(jwt_auth, list) else jwt_auth
         cookie_auth = [cookie_auth] if not isinstance(cookie_auth, list) else cookie_auth
         auth = []
-        if use_jwt_auth:
+        if enable_jwt_auth:
             auth = auth + jwt_auth
-        if use_cookie_auth:
+        if enable_cookie_auth:
             auth = auth + cookie_auth
         auth = [a for a in auth if a is not None]
         
@@ -334,7 +334,7 @@ class UsersAPI(API):
         ) if users_api is None else users_api
 
         # (UsersAPI_router_auth) Add auth router
-        if use_auth_router:
+        if enable_auth_router:
 
             # (UsersAPI_router_auth_method) Set method of auth for route
             if auth_router_auth == 'jwt':
@@ -355,19 +355,19 @@ class UsersAPI(API):
             self.app.include_router(auth_router, **auth_router_include_kwargs)
 
         # (UsersAPI_router_register) Add register router
-        if use_register_router:
+        if enable_register_router:
             self.app.include_router(users_api.get_register_router(**register_router_kwargs), **register_router_include_kwargs)
 
         # (UsersAPI_router_verify) Add verify router
-        if use_verify_router:
+        if enable_verify_router:
             self.app.include_router(users_api.get_verify_router(**verify_router_kwargs), **verify_router_include_kwargs)
         
         # (UsersAPI_router_reset) Add reset password router
-        if use_reset_password_router:
+        if enable_reset_password_router:
             self.app.include_router(users_api.get_reset_password_router(**reset_password_router_kwargs), **reset_password_router_include_kwargs)
 
         # (UsersAPI_router_reset) Add reset password router
-        if use_users_router:
+        if enable_users_router:
             self.app.include_router(users_api.get_users_router(**users_router_kwargs), **users_router_include_kwargs)
 
         # (UserAPI_events_startup) Setup app startup

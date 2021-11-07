@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.core &#8212; 0.0.5</title>
+    <title>msdss_users_api.core &#8212; 0.0.6</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -84,11 +84,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.0.5"
+        <a href="../../index.html" title="0.0.6"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.0.5 logo">
+                   alt="0.0.6 logo">
           
         </a>
       </div>
@@ -171,7 +171,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.5</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.6</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -184,13 +184,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.0.5" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.0.6" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.0.5">msdss-users-api</a>
+       title="0.0.6">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -307,19 +307,19 @@
 <span class="sd">        If ``None``, then one will be setup based on other parameters.</span>
 <span class="sd">    users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers` or None</span>
 <span class="sd">        A FastAPIUsers object to setup routes with. If ``None``, one will be setup using the params.</span>
-<span class="sd">    use_auth_router : bool</span>
+<span class="sd">    enable_auth_router : bool</span>
 <span class="sd">        Whether to include the Fast API Users api route.</span>
-<span class="sd">    use_register_router : bool</span>
+<span class="sd">    enable_register_router : bool</span>
 <span class="sd">        Whether to include the Fast API Users register route.</span>
-<span class="sd">    use_verify_router : bool</span>
+<span class="sd">    enable_verify_router : bool</span>
 <span class="sd">        Whether to include the Fast API Users verify route.</span>
-<span class="sd">    use_reset_password_router : bool</span>
+<span class="sd">    enable_reset_password_router : bool</span>
 <span class="sd">        Whether to include the Fast API Users reset password route.</span>
-<span class="sd">    use_users_router : bool</span>
+<span class="sd">    enable_users_router : bool</span>
 <span class="sd">        Whether to include the Fast API Users users route.</span>
-<span class="sd">    use_jwt_auth : bool</span>
+<span class="sd">    enable_jwt_auth : bool</span>
 <span class="sd">        Whether to use JWT auth or not.</span>
-<span class="sd">    use_cookie_auth : bool</span>
+<span class="sd">    enable_cookie_auth : bool</span>
 <span class="sd">        Whether to use cookie auth or not.</span>
 <span class="sd">    setup_startup : bool</span>
 <span class="sd">        Whether to setup a startup event to connect databases.</span>
@@ -466,13 +466,13 @@
         <span class="n">port</span><span class="o">=</span><span class="s1">'5432'</span><span class="p">,</span>
         <span class="n">database</span><span class="o">=</span><span class="s1">'msdss'</span><span class="p">,</span>
         <span class="n">users_api</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">use_auth_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">use_register_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">use_verify_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">use_reset_password_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">use_users_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">use_jwt_auth</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">use_cookie_auth</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">enable_auth_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_register_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_verify_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_reset_password_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_users_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_jwt_auth</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_cookie_auth</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">setup_startup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">setup_shutdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">auth_router_auth</span><span class="o">=</span><span class="s1">'jwt'</span><span class="p">,</span>
@@ -579,9 +579,9 @@
         <span class="n">jwt_auth</span> <span class="o">=</span> <span class="p">[</span><span class="n">jwt_auth</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">jwt_auth</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">jwt_auth</span>
         <span class="n">cookie_auth</span> <span class="o">=</span> <span class="p">[</span><span class="n">cookie_auth</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cookie_auth</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">cookie_auth</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">use_jwt_auth</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">enable_jwt_auth</span><span class="p">:</span>
             <span class="n">auth</span> <span class="o">=</span> <span class="n">auth</span> <span class="o">+</span> <span class="n">jwt_auth</span>
-        <span class="k">if</span> <span class="n">use_cookie_auth</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">enable_cookie_auth</span><span class="p">:</span>
             <span class="n">auth</span> <span class="o">=</span> <span class="n">auth</span> <span class="o">+</span> <span class="n">cookie_auth</span>
         <span class="n">auth</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">auth</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
         
@@ -602,7 +602,7 @@
         <span class="p">)</span> <span class="k">if</span> <span class="n">users_api</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">users_api</span>
 
         <span class="c1"># (UsersAPI_router_auth) Add auth router</span>
-        <span class="k">if</span> <span class="n">use_auth_router</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">enable_auth_router</span><span class="p">:</span>
 
             <span class="c1"># (UsersAPI_router_auth_method) Set method of auth for route</span>
             <span class="k">if</span> <span class="n">auth_router_auth</span> <span class="o">==</span> <span class="s1">'jwt'</span><span class="p">:</span>
@@ -623,19 +623,19 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">auth_router</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_include_kwargs</span><span class="p">)</span>
 
         <span class="c1"># (UsersAPI_router_register) Add register router</span>
-        <span class="k">if</span> <span class="n">use_register_router</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">enable_register_router</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">get_register_router</span><span class="p">(</span><span class="o">**</span><span class="n">register_router_kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">register_router_include_kwargs</span><span class="p">)</span>
 
         <span class="c1"># (UsersAPI_router_verify) Add verify router</span>
-        <span class="k">if</span> <span class="n">use_verify_router</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">enable_verify_router</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">get_verify_router</span><span class="p">(</span><span class="o">**</span><span class="n">verify_router_kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">verify_router_include_kwargs</span><span class="p">)</span>
         
         <span class="c1"># (UsersAPI_router_reset) Add reset password router</span>
-        <span class="k">if</span> <span class="n">use_reset_password_router</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">enable_reset_password_router</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">get_reset_password_router</span><span class="p">(</span><span class="o">**</span><span class="n">reset_password_router_kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">reset_password_router_include_kwargs</span><span class="p">)</span>
 
         <span class="c1"># (UsersAPI_router_reset) Add reset password router</span>
-        <span class="k">if</span> <span class="n">use_users_router</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">enable_users_router</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">get_users_router</span><span class="p">(</span><span class="o">**</span><span class="n">users_router_kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">users_router_include_kwargs</span><span class="p">)</span>
 
         <span class="c1"># (UserAPI_events_startup) Setup app startup</span>
