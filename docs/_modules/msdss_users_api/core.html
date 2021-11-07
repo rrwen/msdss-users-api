@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.core &#8212; 0.0.4</title>
+    <title>msdss_users_api.core &#8212; 0.0.5</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -84,11 +84,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.0.4"
+        <a href="../../index.html" title="0.0.5"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.0.4 logo">
+                   alt="0.0.5 logo">
           
         </a>
       </div>
@@ -171,7 +171,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.4</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.5</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -184,13 +184,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.0.4" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.0.5" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.0.4">msdss-users-api</a>
+       title="0.0.5">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -325,14 +325,16 @@
 <span class="sd">        Whether to setup a startup event to connect databases.</span>
 <span class="sd">    setup_shutdown : bool</span>
 <span class="sd">        Whether to setup a shutdown event to close databases.</span>
-<span class="sd">    setup_jwt_refresh : bool</span>
-<span class="sd">        Whether to setup a token refresh route at ``jwt_refresh_path``. This is setup according to the FastAPI Users `JWT authentication guide &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/&gt;`_.</span>
 <span class="sd">    auth_router_auth: 'jwt' or 'cookie'</span>
 <span class="sd">        FastAPI Users auth method for the auth router. See `Auth router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/&gt;`_.</span>
 <span class="sd">    auth_router_kwargs : dict</span>
 <span class="sd">        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_auth_router`. See `Auth router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/&gt;`_.</span>
 <span class="sd">    auth_router_include_kwargs : dict</span>
 <span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users auth router.</span>
+<span class="sd">    auth_router_jwt_refresh : bool</span>
+<span class="sd">        Whether to setup a token refresh route at ``auth_router_jwt_refresh_path``. This is setup according to the FastAPI Users `JWT authentication guide &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/&gt;`_.</span>
+<span class="sd">    auth_router_jwt_refresh_path : str</span>
+<span class="sd">        Path to setup refresh token if ``auth_router_jwt_refresh`` is ``True``.</span>
 <span class="sd">    register_router_kwargs : dict</span>
 <span class="sd">        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_register_router`. See `Register router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/register/&gt;`_.</span>
 <span class="sd">    register_router_include_kwargs : dict</span>
@@ -361,8 +363,6 @@
 <span class="sd">        Secret used to secure JWT tokens. If ``None``, it will default to param ``secret``.</span>
 <span class="sd">    jwt_kwargs : dict</span>
 <span class="sd">        Dictionary of keyword arguments passed to :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication`.  See `JWTAuthentication &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/&gt;`_.</span>
-<span class="sd">    jwt_refresh_path : str</span>
-<span class="sd">        Path to setup refresh token if ``setup_jwt_refresh`` is ``True``.</span>
 <span class="sd">    Base : class</span>
 <span class="sd">        Class returned from :func:`sqlalchemy:sqlalchemy.orm.declarative_base`.</span>
 <span class="sd">    User : :class:`msdss_users_api.models.User`</span>
@@ -475,13 +475,14 @@
         <span class="n">use_cookie_auth</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">setup_startup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">setup_shutdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">setup_jwt_refresh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">auth_router_auth</span><span class="o">=</span><span class="s1">'jwt'</span><span class="p">,</span>
         <span class="n">auth_router_kwargs</span><span class="o">=</span><span class="p">{},</span>
         <span class="n">auth_router_include_kwargs</span><span class="o">=</span><span class="p">{</span>
             <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth/jwt'</span><span class="p">,</span>
             <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
         <span class="p">},</span>
+        <span class="n">auth_router_jwt_refresh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">auth_router_jwt_refresh_path</span><span class="o">=</span><span class="s1">'/refresh'</span><span class="p">,</span>
         <span class="n">register_router_kwargs</span><span class="o">=</span><span class="p">{},</span>
         <span class="n">register_router_include_kwargs</span><span class="o">=</span><span class="p">{</span>
             <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
@@ -511,7 +512,6 @@
             <span class="s1">'lifetime_seconds'</span><span class="p">:</span> <span class="mi">3600</span><span class="p">,</span>
             <span class="s1">'tokenUrl'</span><span class="p">:</span> <span class="s1">'auth/jwt/login'</span>
         <span class="p">},</span>
-        <span class="n">jwt_refresh_path</span><span class="o">=</span><span class="s1">'/auth/jwt/refresh'</span><span class="p">,</span>
         <span class="n">Base</span><span class="o">=</span><span class="n">Base</span><span class="p">,</span>
         <span class="n">User</span><span class="o">=</span><span class="n">User</span><span class="p">,</span>
         <span class="n">UserCreate</span><span class="o">=</span><span class="n">UserCreate</span><span class="p">,</span>
@@ -610,8 +610,17 @@
             <span class="k">elif</span> <span class="n">auth_router_auth</span> <span class="o">==</span> <span class="s1">'cookie'</span><span class="p">:</span>
                 <span class="n">auth_router_auth</span> <span class="o">=</span> <span class="n">cookie_auth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
+            <span class="c1"># (UsersAPI_router_auth_create) Create auth route</span>
+            <span class="n">auth_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_auth_router</span><span class="p">(</span><span class="n">auth_router_auth</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_kwargs</span><span class="p">)</span>
+            
+            <span class="c1"># (UsersAPI_router_auth_refresh) Create auth refresh route</span>
+            <span class="k">if</span> <span class="n">auth_router_jwt_refresh</span><span class="p">:</span>
+                <span class="nd">@auth_router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">auth_router_jwt_refresh_path</span><span class="p">)</span>
+                <span class="k">async</span> <span class="k">def</span> <span class="nf">refresh_jwt</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">))):</span>
+                    <span class="k">return</span> <span class="k">await</span> <span class="n">auth_router_auth</span><span class="o">.</span><span class="n">get_login_response</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
+
             <span class="c1"># (UsersAPI_router_auth_add) Add auth route</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">get_auth_router</span><span class="p">(</span><span class="n">auth_router_auth</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">auth_router_include_kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">auth_router</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_include_kwargs</span><span class="p">)</span>
 
         <span class="c1"># (UsersAPI_router_register) Add register router</span>
         <span class="k">if</span> <span class="n">use_register_router</span><span class="p">:</span>
@@ -640,12 +649,6 @@
             <span class="nd">@self</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">'shutdown'</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">def</span> <span class="nf">during_shutdown</span><span class="p">():</span>
                 <span class="k">await</span> <span class="n">async_database</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-
-        <span class="c1"># (UserAPI_route_refresh) Setup refresh token path</span>
-        <span class="k">if</span> <span class="n">setup_jwt_refresh</span><span class="p">:</span>
-            <span class="nd">@self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'POST'</span><span class="p">,</span> <span class="n">jwt_refresh_path</span><span class="p">)</span>
-            <span class="k">async</span> <span class="k">def</span> <span class="nf">refresh_jwt</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">))):</span>
-                <span class="k">return</span> <span class="k">await</span> <span class="n">auth_router_auth</span><span class="o">.</span><span class="n">get_login_response</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
 
         <span class="c1"># (UserAPI_attr) Add attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">users_api</span> <span class="o">=</span> <span class="n">users_api</span>

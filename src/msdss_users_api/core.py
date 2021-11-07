@@ -57,14 +57,16 @@ class UsersAPI(API):
         Whether to setup a startup event to connect databases.
     setup_shutdown : bool
         Whether to setup a shutdown event to close databases.
-    setup_jwt_refresh : bool
-        Whether to setup a token refresh route at ``jwt_refresh_path``. This is setup according to the FastAPI Users `JWT authentication guide <https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/>`_.
     auth_router_auth: 'jwt' or 'cookie'
         FastAPI Users auth method for the auth router. See `Auth router <https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/>`_.
     auth_router_kwargs : dict
         Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_auth_router`. See `Auth router <https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/>`_.
     auth_router_include_kwargs : dict
         Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users auth router.
+    auth_router_jwt_refresh : bool
+        Whether to setup a token refresh route at ``auth_router_jwt_refresh_path``. This is setup according to the FastAPI Users `JWT authentication guide <https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/>`_.
+    auth_router_jwt_refresh_path : str
+        Path to setup refresh token if ``auth_router_jwt_refresh`` is ``True``.
     register_router_kwargs : dict
         Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_register_router`. See `Register router <https://fastapi-users.github.io/fastapi-users/configuration/routers/register/>`_.
     register_router_include_kwargs : dict
@@ -93,8 +95,6 @@ class UsersAPI(API):
         Secret used to secure JWT tokens. If ``None``, it will default to param ``secret``.
     jwt_kwargs : dict
         Dictionary of keyword arguments passed to :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication`.  See `JWTAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/>`_.
-    jwt_refresh_path : str
-        Path to setup refresh token if ``setup_jwt_refresh`` is ``True``.
     Base : class
         Class returned from :func:`sqlalchemy:sqlalchemy.orm.declarative_base`.
     User : :class:`msdss_users_api.models.User`
@@ -207,13 +207,14 @@ class UsersAPI(API):
         use_cookie_auth=False,
         setup_startup=True,
         setup_shutdown=True,
-        setup_jwt_refresh=True,
         auth_router_auth='jwt',
         auth_router_kwargs={},
         auth_router_include_kwargs={
             'prefix': '/auth/jwt',
             'tags': ['auth']
         },
+        auth_router_jwt_refresh=True,
+        auth_router_jwt_refresh_path='/refresh',
         register_router_kwargs={},
         register_router_include_kwargs={
             'prefix': '/auth',
@@ -243,7 +244,6 @@ class UsersAPI(API):
             'lifetime_seconds': 3600,
             'tokenUrl': 'auth/jwt/login'
         },
-        jwt_refresh_path='/auth/jwt/refresh',
         Base=Base,
         User=User,
         UserCreate=UserCreate,
@@ -342,8 +342,17 @@ class UsersAPI(API):
             elif auth_router_auth == 'cookie':
                 auth_router_auth = cookie_auth[0]
 
+            # (UsersAPI_router_auth_create) Create auth route
+            auth_router = users_api.get_auth_router(auth_router_auth, **auth_router_kwargs)
+            
+            # (UsersAPI_router_auth_refresh) Create auth refresh route
+            if auth_router_jwt_refresh:
+                @auth_router.post(auth_router_jwt_refresh_path)
+                async def refresh_jwt(response: Response, user=Depends(users_api.current_user(active=True))):
+                    return await auth_router_auth.get_login_response(user, response, UserManager)
+
             # (UsersAPI_router_auth_add) Add auth route
-            self.app.include_router(users_api.get_auth_router(auth_router_auth, **auth_router_kwargs), **auth_router_include_kwargs)
+            self.app.include_router(auth_router, **auth_router_include_kwargs)
 
         # (UsersAPI_router_register) Add register router
         if use_register_router:
@@ -372,12 +381,6 @@ class UsersAPI(API):
             @self.on('shutdown')
             async def during_shutdown():
                 await async_database.disconnect()
-
-        # (UserAPI_route_refresh) Setup refresh token path
-        if setup_jwt_refresh:
-            @self.add('POST', jwt_refresh_path)
-            async def refresh_jwt(response: Response, user=Depends(users_api.current_user(active=True))):
-                return await auth_router_auth.get_login_response(user, response, UserManager)
 
         # (UserAPI_attr) Add attributes
         self.users_api = users_api
