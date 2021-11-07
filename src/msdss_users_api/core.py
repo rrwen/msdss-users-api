@@ -352,23 +352,23 @@ class UsersAPI(API):
                     return await auth_router_auth.get_login_response(user, response, UserManager)
 
             # (UsersAPI_router_auth_add) Add auth route
-            self.app.include_router(auth_router, **auth_router_include_kwargs)
+            self.add_router(auth_router, **auth_router_include_kwargs)
 
         # (UsersAPI_router_register) Add register router
         if enable_register_router:
-            self.app.include_router(users_api.get_register_router(**register_router_kwargs), **register_router_include_kwargs)
+            self.add_router(users_api.get_register_router(**register_router_kwargs), **register_router_include_kwargs)
 
         # (UsersAPI_router_verify) Add verify router
         if enable_verify_router:
-            self.app.include_router(users_api.get_verify_router(**verify_router_kwargs), **verify_router_include_kwargs)
+            self.add_router(users_api.get_verify_router(**verify_router_kwargs), **verify_router_include_kwargs)
         
         # (UsersAPI_router_reset) Add reset password router
         if enable_reset_password_router:
-            self.app.include_router(users_api.get_reset_password_router(**reset_password_router_kwargs), **reset_password_router_include_kwargs)
+            self.add_router(users_api.get_reset_password_router(**reset_password_router_kwargs), **reset_password_router_include_kwargs)
 
         # (UsersAPI_router_reset) Add reset password router
         if enable_users_router:
-            self.app.include_router(users_api.get_users_router(**users_router_kwargs), **users_router_include_kwargs)
+            self.add_router(users_api.get_users_router(**users_router_kwargs), **users_router_include_kwargs)
 
         # (UserAPI_events_startup) Setup app startup
         if setup_startup:
