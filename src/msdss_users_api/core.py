@@ -114,9 +114,9 @@ class UsersAPI(API):
     async_database : :class:`databases:databases.Database` or None
         Async database object from ``databases``. If ``None``, one will be created from database connection params.
     get_user_db : func or None
-        Function for getting the FastAPI Users DB object. If ``None``, one will be setup from params. See ``FastAPI Users database config <https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/>`_.
+        Function for getting the FastAPI Users DB object. If ``None``, one will be setup from params. See `FastAPI Users database config <https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/>`_.
     get_user_manager : func or None
-        Function for getting the FastAPI UserManager object. If ``None``, one will be setup from params. See ``FastAPI Users UserManager <https://fastapi-users.github.io/fastapi-users/configuration/user-manager/>`_.
+        Function for getting the FastAPI UserManager object. If ``None``, one will be setup from params. See `FastAPI Users UserManager <https://fastapi-users.github.io/fastapi-users/configuration/user-manager/>`_.
     cookie_auth : :class:`fastapi_users:fastapi_users.authentication.CookieAuthentication` or None
         A cookie authentication object from FastAPI Users. See `CookieAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/>`_.
     jwt_auth : :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication` or None
