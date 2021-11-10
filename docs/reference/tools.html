@@ -53,11 +53,14 @@
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/thebelab-helper.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -311,22 +314,22 @@
 <p class="rubric">Example</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">databases</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">msdss_base_database</span> <span class="kn">import</span> <span class="n">Database</span>
-<span class="linenos"> 4</span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="n">create_user_db_func</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="c1"># Create a database object</span>
-<span class="linenos"> 7</span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>
-<span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="c1"># Get the engine object from the database</span>
-<span class="linenos">10</span><span class="n">engine</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">_connection</span>
-<span class="linenos">11</span>
-<span class="linenos">12</span><span class="c1"># Get the async database</span>
-<span class="linenos">13</span><span class="n">async_database</span> <span class="o">=</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="c1"># Get the user db func</span>
-<span class="linenos">16</span><span class="n">get_user_db</span> <span class="o">=</span> <span class="n">create_user_db_func</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">async_database</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">databases</span>
+
+<span class="kn">from</span> <span class="nn">msdss_base_database</span> <span class="kn">import</span> <span class="n">Database</span>
+<span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="n">create_user_db_func</span>
+
+<span class="c1"># Create a database object</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>
+
+<span class="c1"># Get the engine object from the database</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">_connection</span>
+
+<span class="c1"># Get the async database</span>
+<span class="n">async_database</span> <span class="o">=</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+
+<span class="c1"># Get the user db func</span>
+<span class="n">get_user_db</span> <span class="o">=</span> <span class="n">create_user_db_func</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">async_database</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -361,28 +364,28 @@
 <p class="rubric">Example</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">databases</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">msdss_base_database</span> <span class="kn">import</span> <span class="n">Database</span>
-<span class="linenos"> 4</span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="c1"># Create a database object</span>
-<span class="linenos"> 7</span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>
-<span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="c1"># Get the engine object from the database</span>
-<span class="linenos">10</span><span class="n">engine</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">_connection</span>
-<span class="linenos">11</span>
-<span class="linenos">12</span><span class="c1"># Get the async database</span>
-<span class="linenos">13</span><span class="n">async_database</span> <span class="o">=</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
-<span class="linenos">14</span>
-<span class="linenos">15</span><span class="c1"># Get the user db func</span>
-<span class="linenos">16</span><span class="n">get_user_db</span> <span class="o">=</span> <span class="n">create_user_db_func</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">async_database</span><span class="p">)</span>
-<span class="linenos">17</span>
-<span class="linenos">18</span><span class="c1"># Create a user manager model</span>
-<span class="linenos">19</span><span class="n">UserManager</span> <span class="o">=</span> <span class="n">create_user_manager_model</span><span class="p">(</span><span class="s1">'msdss-secret'</span><span class="p">)</span>
-<span class="linenos">20</span>
-<span class="linenos">21</span><span class="c1"># Get the user manager func</span>
-<span class="linenos">22</span><span class="n">get_user_manager</span> <span class="o">=</span> <span class="n">create_user_manager_func</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">databases</span>
+
+<span class="kn">from</span> <span class="nn">msdss_base_database</span> <span class="kn">import</span> <span class="n">Database</span>
+<span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Create a database object</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>
+
+<span class="c1"># Get the engine object from the database</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">_connection</span>
+
+<span class="c1"># Get the async database</span>
+<span class="n">async_database</span> <span class="o">=</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+
+<span class="c1"># Get the user db func</span>
+<span class="n">get_user_db</span> <span class="o">=</span> <span class="n">create_user_db_func</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">async_database</span><span class="p">)</span>
+
+<span class="c1"># Create a user manager model</span>
+<span class="n">UserManager</span> <span class="o">=</span> <span class="n">create_user_manager_model</span><span class="p">(</span><span class="s1">'msdss-secret'</span><span class="p">)</span>
+
+<span class="c1"># Get the user manager func</span>
+<span class="n">get_user_manager</span> <span class="o">=</span> <span class="n">create_user_manager_func</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -422,9 +425,9 @@
 <p class="rubric">Example</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="n">create_user_manager_model</span>
-<span class="linenos">2</span>
-<span class="linenos">3</span><span class="n">UserManager</span> <span class="o">=</span> <span class="n">create_user_manager_model</span><span class="p">(</span><span class="s1">'msdss-secret'</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="n">create_user_manager_model</span>
+
+<span class="n">UserManager</span> <span class="o">=</span> <span class="n">create_user_manager_model</span><span class="p">(</span><span class="s1">'msdss-secret'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

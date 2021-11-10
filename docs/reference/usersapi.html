@@ -53,11 +53,14 @@
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/thebelab-helper.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -282,7 +285,7 @@
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.core.</span></span><span class="sig-name descname"><span class="pre">UsersAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">secret='msdss-secret'</span></em>, <em class="sig-param"><span class="pre">driver='postgresql'</span></em>, <em class="sig-param"><span class="pre">user='msdss'</span></em>, <em class="sig-param"><span class="pre">password='msdss123'</span></em>, <em class="sig-param"><span class="pre">host='localhost'</span></em>, <em class="sig-param"><span class="pre">port='5432'</span></em>, <em class="sig-param"><span class="pre">database='msdss'</span></em>, <em class="sig-param"><span class="pre">users_api=None</span></em>, <em class="sig-param"><span class="pre">enable_auth_router=True</span></em>, <em class="sig-param"><span class="pre">enable_register_router=True</span></em>, <em class="sig-param"><span class="pre">enable_verify_router=True</span></em>, <em class="sig-param"><span class="pre">enable_reset_password_router=True</span></em>, <em class="sig-param"><span class="pre">enable_users_router=True</span></em>, <em class="sig-param"><span class="pre">enable_jwt_auth=True</span></em>, <em class="sig-param"><span class="pre">enable_cookie_auth=False</span></em>, <em class="sig-param"><span class="pre">setup_startup=True</span></em>, <em class="sig-param"><span class="pre">setup_shutdown=True</span></em>, <em class="sig-param"><span class="pre">auth_router_auth='jwt'</span></em>, <em class="sig-param"><span class="pre">auth_router_kwargs={}</span></em>, <em class="sig-param"><span class="pre">auth_router_include_kwargs={'prefix':</span> <span class="pre">'/auth/jwt'</span></em>, <em class="sig-param"><span class="pre">'tags':</span> <span class="pre">['auth']}</span></em>, <em class="sig-param"><span class="pre">auth_router_jwt_refresh=True</span></em>, <em class="sig-param"><span class="pre">auth_router_jwt_refresh_path='/refresh'</span></em>, <em class="sig-param"><span class="pre">register_router_kwargs={}</span></em>, <em class="sig-param"><span class="pre">register_router_include_kwargs={'prefix':</span> <span class="pre">'/auth'</span></em>, <em class="sig-param"><span class="pre">'tags':</span> <span class="pre">['auth']}</span></em>, <em class="sig-param"><span class="pre">verify_router_kwargs={}</span></em>, <em class="sig-param"><span class="pre">verify_router_include_kwargs={'prefix':</span> <span class="pre">'/auth'</span></em>, <em class="sig-param"><span class="pre">'tags':</span> <span class="pre">['auth']}</span></em>, <em class="sig-param"><span class="pre">reset_password_router_kwargs={}</span></em>, <em class="sig-param"><span class="pre">reset_password_router_include_kwargs={'prefix':</span> <span class="pre">'/auth'</span></em>, <em class="sig-param"><span class="pre">'tags':</span> <span class="pre">['auth']}</span></em>, <em class="sig-param"><span class="pre">users_router_kwargs={}</span></em>, <em class="sig-param"><span class="pre">users_router_include_kwargs={'prefix':</span> <span class="pre">'/users'</span></em>, <em class="sig-param"><span class="pre">'tags':</span> <span class="pre">['users']}</span></em>, <em class="sig-param"><span class="pre">reset_password_token_secret=None</span></em>, <em class="sig-param"><span class="pre">verification_token_secret=None</span></em>, <em class="sig-param"><span class="pre">cookie_secret=None</span></em>, <em class="sig-param"><span class="pre">cookie_kwargs={'lifetime_seconds':</span> <span class="pre">3600}</span></em>, <em class="sig-param"><span class="pre">jwt_secret=None</span></em>, <em class="sig-param"><span class="pre">jwt_kwargs={'lifetime_seconds':</span> <span class="pre">3600</span></em>, <em class="sig-param"><span class="pre">'tokenUrl':</span> <span class="pre">'auth/jwt/login'}</span></em>, <em class="sig-param"><span class="pre">Base=&lt;class</span> <span class="pre">'sqlalchemy.orm.decl_api.Base'&gt;</span></em>, <em class="sig-param"><span class="pre">User=&lt;class</span> <span class="pre">'msdss_users_api.models.User'&gt;</span></em>, <em class="sig-param"><span class="pre">UserCreate=&lt;class</span> <span class="pre">'msdss_users_api.models.UserCreate'&gt;</span></em>, <em class="sig-param"><span class="pre">UserUpdate=&lt;class</span> <span class="pre">'msdss_users_api.models.UserUpdate'&gt;</span></em>, <em class="sig-param"><span class="pre">UserDB=&lt;class</span> <span class="pre">'msdss_users_api.models.UserDB'&gt;</span></em>, <em class="sig-param"><span class="pre">UserTable=&lt;class</span> <span class="pre">'msdss_users_api.models.UserTable'&gt;</span></em>, <em class="sig-param"><span class="pre">UserManager=None</span></em>, <em class="sig-param"><span class="pre">database_engine=None</span></em>, <em class="sig-param"><span class="pre">async_database=None</span></em>, <em class="sig-param"><span class="pre">get_user_db=None</span></em>, <em class="sig-param"><span class="pre">get_user_manager=None</span></em>, <em class="sig-param"><span class="pre">cookie_auth=None</span></em>, <em class="sig-param"><span class="pre">jwt_auth=None</span></em>, <em class="sig-param"><span class="pre">load_env=True</span></em>, <em class="sig-param"><span class="pre">env_file='./.env'</span></em>, <em class="sig-param"><span class="pre">key_path=None</span></em>, <em class="sig-param"><span class="pre">secret_key='MSDSS_USERS_SECRET'</span></em>, <em class="sig-param"><span class="pre">jwt_secret_key='MSDSS_USERS_JWT_SECRET'</span></em>, <em class="sig-param"><span class="pre">cookie_secret_key='MSDSS_USERS_COOKIE_SECRET'</span></em>, <em class="sig-param"><span class="pre">reset_password_token_secret_key='MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET'</span></em>, <em class="sig-param"><span class="pre">verification_token_secret_key='MSDSS_USERS_VERIFICATION_TOKEN_SECRET'</span></em>, <em class="sig-param"><span class="pre">driver_key='MSDSS_DATABASE_DRIVER'</span></em>, <em class="sig-param"><span class="pre">user_key='MSDSS_DATABASE_USER'</span></em>, <em class="sig-param"><span class="pre">password_key='MSDSS_DATABASE_PASSWORD'</span></em>, <em class="sig-param"><span class="pre">host_key='MSDSS_DATABASE_HOST'</span></em>, <em class="sig-param"><span class="pre">port_key='MSDSS_DATABASE_PORT'</span></em>, <em class="sig-param"><span class="pre">database_key='MSDSS_DATABASE_NAME'</span></em>, <em class="sig-param"><span class="pre">log_warnings=True</span></em>, <em class="sig-param"><span class="pre">*args</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/core.html#UsersAPI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.core.UsersAPI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Users API class for managing users.</p>
 <ul class="simple">
-<li><p>Extends the <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.0.3)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a> class</p></li>
+<li><p>Extends the <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.0.4)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a> class</p></li>
 <li><p>Users will be stored in a table named <code class="docutils literal notranslate"><span class="pre">user</span></code></p></li>
 </ul>
 <dl class="field-list simple">
@@ -397,21 +400,21 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <p class="rubric">Example</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">msdss_users_api</span> <span class="kn">import</span> <span class="n">UsersAPI</span>
-<span class="linenos"> 2</span><span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">(</span>
-<span class="linenos"> 3</span>    <span class="n">secret</span><span class="o">=</span><span class="s1">'secret-phrase'</span><span class="p">,</span>
-<span class="linenos"> 4</span>    <span class="n">jwt_secret</span><span class="o">=</span><span class="s1">'secret-phrase-02'</span><span class="p">,</span>
-<span class="linenos"> 5</span>    <span class="n">driver</span><span class="o">=</span><span class="s1">'postgresql'</span><span class="p">,</span>
-<span class="linenos"> 6</span>    <span class="n">user</span><span class="o">=</span><span class="s1">'msdss'</span><span class="p">,</span>
-<span class="linenos"> 7</span>    <span class="n">password</span><span class="o">=</span><span class="s1">'msdss123'</span><span class="p">,</span>
-<span class="linenos"> 8</span>    <span class="n">host</span><span class="o">=</span><span class="s1">'localhost'</span><span class="p">,</span>
-<span class="linenos"> 9</span>    <span class="n">port</span><span class="o">=</span><span class="s1">'5432'</span><span class="p">,</span>
-<span class="linenos">10</span>    <span class="n">database</span><span class="o">=</span><span class="s1">'msdss'</span>
-<span class="linenos">11</span><span class="p">)</span>
-<span class="linenos">12</span>
-<span class="linenos">13</span><span class="c1"># Run the app with app.start()</span>
-<span class="linenos">14</span><span class="c1"># Try API at http://localhost:8000/docs</span>
-<span class="linenos">15</span><span class="c1"># app.start()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api</span> <span class="kn">import</span> <span class="n">UsersAPI</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">(</span>
+    <span class="n">secret</span><span class="o">=</span><span class="s1">'secret-phrase'</span><span class="p">,</span>
+    <span class="n">jwt_secret</span><span class="o">=</span><span class="s1">'secret-phrase-02'</span><span class="p">,</span>
+    <span class="n">driver</span><span class="o">=</span><span class="s1">'postgresql'</span><span class="p">,</span>
+    <span class="n">user</span><span class="o">=</span><span class="s1">'msdss'</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s1">'msdss123'</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="s1">'localhost'</span><span class="p">,</span>
+    <span class="n">port</span><span class="o">=</span><span class="s1">'5432'</span><span class="p">,</span>
+    <span class="n">database</span><span class="o">=</span><span class="s1">'msdss'</span>
+<span class="p">)</span>
+
+<span class="c1"># Run the app with app.start()</span>
+<span class="c1"># Try API at http://localhost:8000/docs</span>
+<span class="c1"># app.start()</span>
 </pre></div>
 </div>
 </div>
@@ -445,32 +448,32 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <p class="rubric">Example</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span>
-<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">msdss_users_api</span> <span class="kn">import</span> <span class="n">UsersAPI</span>
-<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">msdss_users_api.models</span> <span class="kn">import</span> <span class="n">User</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">(</span>
-<span class="linenos"> 6</span>    <span class="n">secret</span><span class="o">=</span><span class="s1">'secret-phrase'</span><span class="p">,</span>
-<span class="linenos"> 7</span>    <span class="n">jwt_secret</span><span class="o">=</span><span class="s1">'secret-phrase-02'</span><span class="p">,</span>
-<span class="linenos"> 8</span>    <span class="n">driver</span><span class="o">=</span><span class="s1">'postgresql'</span><span class="p">,</span>
-<span class="linenos"> 9</span>    <span class="n">user</span><span class="o">=</span><span class="s1">'msdss'</span><span class="p">,</span>
-<span class="linenos">10</span>    <span class="n">password</span><span class="o">=</span><span class="s1">'msdss123'</span><span class="p">,</span>
-<span class="linenos">11</span>    <span class="n">host</span><span class="o">=</span><span class="s1">'localhost'</span><span class="p">,</span>
-<span class="linenos">12</span>    <span class="n">port</span><span class="o">=</span><span class="s1">'5432'</span><span class="p">,</span>
-<span class="linenos">13</span>    <span class="n">database</span><span class="o">=</span><span class="s1">'msdss'</span>
-<span class="linenos">14</span><span class="p">)</span>
-<span class="linenos">15</span>
-<span class="linenos">16</span><span class="c1"># Get a function dependency for the current active user</span>
-<span class="linenos">17</span><span class="n">current_active_user</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="linenos">18</span>
-<span class="linenos">19</span><span class="c1"># Add a protected route</span>
-<span class="linenos">20</span><span class="nd">@app</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'/protected-route'</span><span class="p">)</span>
-<span class="linenos">21</span><span class="k">def</span> <span class="nf">protected_route</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">current_active_user</span><span class="p">)):</span>
-<span class="linenos">22</span>    <span class="k">return</span> <span class="sa">f</span><span class="s1">'Hello, </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s1">'</span>
-<span class="linenos">23</span>
-<span class="linenos">24</span><span class="c1"># Run the app with app.start()</span>
-<span class="linenos">25</span><span class="c1"># Try API at http://localhost:8000/docs</span>
-<span class="linenos">26</span><span class="c1"># app.start()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span>
+<span class="kn">from</span> <span class="nn">msdss_users_api</span> <span class="kn">import</span> <span class="n">UsersAPI</span>
+<span class="kn">from</span> <span class="nn">msdss_users_api.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">(</span>
+    <span class="n">secret</span><span class="o">=</span><span class="s1">'secret-phrase'</span><span class="p">,</span>
+    <span class="n">jwt_secret</span><span class="o">=</span><span class="s1">'secret-phrase-02'</span><span class="p">,</span>
+    <span class="n">driver</span><span class="o">=</span><span class="s1">'postgresql'</span><span class="p">,</span>
+    <span class="n">user</span><span class="o">=</span><span class="s1">'msdss'</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s1">'msdss123'</span><span class="p">,</span>
+    <span class="n">host</span><span class="o">=</span><span class="s1">'localhost'</span><span class="p">,</span>
+    <span class="n">port</span><span class="o">=</span><span class="s1">'5432'</span><span class="p">,</span>
+    <span class="n">database</span><span class="o">=</span><span class="s1">'msdss'</span>
+<span class="p">)</span>
+
+<span class="c1"># Get a function dependency for the current active user</span>
+<span class="n">current_active_user</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Add a protected route</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'/protected-route'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">protected_route</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">current_active_user</span><span class="p">)):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">'Hello, </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s1">'</span>
+
+<span class="c1"># Run the app with app.start()</span>
+<span class="c1"># Try API at http://localhost:8000/docs</span>
+<span class="c1"># app.start()</span>
 </pre></div>
 </div>
 </div>
