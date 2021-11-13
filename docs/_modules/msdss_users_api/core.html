@@ -46,17 +46,20 @@
   
   
   
-    <title>msdss_users_api.core &#8212; 0.0.6</title>
+    <title>msdss_users_api.core &#8212; 0.0.7</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/jupyter-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/thebelab.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/thebelab-helper.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -84,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.0.6"
+        <a href="../../index.html" title="0.0.7"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.0.6 logo">
+                   alt="0.0.7 logo">
           
         </a>
       </div>
@@ -171,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.6</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.7</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -184,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.0.6" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.0.7" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.0.6">msdss-users-api</a>
+       title="0.0.7">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -420,7 +423,7 @@
 <span class="sd">    log_warnings : bool</span>
 <span class="sd">        Whether to log warnings or not.</span>
 <span class="sd">    *args, **kwargs</span>
-<span class="sd">        Additional arguments passed to :class:`fastapi_users:fastapi_users.FastAPIUsers`.</span>
+<span class="sd">        Additional arguments passed to :class:`msdss_base_api:msdss_base_api.core.API`.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -541,7 +544,7 @@
         <span class="n">database_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_NAME'</span><span class="p">,</span>
         <span class="n">log_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="c1"># (UserAPI_env) Load env vars</span>
         <span class="n">has_env</span> <span class="o">=</span> <span class="n">env_exists</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">env_file</span><span class="p">,</span> <span class="n">key_path</span><span class="o">=</span><span class="n">key_path</span><span class="p">)</span>
@@ -597,8 +600,7 @@
             <span class="n">User</span><span class="p">,</span>
             <span class="n">UserCreate</span><span class="p">,</span>
             <span class="n">UserUpdate</span><span class="p">,</span>
-            <span class="n">UserDB</span><span class="p">,</span>
-            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+            <span class="n">UserDB</span>
         <span class="p">)</span> <span class="k">if</span> <span class="n">users_api</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">users_api</span>
 
         <span class="c1"># (UsersAPI_router_auth) Add auth router</span>

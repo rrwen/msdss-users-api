@@ -152,7 +152,7 @@ class UsersAPI(API):
     log_warnings : bool
         Whether to log warnings or not.
     *args, **kwargs
-        Additional arguments passed to :class:`fastapi_users:fastapi_users.FastAPIUsers`.
+        Additional arguments passed to :class:`msdss_base_api:msdss_base_api.core.API`.
 
     Attributes
     ----------
@@ -273,7 +273,7 @@ class UsersAPI(API):
         database_key='MSDSS_DATABASE_NAME',
         log_warnings=True,
         *args, **kwargs):
-        super().__init__()
+        super().__init__(*args, **kwargs)
 
         # (UserAPI_env) Load env vars
         has_env = env_exists(file_path=env_file, key_path=key_path)
@@ -329,8 +329,7 @@ class UsersAPI(API):
             User,
             UserCreate,
             UserUpdate,
-            UserDB,
-            *args, **kwargs
+            UserDB
         ) if users_api is None else users_api
 
         # (UsersAPI_router_auth) Add auth router
