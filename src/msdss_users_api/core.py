@@ -375,7 +375,7 @@ class UsersAPI(API):
         if enable_reset_password_router:
             self.add_router(users_api.get_reset_password_router(**reset_password_router_kwargs), **reset_password_router_include_kwargs)
 
-        # (UsersAPI_router_reset) Add reset password router
+        # (UsersAPI_router_users) Add users router
         if enable_users_router:
             self.add_router(users_api.get_users_router(**users_router_kwargs), **users_router_include_kwargs)
 

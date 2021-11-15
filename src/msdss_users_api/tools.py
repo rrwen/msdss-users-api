@@ -143,8 +143,8 @@ def create_user_manager_model(
 
     Return
     ------
-    func
-        A function yielding a configured :class:`msdss_users_api.models.UserManager`.
+    :class:`msdss_users_api.models.UserManager`
+       A configured :class:`msdss_users_api.models.UserManager`.
 
     Author
     ------
@@ -170,4 +170,3 @@ def create_user_manager_model(
         verification_token_secret=verification_token_secret,
         __base__=base_user_manager_model, *args, **kwargs)
     return out
-    
