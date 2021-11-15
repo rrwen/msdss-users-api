@@ -60,7 +60,7 @@ def create_user_db_func(engine, async_database, sqlalchemy_base=Base, user_table
     table = user_table_model.__table__
 
     # (create_user_db_func_return) Return the get_user_db function
-    def out():
+    async def out():
         yield SQLAlchemyUserDatabase(user_db_model, async_database, table)
     return out
 
@@ -113,7 +113,7 @@ def create_user_manager_func(get_user_db, user_manager_model=UserManager):
         # Get the user manager func
         get_user_manager = create_user_manager_func(get_user_db, UserManager)
     """
-    def out(user_db=Depends(get_user_db)):
+    async def out(user_db=Depends(get_user_db)):
         yield user_manager_model(user_db)
     return out
 
