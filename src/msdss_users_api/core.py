@@ -57,16 +57,18 @@ class UsersAPI(API):
         Whether to setup a startup event to connect databases.
     setup_shutdown : bool
         Whether to setup a shutdown event to close databases.
-    auth_router_auth: 'jwt' or 'cookie'
-        FastAPI Users auth method for the auth router. See `Auth router <https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/>`_.
-    auth_router_kwargs : dict
-        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_auth_router`. See `Auth router <https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/>`_.
-    auth_router_include_kwargs : dict
-        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users auth router.
+    auth_router_jwt_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_auth_router` using jwt auth. See `Auth router <https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/>`_.
+    auth_router_jwt_include_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users auth router using jwt auth.
     auth_router_jwt_refresh : bool
         Whether to setup a token refresh route at ``auth_router_jwt_refresh_path``. This is setup according to the FastAPI Users `JWT authentication guide <https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/>`_.
     auth_router_jwt_refresh_path : str
         Path to setup refresh token if ``auth_router_jwt_refresh`` is ``True``.
+    auth_router_cookie_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_auth_router` using cookie auth. See `Auth router <https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/>`_.
+    auth_router_cookie_include_kwargs : dict
+        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users auth router using cookie auth.
     register_router_kwargs : dict
         Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_register_router`. See `Register router <https://fastapi-users.github.io/fastapi-users/configuration/routers/register/>`_.
     register_router_include_kwargs : dict
@@ -204,17 +206,21 @@ class UsersAPI(API):
         enable_reset_password_router=True,
         enable_users_router=True,
         enable_jwt_auth=True,
-        enable_cookie_auth=False,
+        enable_cookie_auth=True,
         setup_startup=True,
         setup_shutdown=True,
-        auth_router_auth='jwt',
-        auth_router_kwargs={},
-        auth_router_include_kwargs={
+        auth_router_jwt_kwargs={},
+        auth_router_jwt_include_kwargs={
             'prefix': '/auth/jwt',
             'tags': ['auth']
         },
         auth_router_jwt_refresh=True,
         auth_router_jwt_refresh_path='/refresh',
+        auth_router_cookie_kwargs={},
+        auth_router_cookie_include_kwargs={
+            'prefix': '/auth',
+            'tags': ['auth']
+        },
         register_router_kwargs={},
         register_router_include_kwargs={
             'prefix': '/auth',
@@ -308,13 +314,11 @@ class UsersAPI(API):
         cookie_auth = CookieAuthentication(secret=cookie_secret, **cookie_kwargs) if cookie_secret and cookie_auth is None else cookie_auth
         
         # (UserAPI_auth_combine) Combine cookie and jwt auths if needed
-        jwt_auth = [jwt_auth] if not isinstance(jwt_auth, list) else jwt_auth
-        cookie_auth = [cookie_auth] if not isinstance(cookie_auth, list) else cookie_auth
         auth = []
-        if enable_jwt_auth:
-            auth = auth + jwt_auth
         if enable_cookie_auth:
-            auth = auth + cookie_auth
+            auth.append(cookie_auth)
+        if enable_jwt_auth:
+            auth.append(jwt_auth)
         auth = [a for a in auth if a is not None]
         
         # (UserAPI_func) Setup required functions
@@ -335,23 +339,29 @@ class UsersAPI(API):
         # (UsersAPI_router_auth) Add auth router
         if enable_auth_router:
 
-            # (UsersAPI_router_auth_method) Set method of auth for route
-            if auth_router_auth == 'jwt':
-                auth_router_auth = jwt_auth[0]
-            elif auth_router_auth == 'cookie':
-                auth_router_auth = cookie_auth[0]
+            # (UsersAPI_router_auth_jwt) Add jwt auth route
+            if enable_jwt_auth:
 
-            # (UsersAPI_router_auth_create) Create auth route
-            auth_router = users_api.get_auth_router(auth_router_auth, **auth_router_kwargs)
-            
-            # (UsersAPI_router_auth_refresh) Create auth refresh route
-            if auth_router_jwt_refresh:
-                @auth_router.post(auth_router_jwt_refresh_path)
-                async def refresh_jwt(response: Response, user=Depends(users_api.current_user(active=True))):
-                    return await auth_router_auth.get_login_response(user, response, UserManager)
+                # (UsersAPI_router_auth_jwt_method) Set method of auth for route
+                auth_router = users_api.get_auth_router(jwt_auth, **auth_router_jwt_kwargs)
+                
+                # (UsersAPI_router_auth_jwt_refresh) Create jwt auth refresh route
+                if auth_router_jwt_refresh:
+                    @auth_router.post(auth_router_jwt_refresh_path)
+                    async def refresh_jwt(response: Response, user=Depends(users_api.current_user(active=True))):
+                        return await jwt_auth.get_login_response(user, response, UserManager)
 
-            # (UsersAPI_router_auth_add) Add auth route
-            self.add_router(auth_router, **auth_router_include_kwargs)
+                # (UsersAPI_router_auth_jwt_add) Add jwt auth route
+                self.add_router(auth_router, **auth_router_jwt_include_kwargs)
+
+            # (UsersAPI_router_auth_cookie) Add cookie auth route
+            if enable_cookie_auth:
+
+                    # (UsersAPI_router_auth_cookie_method) Set method of auth for route
+                auth_router = users_api.get_auth_router(cookie_auth, **auth_router_cookie_kwargs)
+
+                # (UsersAPI_router_auth_cookie_add) Add auth route
+                self.add_router(auth_router, **auth_router_cookie_include_kwargs)
 
         # (UsersAPI_router_register) Add register router
         if enable_register_router:
