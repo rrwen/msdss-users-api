@@ -73,6 +73,8 @@ class UsersAPI(API):
         Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_register_router`. See `Register router <https://fastapi-users.github.io/fastapi-users/configuration/routers/register/>`_.
     register_router_include_kwargs : dict
         Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users register router.
+    register_router_superuser : bool
+        Whether to limit registration control to superusesr only. If ``dependencies`` are set in parameter ``register_router_include_kwargs``, then a superuser dependency will be added to the list if ``True``.
     verify_router_kwargs : dict
         Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_verify_router`. See `Verify router <https://fastapi-users.github.io/fastapi-users/configuration/routers/verify/>`_.
     verify_router_include_kwarg : dict
@@ -226,6 +228,7 @@ class UsersAPI(API):
             'prefix': '/auth',
             'tags': ['auth']
         },
+        register_router_superuser=True,
         verify_router_kwargs={},
         verify_router_include_kwargs={
             'prefix': '/auth',
@@ -365,6 +368,9 @@ class UsersAPI(API):
 
         # (UsersAPI_router_register) Add register router
         if enable_register_router:
+            if register_router_superuser:
+                register_router_include_kwargs['dependencies'] = register_router_include_kwargs['dependencies'] if 'dependencies' in register_router_include_kwargs else []
+                register_router_include_kwargs['dependencies'] = register_router_include_kwargs.get['dependencies'].append(Depends(users_api.current_user(superuser=True)))
             self.add_router(users_api.get_register_router(**register_router_kwargs), **register_router_include_kwargs)
 
         # (UsersAPI_router_verify) Add verify router
