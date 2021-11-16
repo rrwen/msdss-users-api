@@ -1,9 +1,11 @@
+import contextlib
 import pydantic
 
 from fastapi import Depends
 from fastapi_users.db import SQLAlchemyUserDatabase
+from fastapi_users.manager import UserAlreadyExists
 
-from .models import Base, UserDB, UserTable, UserManager
+from .models import Base, UserCreate, UserDB, UserTable, UserManager
 
 def create_user_db_func(engine, async_database, sqlalchemy_base=Base, user_table_model=UserTable, user_db_model=UserDB):
     """

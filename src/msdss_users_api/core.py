@@ -74,7 +74,7 @@ class UsersAPI(API):
     register_router_include_kwargs : dict
         Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users register router.
     register_router_superuser : bool
-        Whether to limit registration control to superusesr only. If ``dependencies`` are set in parameter ``register_router_include_kwargs``, then a superuser dependency will be added to the list if ``True``.
+        Whether to limit registration control to superusers only. If ``dependencies`` are set in parameter ``register_router_include_kwargs``, then a superuser dependency will be added to the list if ``True``.
     verify_router_kwargs : dict
         Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_verify_router`. See `Verify router <https://fastapi-users.github.io/fastapi-users/configuration/routers/verify/>`_.
     verify_router_include_kwarg : dict
@@ -162,10 +162,33 @@ class UsersAPI(API):
     ----------
     users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers`
         Configured FastAPI Users object. See `FastAPIUsers object <https://fastapi-users.github.io/fastapi-users/configuration/routers/>`_.
-    _database_engine : :func:`sqlalchemy:sqlalchemy.create_engine`
-        Engine from parameter ``database_engine``.
-    _async_database : :class:`databases:databases.Database`
-        Async database from parameter ``async_database``.
+    _users_databases : dict
+        Dictionary of user database related objects:
+
+        * ``engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): Engine from parameter ``database_engine``.
+        * ``asynchronous`` (:class:`databases:databases.Database`): Async database from parameter ``async_database``.
+    
+    _users_functions : dict(func)
+        Dictionary of user related functions from auto-config:
+
+        * ``get_user_db`` (func): get_user_db function auto-configured or from parameter ``get_user_db``. See :func:`msdss_users_api.tools.create_user_db_func`.
+        * ``get_user_manager`` (func): get_user_manager function auto-configured or from parameter ``get_user_manager``. See :func`msdss_users_api.tools.create_user_manager_func`.
+    
+    _users_events : dict(func)
+        Dictionary of event functions registered from auto-config:
+
+        * ``startup``: startup function registered if ``setup_startup`` is ``True``
+        * ``shutdown``: shutdown function registered if ``setup_shutdown`` is ``True``
+    
+    _users_models : dict
+        Dictionary of user models for the users API:
+
+        * User (:class:`msdss_users_api.models.User`): see parameter ``User``.
+        * UserCreate (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``.
+        * UserUpdate (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``.
+        * UserDB (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``.
+        * UserTable (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``.
+        * UserManager (:class:`msdss_users_api.models.UserManager`): see parameter ``UserManager``.
 
     Author
     ------
@@ -346,61 +369,82 @@ class UsersAPI(API):
             if enable_jwt_auth:
 
                 # (UsersAPI_router_auth_jwt_method) Set method of auth for route
-                auth_router = users_api.get_auth_router(jwt_auth, **auth_router_jwt_kwargs)
+                auth_jwt_router = users_api.get_auth_router(jwt_auth, **auth_router_jwt_kwargs)
                 
                 # (UsersAPI_router_auth_jwt_refresh) Create jwt auth refresh route
                 if auth_router_jwt_refresh:
-                    @auth_router.post(auth_router_jwt_refresh_path)
+                    @auth_jwt_router.post(auth_router_jwt_refresh_path)
                     async def refresh_jwt(response: Response, user=Depends(users_api.current_user(active=True))):
                         return await jwt_auth.get_login_response(user, response, UserManager)
 
                 # (UsersAPI_router_auth_jwt_add) Add jwt auth route
-                self.add_router(auth_router, **auth_router_jwt_include_kwargs)
+                self.add_router(auth_jwt_router, **auth_router_jwt_include_kwargs)
 
             # (UsersAPI_router_auth_cookie) Add cookie auth route
             if enable_cookie_auth:
 
                     # (UsersAPI_router_auth_cookie_method) Set method of auth for route
-                auth_router = users_api.get_auth_router(cookie_auth, **auth_router_cookie_kwargs)
+                auth_cookie_router = users_api.get_auth_router(cookie_auth, **auth_router_cookie_kwargs)
 
                 # (UsersAPI_router_auth_cookie_add) Add auth route
-                self.add_router(auth_router, **auth_router_cookie_include_kwargs)
+                self.add_router(auth_cookie_router, **auth_router_cookie_include_kwargs)
 
         # (UsersAPI_router_register) Add register router
         if enable_register_router:
             if register_router_superuser:
                 register_router_include_kwargs['dependencies'] = register_router_include_kwargs['dependencies'] if 'dependencies' in register_router_include_kwargs else []
-                register_router_include_kwargs['dependencies'] = register_router_include_kwargs.get['dependencies'].append(Depends(users_api.current_user(superuser=True)))
-            self.add_router(users_api.get_register_router(**register_router_kwargs), **register_router_include_kwargs)
+                register_router_include_kwargs['dependencies'].append(Depends(users_api.current_user(superuser=True)))
+            register_router = users_api.get_register_router(**register_router_kwargs)
+            self.add_router(register_router, **register_router_include_kwargs)
 
         # (UsersAPI_router_verify) Add verify router
         if enable_verify_router:
-            self.add_router(users_api.get_verify_router(**verify_router_kwargs), **verify_router_include_kwargs)
+            verify_router = users_api.get_verify_router(**verify_router_kwargs)
+            self.add_router(verify_router, **verify_router_include_kwargs)
         
         # (UsersAPI_router_reset) Add reset password router
         if enable_reset_password_router:
-            self.add_router(users_api.get_reset_password_router(**reset_password_router_kwargs), **reset_password_router_include_kwargs)
+            reset_password_router = users_api.get_reset_password_router(**reset_password_router_kwargs)
+            self.add_router(reset_password_router, **reset_password_router_include_kwargs)
 
         # (UsersAPI_router_users) Add users router
         if enable_users_router:
-            self.add_router(users_api.get_users_router(**users_router_kwargs), **users_router_include_kwargs)
+            users_router = users_api.get_users_router(**users_router_kwargs)
+            self.add_router(users_router, **users_router_include_kwargs)
+
+        # (UserAPI_attr) Add attributes
+        self.users_api = users_api
+        self._users_databases = dict(
+            engine = database_engine,
+            asynchronous = async_database
+        )
+        self._users_functions = dict(
+            get_user_db = get_user_db,
+            get_user_manager = get_user_manager
+        )
+        self._users_models = dict(
+            User = User,
+            UserCreate = UserCreate,
+            UserUpdate = UserUpdate,
+            UserDB = UserDB,
+            UserTable = UserTable,
+            UserManager = UserManager
+        )
+        self._users_events = {}
 
         # (UserAPI_events_startup) Setup app startup
         if setup_startup:
             @self.on('startup')
-            async def before_startup():
-                await async_database.connect()
+            async def startup():
+                await self._users_databases.asynchronous.connect()
+            self._users_events['startup'] = startup
 
         # (UserAPI_events_shutdown) Setup app shutdown
         if setup_shutdown:
             @self.on('shutdown')
-            async def during_shutdown():
-                await async_database.disconnect()
-
-        # (UserAPI_attr) Add attributes
-        self.users_api = users_api
-        self._database_engine = database_engine
-        self._async_database = async_database
+            async def shutdown():
+                await self._users_databases.asynchronous.disconnect()
+            self._users_events['shutdown'] = shutdown
 
     def get_current_user(self, *args, **kwargs):
         """
