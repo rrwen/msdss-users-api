@@ -103,4 +103,4 @@ def run():
 
     # (run_command) Run commands
     if command == 'register':
-        create_user(**kwargs)
+        asyncio.run(create_user(**kwargs))
