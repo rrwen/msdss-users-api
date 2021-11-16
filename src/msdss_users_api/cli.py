@@ -34,26 +34,31 @@ def _get_parser():
     """
 
     # (_get_parser_parsers) Create main parser and sub parsers
-    parser = argparse.ArgumentParser(description='Manages encrypted .env files')
+    parser = argparse.ArgumentParser(description='Manages users with a database')
     subparsers = parser.add_subparsers(title='commands', dest='command')
-
-    # (_get_parser_init) Add init command
-    init_parser = subparsers.add_parser('init', help='create env file and key')
     
-    # (_get_parser_set) Add set command
-    set_parser = subparsers.add_parser('set', help='set an env var')
-    set_parser.add_argument('name', type=str, help='env var name to set')
-    set_parser.add_argument('value', type=str, help='env var value to set')
+    # (_get_parser_register) Add register command
+    register_parser = subparsers.add_parser('register', help='register a user')
+    register_parser.add_argument('email', type=str, help='email for user')
+    register_parser.add_argument('password', type=str, help='password for user')
+    register_parser.add_argument('superuser', type=str, default=False, help='whether user is a superuser or not')
 
-    # (_get_parser_del) Add del command
-    del_parser = subparsers.add_parser('del', help='delete an env var')
-    del_parser.add_argument('name', type=str, help='env var name to delete')
+    # (_get_parser_get) Add get command
+    get_parser = subparsers.add_parser('get', help='get user attributes')
+    get_parser.add_argument('email', type=str, help='email for user')
 
-    # (_get_parser_clear) Add clear command
-    clear_parser = subparsers.add_parser('clear', help='clear env file and key')
+    # (_get_parser_delete) Add delete command
+    delete_parser = subparsers.add_parser('delete', help='delete a user')
+    delete_parser.add_argument('email', type=str, help='email of user to delete')
+
+    # (_get_parser_update) Add update command
+    update_parser = subparsers.add_parser('update', help='update a user\'s attribute')
+    update_parser.add_argument('email', type=str, help='email of user')
+    update_parser.add_argument('attribute', type=str, help='attribute of user')
+    update_parser.add_argument('value', type=str, help='value to update attribute with')
 
     # (_get_parser_file_key) Add file and key arguments to all commands
-    for p in [parser, init_parser, set_parser, del_parser, clear_parser]:
+    for p in [parser, register_parser, delete_parser, update_parser, get_parser]:
         p.add_argument('--file_path', type=str, default='./.env', help='path of .env file')
         p.add_argument('--key_path', type=str, default=None, help='path of key file')
     
@@ -62,7 +67,7 @@ def _get_parser():
     return out
 
 
-async def create_user(email, password, is_superuser=False, users_api_kwargs={}, *args, **kwargs):
+async def create_user(email, password, superuser=False, users_api_kwargs={}, *args, **kwargs):
     
     # (create_user_func) Get db and manager funcs
     app = UsersAPI(**users_api_kwargs)
@@ -81,7 +86,7 @@ async def create_user(email, password, is_superuser=False, users_api_kwargs={}, 
                     UserCreate(
                         email=email,
                         password=password,
-                        is_superuser=is_superuser,
+                        is_superuser=superuser,
                         *args, **kwargs
                     )
                 )
@@ -95,3 +100,7 @@ def run():
     parser = _get_parser()
     kwargs = vars(parser.parse_args())
     command = kwargs.pop('command')
+
+    # (run_command) Run commands
+    if command == 'register':
+        create_user(**kwargs)
