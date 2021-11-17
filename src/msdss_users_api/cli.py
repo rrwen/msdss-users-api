@@ -5,7 +5,7 @@ import contextlib
 from fastapi_users.manager import UserAlreadyExists
 
 from .core import UsersAPI
-from .models import UserCreate
+from .models import User, UserCreate
 
 def _get_parser():
     """
@@ -82,17 +82,43 @@ async def create_user(email, password, superuser=False, users_api_kwargs={}, *ar
     try:
         async with get_user_db_context() as user_db:
             async with get_user_manager_context(user_db) as user_manager:
-                user = await user_manager.create(
+                await app._users_databases['asynchronous'].connect()
+                await user_manager.create(
                     UserCreate(
                         email=email,
                         password=password,
                         is_superuser=superuser,
-                        *args, **kwargs
-                    )
-                )
-                print(f"User created {user}")
+                        *args, **kwargs))
+                print(f'User created {email}')
     except UserAlreadyExists:
-        print(f"User {email} already exists")
+        print(f'User {email} already exists')
+    finally:
+        await app._users_databases['asynchronous'].disconnect()
+
+async def delete_user(email, users_api_kwargs={}, *args, **kwargs):
+    
+    # (create_user_func) Get db and manager funcs
+    app = UsersAPI(**users_api_kwargs)
+    get_user_db = app._users_functions['get_user_db']
+    get_user_manager = app._users_functions['get_user_manager']
+    db = app.users_database
+
+    # (create_user_context) Get db and manager context functions
+    get_user_db_context = contextlib.asynccontextmanager(get_user_db)
+    get_user_manager_context = contextlib.asynccontextmanager(get_user_manager)
+
+    # (create_user_run) Run create user function
+    try:
+        async with get_user_db_context() as user_db:
+            async with get_user_manager_context(user_db) as user_manager:
+                await app._users_databases['asynchronous'].connect()
+                id = db.select('user', where=[('email', '=', email)]).iloc[0].id
+                await user_manager.delete(User(id=id, email=email))
+                print(f'User {email} deleted')
+    except UserAlreadyExists:
+        print(f'User {email} already exists')
+    finally:
+        await app._users_databases['asynchronous'].disconnect()
 
 def run():
 
@@ -104,3 +130,5 @@ def run():
     # (run_command) Run commands
     if command == 'register':
         asyncio.run(create_user(**kwargs))
+    elif command == 'delete':
+        asyncio.run(delete_user(**kwargs))

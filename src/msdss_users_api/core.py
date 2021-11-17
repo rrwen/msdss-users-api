@@ -332,7 +332,8 @@ class UsersAPI(API):
         cookie_secret = secret if cookie_secret is None else cookie_secret
 
         # (UserAPI_db) Setup database connections
-        database_engine = Database(driver=driver, user=user, password=password, host=host, port=port, database=database)._connection if database_engine is None else database_engine
+        db = Database(driver=driver, user=user, password=password, host=host, port=port, database=database)
+        database_engine = db._connection if database_engine is None else database_engine
         async_database = databases.Database(str(database_engine.url)) if async_database is None else async_database
 
         # (UserAPI_auth) Setup auth for users
@@ -414,6 +415,7 @@ class UsersAPI(API):
 
         # (UserAPI_attr) Add attributes
         self.users_api = users_api
+        self.users_database = db
         self._users_databases = dict(
             engine = database_engine,
             asynchronous = async_database
