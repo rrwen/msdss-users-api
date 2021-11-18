@@ -81,7 +81,7 @@ def create_user_db_context(
 
         from msdss_users_api.tools import *
         
-        get_user_db_context, get_user_db, async_database, engine = create_user_manager_context()
+        get_user_db_context, get_user_db, async_database, engine = create_user_db_context()
     """
 
     # (get_user_db_context_env) Load env vars
@@ -391,8 +391,8 @@ async def delete_user(email, create_user_db_context_kwargs={}, create_user_manag
 
         from msdss_users_api.tools import *
 
-        register_user('test@example.com', 'msdss123')
-        delete_user('test@example.com')
+        await register_user('test@example.com', 'msdss123')
+        await delete_user('test@example.com')
     """
 
     # (delete_user_context) Get db and manager context functions
@@ -443,10 +443,11 @@ async def get_user(email, show=False, include_hashed_password=False, create_user
 
     .. jupyter-execute::
 
-        from msdss_users_api.tools import *
+        from msdss_users_api.tools import register_user, get_user
 
-        register_user('test@example.com', 'msdss123')
-        user = get_user('test@example.com', show=True)
+        await register_user('test@example.com', 'msdss123')
+        user = await get_user('test@example.com', show=True)
+
     """
 
     # (get_user_context) Get db and manager context functions
@@ -512,7 +513,7 @@ async def register_user(
 
         from msdss_users_api.tools import *
         
-        register_user('test@example.com', 'msdss123')
+        await register_user('test@example.com', 'msdss123')
     """
     
     # (register_user_context) Get db and manager context functions
@@ -562,8 +563,8 @@ async def reset_user_password(email, password, create_user_db_context_kwargs={},
 
         from msdss_users_api.tools import *
 
-        register_user('test@example.com', 'msdss123')
-        reset_user_password('test@example.com', 'msdss321')
+        await register_user('test@example.com', 'msdss123')
+        await reset_user_password('test@example.com', 'msdss321')
     """
 
     # (reset_user_password_context) Get db and manager context functions
@@ -629,14 +630,14 @@ async def update_user(
         from msdss_users_api.tools import *
         
         # Create a test user
-        register_user('test@example.com', 'msdss123')
-        print('before_update:')
-        get_user('test@example.com`, show=True)
+        await register_user('test@example.com', 'msdss123')
+        print('\\nbefore_update:\\n')
+        user = await get_user('test@example.com', show=True)
         
         # Update the test user
-        update_user('test@example.com', is_verified=True)
-        print('after_update:')
-        get_user('test@example.com`, show=True)
+        await update_user('test@example.com', is_verified=True)
+        print('\\nafter_update:\\n')
+        user = await get_user('test@example.com', show=True)
     """
     
     # (register_user_context) Get db and manager context functions

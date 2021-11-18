@@ -7,6 +7,8 @@ Database connection variables and engine are handled by :class:`msdss_base_datab
 
 In order to create a ``FastAPIUsers`` object, this package follows the configuration instructions `here <https://fastapi-users.github.io/fastapi-users/configuration/overview/>`_, where user :any:`msdss_users_api.models`, `authentication objects <https://fastapi-users.github.io/fastapi-users/configuration/authentication/>`_, and database connections are passed as inputs.
 
+The command line uses methods from the `FastAPI UsersManager <https://github.com/fastapi-users/fastapi-users/blob/master/fastapi_users/manager.py>`_ to `programmatically manage users <https://fastapi-users.github.io/fastapi-users/cookbook/create-user-programmatically/>`_.
+
 .. digraph:: methods
 
    compound=true;

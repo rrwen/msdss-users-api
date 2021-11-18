@@ -344,6 +344,8 @@
 <span class="sd">        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_register_router`. See `Register router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/register/&gt;`_.</span>
 <span class="sd">    register_router_include_kwargs : dict</span>
 <span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users register router.</span>
+<span class="sd">    register_router_superuser : bool</span>
+<span class="sd">        Whether to limit registration control to superusers only. If ``dependencies`` are set in parameter ``register_router_include_kwargs``, then a superuser dependency will be added to the list if ``True``.</span>
 <span class="sd">    verify_router_kwargs : dict</span>
 <span class="sd">        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_verify_router`. See `Verify router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/verify/&gt;`_.</span>
 <span class="sd">    verify_router_include_kwarg : dict</span>
@@ -431,10 +433,33 @@
 <span class="sd">    ----------</span>
 <span class="sd">    users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers`</span>
 <span class="sd">        Configured FastAPI Users object. See `FastAPIUsers object &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/&gt;`_.</span>
-<span class="sd">    _database_engine : :func:`sqlalchemy:sqlalchemy.create_engine`</span>
-<span class="sd">        Engine from parameter ``database_engine``.</span>
-<span class="sd">    _async_database : :class:`databases:databases.Database`</span>
-<span class="sd">        Async database from parameter ``async_database``.</span>
+<span class="sd">    _users_databases : dict</span>
+<span class="sd">        Dictionary of user database related objects:</span>
+
+<span class="sd">        * ``engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): Engine from parameter ``database_engine``.</span>
+<span class="sd">        * ``asynchronous`` (:class:`databases:databases.Database`): Async database from parameter ``async_database``.</span>
+<span class="sd">    </span>
+<span class="sd">    _users_functions : dict(func)</span>
+<span class="sd">        Dictionary of user related functions from auto-config:</span>
+
+<span class="sd">        * ``get_user_db`` (func): get_user_db function auto-configured or from parameter ``get_user_db``. See :func:`msdss_users_api.tools.create_user_db_func`.</span>
+<span class="sd">        * ``get_user_manager`` (func): get_user_manager function auto-configured or from parameter ``get_user_manager``. See :func`msdss_users_api.tools.create_user_manager_func`.</span>
+<span class="sd">    </span>
+<span class="sd">    _users_events : dict(func)</span>
+<span class="sd">        Dictionary of event functions registered from auto-config:</span>
+
+<span class="sd">        * ``startup``: startup function registered if ``setup_startup`` is ``True``</span>
+<span class="sd">        * ``shutdown``: shutdown function registered if ``setup_shutdown`` is ``True``</span>
+<span class="sd">    </span>
+<span class="sd">    _users_models : dict</span>
+<span class="sd">        Dictionary of user models for the users API:</span>
+
+<span class="sd">        * User (:class:`msdss_users_api.models.User`): see parameter ``User``.</span>
+<span class="sd">        * UserCreate (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``.</span>
+<span class="sd">        * UserUpdate (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``.</span>
+<span class="sd">        * UserDB (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``.</span>
+<span class="sd">        * UserTable (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``.</span>
+<span class="sd">        * UserManager (:class:`msdss_users_api.models.UserManager`): see parameter ``UserManager``.</span>
 
 <span class="sd">    Author</span>
 <span class="sd">    ------</span>
@@ -497,6 +522,7 @@
             <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
             <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
         <span class="p">},</span>
+        <span class="n">register_router_superuser</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">verify_router_kwargs</span><span class="o">=</span><span class="p">{},</span>
         <span class="n">verify_router_include_kwargs</span><span class="o">=</span><span class="p">{</span>
             <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
@@ -577,7 +603,8 @@
         <span class="n">cookie_secret</span> <span class="o">=</span> <span class="n">secret</span> <span class="k">if</span> <span class="n">cookie_secret</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cookie_secret</span>
 
         <span class="c1"># (UserAPI_db) Setup database connections</span>
-        <span class="n">database_engine</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">)</span><span class="o">.</span><span class="n">_connection</span> <span class="k">if</span> <span class="n">database_engine</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">database_engine</span>
+        <span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">)</span>
+        <span class="n">database_engine</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">_connection</span> <span class="k">if</span> <span class="n">database_engine</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">database_engine</span>
         <span class="n">async_database</span> <span class="o">=</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">database_engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span> <span class="k">if</span> <span class="n">async_database</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">async_database</span>
 
         <span class="c1"># (UserAPI_auth) Setup auth for users</span>
@@ -614,58 +641,83 @@
             <span class="k">if</span> <span class="n">enable_jwt_auth</span><span class="p">:</span>
 
                 <span class="c1"># (UsersAPI_router_auth_jwt_method) Set method of auth for route</span>
-                <span class="n">auth_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_auth_router</span><span class="p">(</span><span class="n">jwt_auth</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_jwt_kwargs</span><span class="p">)</span>
+                <span class="n">auth_jwt_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_auth_router</span><span class="p">(</span><span class="n">jwt_auth</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_jwt_kwargs</span><span class="p">)</span>
                 
                 <span class="c1"># (UsersAPI_router_auth_jwt_refresh) Create jwt auth refresh route</span>
                 <span class="k">if</span> <span class="n">auth_router_jwt_refresh</span><span class="p">:</span>
-                    <span class="nd">@auth_router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">auth_router_jwt_refresh_path</span><span class="p">)</span>
+                    <span class="nd">@auth_jwt_router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">auth_router_jwt_refresh_path</span><span class="p">)</span>
                     <span class="k">async</span> <span class="k">def</span> <span class="nf">refresh_jwt</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">))):</span>
                         <span class="k">return</span> <span class="k">await</span> <span class="n">jwt_auth</span><span class="o">.</span><span class="n">get_login_response</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
 
                 <span class="c1"># (UsersAPI_router_auth_jwt_add) Add jwt auth route</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">auth_router</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_jwt_include_kwargs</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">auth_jwt_router</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_jwt_include_kwargs</span><span class="p">)</span>
 
             <span class="c1"># (UsersAPI_router_auth_cookie) Add cookie auth route</span>
             <span class="k">if</span> <span class="n">enable_cookie_auth</span><span class="p">:</span>
 
                     <span class="c1"># (UsersAPI_router_auth_cookie_method) Set method of auth for route</span>
-                <span class="n">auth_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_auth_router</span><span class="p">(</span><span class="n">cookie_auth</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_cookie_kwargs</span><span class="p">)</span>
+                <span class="n">auth_cookie_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_auth_router</span><span class="p">(</span><span class="n">cookie_auth</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_cookie_kwargs</span><span class="p">)</span>
 
                 <span class="c1"># (UsersAPI_router_auth_cookie_add) Add auth route</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">auth_router</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_cookie_include_kwargs</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">auth_cookie_router</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_cookie_include_kwargs</span><span class="p">)</span>
 
         <span class="c1"># (UsersAPI_router_register) Add register router</span>
         <span class="k">if</span> <span class="n">enable_register_router</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">get_register_router</span><span class="p">(</span><span class="o">**</span><span class="n">register_router_kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">register_router_include_kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">register_router_superuser</span><span class="p">:</span>
+                <span class="n">register_router_include_kwargs</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">register_router_include_kwargs</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="k">if</span> <span class="s1">'dependencies'</span> <span class="ow">in</span> <span class="n">register_router_include_kwargs</span> <span class="k">else</span> <span class="p">[]</span>
+                <span class="n">register_router_include_kwargs</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Depends</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="n">superuser</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+            <span class="n">register_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_register_router</span><span class="p">(</span><span class="o">**</span><span class="n">register_router_kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">register_router</span><span class="p">,</span> <span class="o">**</span><span class="n">register_router_include_kwargs</span><span class="p">)</span>
 
         <span class="c1"># (UsersAPI_router_verify) Add verify router</span>
         <span class="k">if</span> <span class="n">enable_verify_router</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">get_verify_router</span><span class="p">(</span><span class="o">**</span><span class="n">verify_router_kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">verify_router_include_kwargs</span><span class="p">)</span>
+            <span class="n">verify_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_verify_router</span><span class="p">(</span><span class="o">**</span><span class="n">verify_router_kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">verify_router</span><span class="p">,</span> <span class="o">**</span><span class="n">verify_router_include_kwargs</span><span class="p">)</span>
         
         <span class="c1"># (UsersAPI_router_reset) Add reset password router</span>
         <span class="k">if</span> <span class="n">enable_reset_password_router</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">get_reset_password_router</span><span class="p">(</span><span class="o">**</span><span class="n">reset_password_router_kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">reset_password_router_include_kwargs</span><span class="p">)</span>
+            <span class="n">reset_password_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_reset_password_router</span><span class="p">(</span><span class="o">**</span><span class="n">reset_password_router_kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">reset_password_router</span><span class="p">,</span> <span class="o">**</span><span class="n">reset_password_router_include_kwargs</span><span class="p">)</span>
 
-        <span class="c1"># (UsersAPI_router_reset) Add reset password router</span>
+        <span class="c1"># (UsersAPI_router_users) Add users router</span>
         <span class="k">if</span> <span class="n">enable_users_router</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">get_users_router</span><span class="p">(</span><span class="o">**</span><span class="n">users_router_kwargs</span><span class="p">),</span> <span class="o">**</span><span class="n">users_router_include_kwargs</span><span class="p">)</span>
+            <span class="n">users_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_users_router</span><span class="p">(</span><span class="o">**</span><span class="n">users_router_kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">users_router</span><span class="p">,</span> <span class="o">**</span><span class="n">users_router_include_kwargs</span><span class="p">)</span>
+
+        <span class="c1"># (UserAPI_attr) Add attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">users_api</span> <span class="o">=</span> <span class="n">users_api</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">users_database</span> <span class="o">=</span> <span class="n">db</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">engine</span> <span class="o">=</span> <span class="n">database_engine</span><span class="p">,</span>
+            <span class="n">asynchronous</span> <span class="o">=</span> <span class="n">async_database</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_users_functions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">get_user_db</span><span class="p">,</span>
+            <span class="n">get_user_manager</span> <span class="o">=</span> <span class="n">get_user_manager</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_users_models</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">User</span> <span class="o">=</span> <span class="n">User</span><span class="p">,</span>
+            <span class="n">UserCreate</span> <span class="o">=</span> <span class="n">UserCreate</span><span class="p">,</span>
+            <span class="n">UserUpdate</span> <span class="o">=</span> <span class="n">UserUpdate</span><span class="p">,</span>
+            <span class="n">UserDB</span> <span class="o">=</span> <span class="n">UserDB</span><span class="p">,</span>
+            <span class="n">UserTable</span> <span class="o">=</span> <span class="n">UserTable</span><span class="p">,</span>
+            <span class="n">UserManager</span> <span class="o">=</span> <span class="n">UserManager</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_users_events</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># (UserAPI_events_startup) Setup app startup</span>
         <span class="k">if</span> <span class="n">setup_startup</span><span class="p">:</span>
             <span class="nd">@self</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">'startup'</span><span class="p">)</span>
-            <span class="k">async</span> <span class="k">def</span> <span class="nf">before_startup</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">async_database</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+            <span class="k">async</span> <span class="k">def</span> <span class="nf">startup</span><span class="p">():</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span><span class="o">.</span><span class="n">asynchronous</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_users_events</span><span class="p">[</span><span class="s1">'startup'</span><span class="p">]</span> <span class="o">=</span> <span class="n">startup</span>
 
         <span class="c1"># (UserAPI_events_shutdown) Setup app shutdown</span>
         <span class="k">if</span> <span class="n">setup_shutdown</span><span class="p">:</span>
             <span class="nd">@self</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">'shutdown'</span><span class="p">)</span>
-            <span class="k">async</span> <span class="k">def</span> <span class="nf">during_shutdown</span><span class="p">():</span>
-                <span class="k">await</span> <span class="n">async_database</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-
-        <span class="c1"># (UserAPI_attr) Add attributes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">users_api</span> <span class="o">=</span> <span class="n">users_api</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_database_engine</span> <span class="o">=</span> <span class="n">database_engine</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_async_database</span> <span class="o">=</span> <span class="n">async_database</span>
+            <span class="k">async</span> <span class="k">def</span> <span class="nf">shutdown</span><span class="p">():</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span><span class="o">.</span><span class="n">asynchronous</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_users_events</span><span class="p">[</span><span class="s1">'shutdown'</span><span class="p">]</span> <span class="o">=</span> <span class="n">shutdown</span>
 
 <div class="viewcode-block" id="UsersAPI.get_current_user"><a class="viewcode-back" href="../../reference/usersapi.html#msdss_users_api.core.UsersAPI.get_current_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">"""</span>
@@ -743,7 +795,7 @@
               
           </div>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>

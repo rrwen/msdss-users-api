@@ -112,7 +112,7 @@ def run():
     .. jupyter-execute::
         :hide-code:
 
-        from msdss_base_dotenv.cli import _get_parser
+        from msdss_users_api.cli import _get_parser
 
         parser = _get_parser()
         parser.print_help()
@@ -124,6 +124,14 @@ def run():
     Get user attributes:
 
     >>> msdss-users get test@example.com
+
+    Update user attributes:
+
+    >>> msdss-users update test@example.com --is_verified True
+
+    Reset user password:
+
+    >>> msdss-users reset test@example.com
 
     Delete a user:
 

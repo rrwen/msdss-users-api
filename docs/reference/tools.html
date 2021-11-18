@@ -47,7 +47,7 @@
   
   
   
-    <title>tools &#8212; 0.0.9</title>
+    <title>tools &#8212; 0.1.0</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -90,11 +90,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="0.0.9"
+        <a href="../index.html" title="0.1.0"
            class="md-header-nav__button md-logo">
           
               <img src="../_static/logo.svg" height="26"
-                   alt="0.0.9 logo">
+                   alt="0.1.0 logo">
           
         </a>
       </div>
@@ -177,7 +177,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">0.0.9</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">0.1.0</a></li>
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">API Reference</a></li>
       </ul>
     </div>
@@ -190,13 +190,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="0.0.9" class="md-nav__button md-logo">
+    <a href="../index.html" title="0.1.0" class="md-nav__button md-logo">
       
         <img src="../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../index.html"
-       title="0.0.9">msdss-users-api</a>
+       title="0.1.0">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -261,11 +261,25 @@
   <ul class="md-nav__list" data-md-scrollfix="">
         <li class="md-nav__item"><a href="#reference-tools--page-root" class="md-nav__link">tools</a><nav class="md-nav">
               <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#create-user-db-context" class="md-nav__link">create_user_db_context</a>
+        </li>
         <li class="md-nav__item"><a href="#create-user-db-func" class="md-nav__link">create_user_db_func</a>
+        </li>
+        <li class="md-nav__item"><a href="#create-user-manager-context" class="md-nav__link">create_user_manager_context</a>
         </li>
         <li class="md-nav__item"><a href="#create-user-manager-func" class="md-nav__link">create_user_manager_func</a>
         </li>
         <li class="md-nav__item"><a href="#create-user-manager-model" class="md-nav__link">create_user_manager_model</a>
+        </li>
+        <li class="md-nav__item"><a href="#delete-user" class="md-nav__link">delete_user</a>
+        </li>
+        <li class="md-nav__item"><a href="#get-user" class="md-nav__link">get_user</a>
+        </li>
+        <li class="md-nav__item"><a href="#register-user" class="md-nav__link">register_user</a>
+        </li>
+        <li class="md-nav__item"><a href="#reset-user-password" class="md-nav__link">reset_user_password</a>
+        </li>
+        <li class="md-nav__item"><a href="#update-user" class="md-nav__link">update_user</a>
         </li></ul>
             </nav>
         </li>
@@ -285,18 +299,73 @@
             
   <section id="module-msdss_users_api.tools">
 <span id="tools"></span><h1 id="reference-tools--page-root">tools<a class="headerlink" href="#reference-tools--page-root" title="Permalink to this headline">¶</a></h1>
+<section id="create-user-db-context">
+<h2 id="create-user-db-context">create_user_db_context<a class="headerlink" href="#create-user-db-context" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="msdss_users_api.tools.create_user_db_context">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_db_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">async_database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./.env'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MSDSS_DATABASE_DRIVER'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MSDSS_DATABASE_USER'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MSDSS_DATABASE_PASSWORD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MSDSS_DATABASE_HOST'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MSDSS_DATABASE_PORT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MSDSS_DATABASE_NAME'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">async_database_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_db_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_db_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a context manager for an auto-configured <a class="reference internal" href="#msdss_users_api.tools.create_user_db_func" title="msdss_users_api.tools.create_user_db_func"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_func()</span></code></a> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>engine</strong> (<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/connections.html#sqlalchemy.engine.Engine" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.engine.Engine</span></code></a> or None) – SQLAlchemy engine object to use for creating tables. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, one will be auto-configured from the <code class="docutils literal notranslate"><span class="pre">env_file</span></code>.</p></li>
+<li><p><strong>async_database</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code>) – The async database object to use for managing users. See <a class="reference external" href="https://pypi.org/project/databases/">databases</a>. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, one will be auto-configured from the <code class="docutils literal notranslate"><span class="pre">env_file</span></code>.</p></li>
+<li><p><strong>load_env</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to load variables from a file with environmental variables at <code class="docutils literal notranslate"><span class="pre">env_file</span></code> or not.</p></li>
+<li><p><strong>env_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path of the file with environmental variables.</p></li>
+<li><p><strong>key_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path of the key file for the <code class="docutils literal notranslate"><span class="pre">env_file</span></code>.</p></li>
+<li><p><strong>driver_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The environmental variable name for <code class="docutils literal notranslate"><span class="pre">driver</span></code>.</p></li>
+<li><p><strong>user_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The environmental variable name for <code class="docutils literal notranslate"><span class="pre">user</span></code>.</p></li>
+<li><p><strong>password_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The environmental variable name for <code class="docutils literal notranslate"><span class="pre">password</span></code>.</p></li>
+<li><p><strong>host_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The environmental variable name for <code class="docutils literal notranslate"><span class="pre">key</span></code>.</p></li>
+<li><p><strong>port_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The environmental variable name for <code class="docutils literal notranslate"><span class="pre">port</span></code>.</p></li>
+<li><p><strong>database_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The environmental variable name for <code class="docutils literal notranslate"><span class="pre">database</span></code>.</p></li>
+<li><p><strong>engine_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/database.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.0.5)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a> if <code class="docutils literal notranslate"><span class="pre">engine</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>async_database_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code> if <code class="docutils literal notranslate"><span class="pre">async_database</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Returns a tuple of (in order):</p>
+<ul class="simple">
+<li><p>Function returned from <a class="reference external" href="https://docs.python.org/3/library/contextlib.html#contextlib.asynccontextmanager" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">contextlib.asynccontextmanager()</span></code></a> created from an auto-configured <a class="reference internal" href="#msdss_users_api.tools.create_user_db_func" title="msdss_users_api.tools.create_user_db_func"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_func()</span></code></a> function</p></li>
+<li><p>Function for the user database dependency from <code class="docutils literal notranslate"><span class="pre">get_user_db</span></code> or auto-configured <a class="reference internal" href="#msdss_users_api.tools.create_user_db_func" title="msdss_users_api.tools.create_user_db_func"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_func()</span></code></a>.</p></li>
+<li><p>Async database from parameter <code class="docutils literal notranslate"><span class="pre">async_database</span></code> or auto-configured <code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code> from env vars</p></li>
+<li><p>Engine from parameter <code class="docutils literal notranslate"><span class="pre">engine</span></code> or auto-configured <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/connections.html#sqlalchemy.engine.Engine" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.engine.Engine</span></code></a> from env vars</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/contextlib.html#contextlib.asynccontextmanager" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">contextlib.asynccontextmanager()</span></code></a>, func, <code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code>, <a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/connections.html#sqlalchemy.engine.Engine" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.engine.Engine</span></code></a>)</p>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">get_user_db_context</span><span class="p">,</span> <span class="n">get_user_db</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</dd></dl>
+</section>
 <section id="create-user-db-func">
 <h2 id="create-user-db-func">create_user_db_func<a class="headerlink" href="#create-user-db-func" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="msdss_users_api.tools.create_user_db_func">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_db_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">engine</span></em>, <em class="sig-param"><span class="pre">async_database</span></em>, <em class="sig-param"><span class="pre">sqlalchemy_base=&lt;class</span> <span class="pre">'sqlalchemy.orm.decl_api.Base'&gt;</span></em>, <em class="sig-param"><span class="pre">user_table_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserTable'&gt;</span></em>, <em class="sig-param"><span class="pre">user_db_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserDB'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_db_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_db_func" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_db_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">engine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">async_database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sqlalchemy_base=&lt;class</span> <span class="pre">'sqlalchemy.orm.decl_api.Base'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_table_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserTable'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_db_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserDB'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_db_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_db_func" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a function to return the the database adapter dependency.</p>
 <p>See <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/">SQLAlchemy configuration</a> for FastAPI Users,</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>engine</strong> (<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/connections.html#sqlalchemy.engine.Engine" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.engine.Engine</span></code></a>) – SQLAlchemy engine object to use for creating tables.</p></li>
-<li><p><strong>async_database</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code>) – The async database object to use for managing users. See <a class="reference external" href="https://pypi.org/project/databases/">databases</a>.</p></li>
+<li><p><strong>async_database</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code>) – <p>The async database object to use for managing users. See <a class="reference external" href="https://pypi.org/project/databases/">databases</a>.</p>
+</p></li>
 <li><p><strong>sqlalchemy_base</strong> (<a class="reference external" href="https://docs.sqlalchemy.org/en/14/orm/mapping_api.html#sqlalchemy.orm.declarative_base" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.orm.declarative_base()</span></code></a>) – The base class from sqlalchemy. See <a class="reference external" href="https://docs.sqlalchemy.org/en/14/orm/mapping_api.html#sqlalchemy.orm.declarative_base" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.orm.declarative_base()</span></code></a>.</p></li>
 <li><p><strong>user_table_model</strong> (<a class="reference internal" href="models.html#msdss_users_api.models.UserTable" title="msdss_users_api.models.UserTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserTable</span></code></a>) – The user table model to use for the database dependency. See <a class="reference internal" href="models.html#msdss_users_api.models.UserTable" title="msdss_users_api.models.UserTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserTable</span></code></a>.</p></li>
 <li><p><strong>user_db_model</strong> (<a class="reference internal" href="models.html#msdss_users_api.models.UserDB" title="msdss_users_api.models.UserDB"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserDB</span></code></a>) – The user database model for the database dependency. See <a class="reference internal" href="models.html#msdss_users_api.models.UserDB" title="msdss_users_api.models.UserDB"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserDB</span></code></a>.</p></li>
@@ -338,11 +407,58 @@
 </div>
 </dd></dl>
 </section>
+<section id="create-user-manager-context">
+<h2 id="create-user-manager-context">create_user_manager_context<a class="headerlink" href="#create-user-manager-context" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="msdss_users_api.tools.create_user_manager_context">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_manager_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secret</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'msdss-secret'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_user_db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_password_token_secret</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verification_token_secret</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_manager_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./.env'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MSDSS_USERS_SECRET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_password_token_secret_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verification_token_secret_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MSDSS_USERS_VERIFICATION_TOKEN_SECRET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_manager_model_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_manager_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_manager_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a context manager for an auto-configured <a class="reference internal" href="#msdss_users_api.tools.create_user_manager_func" title="msdss_users_api.tools.create_user_manager_func"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_manager_func()</span></code></a> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A secret for security encryption and protecting user data. Use a strong phrase (e.g. <code class="docutils literal notranslate"><span class="pre">openssl</span> <span class="pre">rand</span> <span class="pre">-hex</span> <span class="pre">32</span></code>).</p></li>
+<li><p><strong>get_user_db</strong> (<em>func</em>) – Function for the user database dependency. See <a class="reference internal" href="#msdss_users_api.tools.create_user_db_func" title="msdss_users_api.tools.create_user_db_func"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_func()</span></code></a>.</p></li>
+<li><p><strong>verification_token_secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Secret used to secure verification tokens. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, it will default to param <code class="docutils literal notranslate"><span class="pre">secret</span></code>.</p></li>
+<li><p><strong>cookie_secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Secret used to secure cookies. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, it will default to param <code class="docutils literal notranslate"><span class="pre">secret</span></code>.</p></li>
+<li><p><strong>user_manager_model</strong> (<a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a>) – The user manager model from FastAPI Users. See <a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a> and <a class="reference internal" href="#msdss_users_api.tools.create_user_manager_model" title="msdss_users_api.tools.create_user_manager_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_manager_model()</span></code></a>.</p></li>
+<li><p><strong>load_env</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to load variables from a file with environmental variables at <code class="docutils literal notranslate"><span class="pre">env_file</span></code> or not.</p></li>
+<li><p><strong>env_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path of the file with environmental variables.</p></li>
+<li><p><strong>key_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path of the key file for the <code class="docutils literal notranslate"><span class="pre">env_file</span></code>.</p></li>
+<li><p><strong>secret_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The environmental variable name for <code class="docutils literal notranslate"><span class="pre">secret</span></code>.</p></li>
+<li><p><strong>reset_password_token_secret_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The environmental variable name for <code class="docutils literal notranslate"><span class="pre">reset_password_token_secret</span></code>.</p></li>
+<li><p><strong>verification_token_secret_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The environmental variable name for <code class="docutils literal notranslate"><span class="pre">verification_token_secret</span></code>.</p></li>
+<li><p><strong>show_warnings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to display warnings or not.</p></li>
+<li><p><strong>create_user_manager_model_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_manager_model" title="msdss_users_api.tools.create_user_manager_model"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_manager_model()</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Function returned from <a class="reference external" href="https://docs.python.org/3/library/contextlib.html#contextlib.asynccontextmanager" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">contextlib.asynccontextmanager()</span></code></a> created from an auto-configured <a class="reference internal" href="#msdss_users_api.tools.create_user_manager_func" title="msdss_users_api.tools.create_user_manager_func"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_manager_func()</span></code></a> function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/contextlib.html#contextlib.asynccontextmanager" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">contextlib.asynccontextmanager()</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="s1">'msdss-secret'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</dd></dl>
+</section>
 <section id="create-user-manager-func">
 <h2 id="create-user-manager-func">create_user_manager_func<a class="headerlink" href="#create-user-manager-func" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="msdss_users_api.tools.create_user_manager_func">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_manager_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">get_user_db</span></em>, <em class="sig-param"><span class="pre">user_manager_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserManager'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_manager_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_manager_func" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_manager_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">get_user_db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_manager_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserManager'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_manager_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_manager_func" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a function to return the the user manager class.</p>
 <p>See <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/user-manager/">UserManager configuration</a> for FastAPI Users,</p>
 <dl class="field-list simple">
@@ -398,7 +514,7 @@
 <h2 id="create-user-manager-model">create_user_manager_model<a class="headerlink" href="#create-user-manager-model" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="msdss_users_api.tools.create_user_manager_model">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_manager_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">secret</span></em>, <em class="sig-param"><span class="pre">reset_password_token_secret=None</span></em>, <em class="sig-param"><span class="pre">verification_token_secret=None</span></em>, <em class="sig-param"><span class="pre">base_user_manager_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserManager'&gt;</span></em>, <em class="sig-param"><span class="pre">*args</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_manager_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_manager_model" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_user_manager_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_password_token_secret=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verification_token_secret=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_user_manager_model=&lt;class</span> <span class="pre">'msdss_users_api.models.UserManager'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_user_manager_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_user_manager_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a function to return the the user manager class.</p>
 <p>See <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/user-manager/">UserManager configuration</a> for FastAPI Users,</p>
 <dl class="field-list simple">
@@ -414,10 +530,10 @@
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A function yielding a configured <a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a>.</p>
+<dd class="field-even"><p>A configured <a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a>.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>func</p>
+<dd class="field-odd"><p><a class="reference internal" href="models.html#msdss_users_api.models.UserManager" title="msdss_users_api.models.UserManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserManager</span></code></a></p>
 </dd>
 </dl>
 <p class="rubric">Author</p>
@@ -432,6 +548,230 @@
 </div>
 </div>
 <div class="cell_output docutils container">
+</div>
+</div>
+</dd></dl>
+</section>
+<section id="delete-user">
+<h2 id="delete-user">delete_user<a class="headerlink" href="#delete-user" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="msdss_users_api.tools.delete_user">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">delete_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_db_context_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_manager_context_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#delete_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.delete_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Email for the user.</p></li>
+<li><p><strong>create_user_db_context_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_db_context" title="msdss_users_api.tools.create_user_db_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_context</span></code></a>.</p></li>
+<li><p><strong>create_user_manager_context_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_manager_context" title="msdss_users_api.tools.create_user_manager_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_manager_context</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">await</span> <span class="n">register_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com already exists
+User deleted test@example.com
+</pre></div>
+</div>
+</div>
+</div>
+</dd></dl>
+</section>
+<section id="get-user">
+<h2 id="get-user">get_user<a class="headerlink" href="#get-user" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="msdss_users_api.tools.get_user">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">get_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_hashed_password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_db_context_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_manager_context_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#get_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.get_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get attributes for a user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Email for the user.</p></li>
+<li><p><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to print user attributes or not.</p></li>
+<li><p><strong>include_hashed_password</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to include the <code class="docutils literal notranslate"><span class="pre">hashed_password</span></code> attribute.</p></li>
+<li><p><strong>create_user_db_context_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_db_context" title="msdss_users_api.tools.create_user_db_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_context</span></code></a>.</p></li>
+<li><p><strong>create_user_manager_context_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_manager_context" title="msdss_users_api.tools.create_user_manager_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_manager_context</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A user model with attributes for the specified user with <code class="docutils literal notranslate"><span class="pre">email</span></code>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users.models.User</span></code></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="n">register_user</span><span class="p">,</span> <span class="n">get_user</span>
+
+<span class="k">await</span> <span class="n">register_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">)</span>
+<span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User created test@example.com
+id: 7620c71f-a085-4c20-9e1e-379b7b4ba112
+email: test@example.com
+is_active: True
+is_superuser: False
+is_verified: False
+</pre></div>
+</div>
+</div>
+</div>
+</dd></dl>
+</section>
+<section id="register-user">
+<h2 id="register-user">register_user<a class="headerlink" href="#register-user" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="msdss_users_api.tools.register_user">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">register_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">superuser</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_db_context_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_manager_context_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#register_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.register_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Email for the user.</p></li>
+<li><p><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Password for the user.</p></li>
+<li><p><strong>superuser</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the user is a superuser or not.</p></li>
+<li><p><strong>create_user_db_context_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_db_context" title="msdss_users_api.tools.create_user_db_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_context</span></code></a>.</p></li>
+<li><p><strong>create_user_manager_context_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_manager_context" title="msdss_users_api.tools.create_user_manager_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_manager_context</span></code></a>.</p></li>
+<li><p><strong>*args</strong> – Additional arguments passed to <a class="reference internal" href="models.html#msdss_users_api.models.UserCreate" title="msdss_users_api.models.UserCreate"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserCreate</span></code></a>.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments passed to <a class="reference internal" href="models.html#msdss_users_api.models.UserCreate" title="msdss_users_api.models.UserCreate"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserCreate</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">await</span> <span class="n">register_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com already exists
+</pre></div>
+</div>
+</div>
+</div>
+</dd></dl>
+</section>
+<section id="reset-user-password">
+<h2 id="reset-user-password">reset_user_password<a class="headerlink" href="#reset-user-password" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="msdss_users_api.tools.reset_user_password">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">reset_user_password</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_db_context_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_manager_context_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#reset_user_password"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.reset_user_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset password for a user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Email for the user.</p></li>
+<li><p><strong>password</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – New password for the user.</p></li>
+<li><p><strong>create_user_db_context_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_db_context" title="msdss_users_api.tools.create_user_db_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_context</span></code></a>.</p></li>
+<li><p><strong>create_user_manager_context_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_manager_context" title="msdss_users_api.tools.create_user_manager_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_manager_context</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">await</span> <span class="n">register_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">reset_user_password</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss321'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com already exists
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User password reset test@example.com
+</pre></div>
+</div>
+</div>
+</div>
+</dd></dl>
+</section>
+<section id="update-user">
+<h2 id="update-user">update_user<a class="headerlink" href="#update-user" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="msdss_users_api.tools.update_user">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">update_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_db_context_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_user_manager_context_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#update_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.update_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>email</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Email for the user.</p></li>
+<li><p><strong>create_user_db_context_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_db_context" title="msdss_users_api.tools.create_user_db_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_context</span></code></a>.</p></li>
+<li><p><strong>create_user_manager_context_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_manager_context" title="msdss_users_api.tools.create_user_manager_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_manager_context</span></code></a>.</p></li>
+<li><p><strong>*args</strong> – Additional arguments passed to <a class="reference internal" href="models.html#msdss_users_api.models.UserUpdate" title="msdss_users_api.models.UserUpdate"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserUpdate</span></code></a>.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments passed to <a class="reference internal" href="models.html#msdss_users_api.models.UserUpdate" title="msdss_users_api.models.UserUpdate"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserUpdate</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Author</p>
+<p>Richard Wen &lt;<a class="reference external" href="mailto:rrwen.dev%40gmail.com">rrwen<span>.</span>dev<span>@</span>gmail<span>.</span>com</a>&gt;</p>
+<p class="rubric">Example</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Create a test user</span>
+<span class="k">await</span> <span class="n">register_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">before_update:</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Update the test user</span>
+<span class="k">await</span> <span class="n">update_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">is_verified</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">after_update:</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com already exists
+
+before_update:
+
+id: 7620c71f-a085-4c20-9e1e-379b7b4ba112
+email: test@example.com
+is_active: True
+is_superuser: False
+is_verified: False
+User updated test@example.com
+
+after_update:
+
+id: 7620c71f-a085-4c20-9e1e-379b7b4ba112
+email: test@example.com
+is_active: True
+is_superuser: False
+is_verified: True
+</pre></div>
+</div>
 </div>
 </div>
 </dd></dl>
@@ -485,7 +825,7 @@
               
           </div>
             Created using
-            <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.2.0.
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
              and
             <a href="https://github.com/bashtage/sphinx-material/">Material for
               Sphinx</a>
