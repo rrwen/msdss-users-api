@@ -438,14 +438,14 @@ class UsersAPI(API):
         if setup_startup:
             @self.on('startup')
             async def startup():
-                await self._users_databases.asynchronous.connect()
+                await self._users_databases['asynchronous'].connect()
             self._users_events['startup'] = startup
 
         # (UserAPI_events_shutdown) Setup app shutdown
         if setup_shutdown:
             @self.on('shutdown')
             async def shutdown():
-                await self._users_databases.asynchronous.disconnect()
+                await self._users_databases['asynchronous'].disconnect()
             self._users_events['shutdown'] = shutdown
 
     def get_current_user(self, *args, **kwargs):

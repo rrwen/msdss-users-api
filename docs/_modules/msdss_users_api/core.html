@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.core &#8212; 0.0.9</title>
+    <title>msdss_users_api.core &#8212; 0.1.0</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -87,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.0.9"
+        <a href="../../index.html" title="0.1.0"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.0.9 logo">
+                   alt="0.1.0 logo">
           
         </a>
       </div>
@@ -174,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.9</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.1.0</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -187,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.0.9" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.1.0" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.0.9">msdss-users-api</a>
+       title="0.1.0">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -709,14 +709,14 @@
         <span class="k">if</span> <span class="n">setup_startup</span><span class="p">:</span>
             <span class="nd">@self</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">'startup'</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">def</span> <span class="nf">startup</span><span class="p">():</span>
-                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span><span class="o">.</span><span class="n">asynchronous</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span><span class="p">[</span><span class="s1">'asynchronous'</span><span class="p">]</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_users_events</span><span class="p">[</span><span class="s1">'startup'</span><span class="p">]</span> <span class="o">=</span> <span class="n">startup</span>
 
         <span class="c1"># (UserAPI_events_shutdown) Setup app shutdown</span>
         <span class="k">if</span> <span class="n">setup_shutdown</span><span class="p">:</span>
             <span class="nd">@self</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">'shutdown'</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">def</span> <span class="nf">shutdown</span><span class="p">():</span>
-                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span><span class="o">.</span><span class="n">asynchronous</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span><span class="p">[</span><span class="s1">'asynchronous'</span><span class="p">]</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_users_events</span><span class="p">[</span><span class="s1">'shutdown'</span><span class="p">]</span> <span class="o">=</span> <span class="n">shutdown</span>
 
 <div class="viewcode-block" id="UsersAPI.get_current_user"><a class="viewcode-back" href="../../reference/usersapi.html#msdss_users_api.core.UsersAPI.get_current_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
