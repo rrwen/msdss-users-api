@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.tools &#8212; 0.0.9</title>
+    <title>msdss_users_api.tools &#8212; 0.1.0</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -87,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.0.9"
+        <a href="../../index.html" title="0.1.0"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.0.9 logo">
+                   alt="0.1.0 logo">
           
         </a>
       </div>
@@ -174,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.9</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.1.0</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -187,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.0.9" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.1.0" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.0.9">msdss-users-api</a>
+       title="0.1.0">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -330,6 +330,8 @@
 <span class="sd">        Keyword arguments passed to :class:`msdss_base_database:msdss_base_database.core.Database` if ``engine`` is ``None``.</span>
 <span class="sd">    async_database_kwargs : dict</span>
 <span class="sd">        Keyword arguments passed to :class:`databases:databases.Database` if ``async_database`` is ``None``.</span>
+<span class="sd">    *args, **kwargs</span>
+<span class="sd">        Additional arguments passed to :func:`msdss_users_api.tools.create_user_db_func`.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
@@ -450,7 +452,6 @@
     <span class="n">secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_SECRET'</span><span class="p">,</span>
     <span class="n">reset_password_token_secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET'</span><span class="p">,</span>
     <span class="n">verification_token_secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_VERIFICATION_TOKEN_SECRET'</span><span class="p">,</span>
-    <span class="n">show_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">create_user_manager_model_kwargs</span><span class="o">=</span><span class="p">{}):</span>
     <span class="sd">"""</span>
 <span class="sd">    Create a context manager for an auto-configured :func:`msdss_users_api.tools.create_user_manager_func` function.</span>
@@ -461,10 +462,10 @@
 <span class="sd">        A secret for security encryption and protecting user data. Use a strong phrase (e.g. ``openssl rand -hex 32``).</span>
 <span class="sd">    get_user_db : func</span>
 <span class="sd">        Function for the user database dependency. See :func:`msdss_users_api.tools.create_user_db_func`.</span>
+<span class="sd">    reset_password_token_secret : str</span>
+<span class="sd">        Secret used to secure password reset tokens. If ``None``, it will default to param ``secret``.</span>
 <span class="sd">    verification_token_secret : str or None</span>
 <span class="sd">        Secret used to secure verification tokens. If ``None``, it will default to param ``secret``.</span>
-<span class="sd">    cookie_secret : str or None</span>
-<span class="sd">        Secret used to secure cookies. If ``None``, it will default to param ``secret``.</span>
 <span class="sd">    user_manager_model : :class:`msdss_users_api.models.UserManager`</span>
 <span class="sd">        The user manager model from FastAPI Users. See :class:`msdss_users_api.models.UserManager` and :func:`msdss_users_api.tools.create_user_manager_model`.</span>
 <span class="sd">    load_env : bool</span>
@@ -479,8 +480,6 @@
 <span class="sd">        The environmental variable name for ``reset_password_token_secret``.</span>
 <span class="sd">    verification_token_secret_key : str</span>
 <span class="sd">        The environmental variable name for ``verification_token_secret``.</span>
-<span class="sd">    show_warnings : bool</span>
-<span class="sd">        Whether to display warnings or not.</span>
 <span class="sd">    create_user_manager_model_kwargs : dict</span>
 <span class="sd">        Keyword arguments passed to :func:`msdss_users_api.tools.create_user_manager_model`</span>
 

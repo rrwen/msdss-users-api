@@ -59,6 +59,8 @@ def create_user_db_context(
         Keyword arguments passed to :class:`msdss_base_database:msdss_base_database.core.Database` if ``engine`` is ``None``.
     async_database_kwargs : dict
         Keyword arguments passed to :class:`databases:databases.Database` if ``async_database`` is ``None``.
+    *args, **kwargs
+        Additional arguments passed to :func:`msdss_users_api.tools.create_user_db_func`.
 
     Return
     ------
@@ -179,7 +181,6 @@ def create_user_manager_context(
     secret_key='MSDSS_USERS_SECRET',
     reset_password_token_secret_key='MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET',
     verification_token_secret_key='MSDSS_USERS_VERIFICATION_TOKEN_SECRET',
-    show_warnings=True,
     create_user_manager_model_kwargs={}):
     """
     Create a context manager for an auto-configured :func:`msdss_users_api.tools.create_user_manager_func` function.
@@ -190,10 +191,10 @@ def create_user_manager_context(
         A secret for security encryption and protecting user data. Use a strong phrase (e.g. ``openssl rand -hex 32``).
     get_user_db : func
         Function for the user database dependency. See :func:`msdss_users_api.tools.create_user_db_func`.
+    reset_password_token_secret : str
+        Secret used to secure password reset tokens. If ``None``, it will default to param ``secret``.
     verification_token_secret : str or None
         Secret used to secure verification tokens. If ``None``, it will default to param ``secret``.
-    cookie_secret : str or None
-        Secret used to secure cookies. If ``None``, it will default to param ``secret``.
     user_manager_model : :class:`msdss_users_api.models.UserManager`
         The user manager model from FastAPI Users. See :class:`msdss_users_api.models.UserManager` and :func:`msdss_users_api.tools.create_user_manager_model`.
     load_env : bool
@@ -208,8 +209,6 @@ def create_user_manager_context(
         The environmental variable name for ``reset_password_token_secret``.
     verification_token_secret_key : str
         The environmental variable name for ``verification_token_secret``.
-    show_warnings : bool
-        Whether to display warnings or not.
     create_user_manager_model_kwargs : dict
         Keyword arguments passed to :func:`msdss_users_api.tools.create_user_manager_model`
 
