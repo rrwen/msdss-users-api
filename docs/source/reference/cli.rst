@@ -7,7 +7,7 @@ _get_parser
 .. autofunction:: msdss_users_api.cli._get_parser
 
 _prompt_password
----------------
+----------------
 
 .. autofunction:: msdss_users_api.cli._prompt_password
 

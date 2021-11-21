@@ -3,6 +3,7 @@ import asyncio
 
 from getpass import getpass
 
+from .core import *
 from .tools import *
 
 def _get_parser():
@@ -60,6 +61,28 @@ def _get_parser():
     update_parser.add_argument('--is_active', type=bool, default=None, help='set is_active attribute')
     update_parser.add_argument('--is_superuser', type=bool, default=None, help='set is_superuser attribute')
     update_parser.add_argument('--is_verified', type=bool, default=None, help='set is_verified attribute')
+
+    # (_get_parser_start) Add start command
+    start_parser = subparsers.add_parser('start', help='start a users api server')
+    start_parser.add_argument('--host', type=str, default='127.0.0.1', help='address to host server')
+    start_parser.add_argument('--port', type=int, default=8000, help='port to host server')
+    start_parser.add_argument('--log_level', type=str, default='info', help='level of verbose messages to display')
+    start_parser.add_argument('--disable_auth_router', dest='enable_auth_router', action='store_false', help='disable auth router')
+    start_parser.add_argument('--disable_register_router', dest='enable_register_router', action='store_false', help='disable register router')
+    start_parser.add_argument('--disable_verify_router', dest='enable_verify_router', action='store_false', help='disable verify router')
+    start_parser.add_argument('--disable_reset_password_router', dest='enable_reset_password_router', action='store_false', help='disable reset password router')
+    start_parser.add_argument('--disable_users_router', dest='enable_users_router', action='store_false', help='disable users router')
+    start_parser.add_argument('--disable_jwt_auth', dest='enable_jwt_auth', action='store_false', help='disable jwt authentication')
+    start_parser.add_argument('--disable_cookie_auth', dest='enable_cookie_auth', action='store_false', help='disable cookie authentication')
+    start_parser.set_defaults(
+        enable_auth_router=True,
+        enable_register_router=True,
+        enable_verify_router=True,
+        enable_reset_password_router=True,
+        enable_users_router=True,
+        enable_jwt_auth=True,
+        enable_cookie_auth=True
+    )
 
     # (_get_parser_file_key) Add file and key arguments to all commands
     for p in [parser, register_parser, delete_parser, update_parser, get_parser, reset_parser]:
@@ -185,3 +208,11 @@ def run():
             create_user_manager_context_kwargs=env_kwargs,
             **kwargs
         ))
+    elif command == 'start':
+        kwargs.update(env_kwargs)
+        app_kwargs = dict(
+            host=kwargs.pop('host'),
+            port=kwargs.pop('port'),
+            log_level=kwargs.pop('log_level'))
+        app = UsersAPI(**kwargs)
+        app.start(**app_kwargs)

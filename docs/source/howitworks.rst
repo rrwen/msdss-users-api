@@ -7,8 +7,6 @@ Database connection variables and engine are handled by :class:`msdss_base_datab
 
 In order to create a ``FastAPIUsers`` object, this package follows the configuration instructions `here <https://fastapi-users.github.io/fastapi-users/configuration/overview/>`_, where user :any:`msdss_users_api.models`, `authentication objects <https://fastapi-users.github.io/fastapi-users/configuration/authentication/>`_, and database connections are passed as inputs.
 
-The command line uses methods from the `FastAPI UsersManager <https://github.com/fastapi-users/fastapi-users/blob/master/fastapi_users/manager.py>`_ to `programmatically manage users <https://fastapi-users.github.io/fastapi-users/cookbook/create-user-programmatically/>`_.
-
 .. digraph:: methods
 
    compound=true;
@@ -65,4 +63,37 @@ The command line uses methods from the `FastAPI UsersManager <https://github.com
       cookieauth -> fastapiusers[lhead=cluster3 ltail=cluster3];
 
       fastapiusers -> baseapi;
+   }
+
+The command line uses methods from the `FastAPI UsersManager <https://github.com/fastapi-users/fastapi-users/blob/master/fastapi_users/manager.py>`_ to `programmatically manage users <https://fastapi-users.github.io/fastapi-users/cookbook/create-user-programmatically/>`_.
+
+Most of these are implemented under the :mod:`msdss_users_api.tools` module, and run using :func:`msdss_users_api.cli.run`.
+
+.. digraph:: methods
+
+   rankdir=TB;
+
+   deleteuserfunc[label="delete_user (delete)" shape=rect style=rounded];
+   getuserfunc[label="get_user (get)" shape=rect style=rounded];
+   registeruserfunc[label="register_user (register)" shape=rect style=rounded];
+   resetuserfunc[label="reset_user_password (reset)" shape=rect style=rounded];
+   updateuserfunc[label="update_user (update)" shape=rect style=rounded];
+
+   subgraph cluster0 {
+      label=< <B>msdss_users_api.cli.run</B> >;
+
+      style=rounded;
+
+      subgraph cluster1 {
+         label=< <B>msdss_users_api.tools</B> >;
+         rankdir=TB;
+         deleteuserfunc;
+         getuserfunc;
+         registeruserfunc;
+         resetuserfunc;
+         updateuserfunc;
+      };
+
+      usersapi[label="msdss_users_api.core.UsersAPI (start)" shape=rect];  
+
    }

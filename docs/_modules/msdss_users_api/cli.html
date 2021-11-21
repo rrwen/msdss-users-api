@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.cli &#8212; 0.0.9</title>
+    <title>msdss_users_api.cli &#8212; 0.1.2</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -87,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.0.9"
+        <a href="../../index.html" title="0.1.2"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.0.9 logo">
+                   alt="0.1.2 logo">
           
         </a>
       </div>
@@ -174,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.0.9</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.1.2</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -187,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.0.9" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.1.2" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.0.9">msdss-users-api</a>
+       title="0.1.2">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -274,6 +274,7 @@
 
 <span class="kn">from</span> <span class="nn">getpass</span> <span class="kn">import</span> <span class="n">getpass</span>
 
+<span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="o">*</span>
 
 <div class="viewcode-block" id="_get_parser"><a class="viewcode-back" href="../../reference/cli.html#msdss_users_api.cli._get_parser">[docs]</a><span class="k">def</span> <span class="nf">_get_parser</span><span class="p">():</span>
@@ -331,6 +332,28 @@
     <span class="n">update_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--is_active'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'set is_active attribute'</span><span class="p">)</span>
     <span class="n">update_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--is_superuser'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'set is_superuser attribute'</span><span class="p">)</span>
     <span class="n">update_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--is_verified'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'set is_verified attribute'</span><span class="p">)</span>
+
+    <span class="c1"># (_get_parser_start) Add start command</span>
+    <span class="n">start_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'start a users api server'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--host'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'127.0.0.1'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'address to host server'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--port'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'port to host server'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--log_level'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'info'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'level of verbose messages to display'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_auth_router'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_auth_router'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable auth router'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_register_router'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_register_router'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable register router'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_verify_router'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_verify_router'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable verify router'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_reset_password_router'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_reset_password_router'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable reset password router'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_users_router'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_users_router'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable users router'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_jwt_auth'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_jwt_auth'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable jwt authentication'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_cookie_auth'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_cookie_auth'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable cookie authentication'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span>
+        <span class="n">enable_auth_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_register_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_verify_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_reset_password_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_users_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_jwt_auth</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">enable_cookie_auth</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
 
     <span class="c1"># (_get_parser_file_key) Add file and key arguments to all commands</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="n">parser</span><span class="p">,</span> <span class="n">register_parser</span><span class="p">,</span> <span class="n">delete_parser</span><span class="p">,</span> <span class="n">update_parser</span><span class="p">,</span> <span class="n">get_parser</span><span class="p">,</span> <span class="n">reset_parser</span><span class="p">]:</span>
@@ -455,7 +478,15 @@
             <span class="n">create_user_db_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
-        <span class="p">))</span></div>
+        <span class="p">))</span>
+    <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s1">'start'</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">env_kwargs</span><span class="p">)</span>
+        <span class="n">app_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">host</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'host'</span><span class="p">),</span>
+            <span class="n">port</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'port'</span><span class="p">),</span>
+            <span class="n">log_level</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'log_level'</span><span class="p">))</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="o">**</span><span class="n">app_kwargs</span><span class="p">)</span></div>
 </pre></div>
 
           </article>
