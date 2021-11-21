@@ -159,6 +159,10 @@ def run():
     Delete a user:
 
     >>> msdss-users delete test@example.com
+
+    Start an API server:
+
+    >>> msdss-users start
     """
 
     # (run_kwargs) Get arguments and command
