@@ -85,7 +85,7 @@ def _get_parser():
     )
 
     # (_get_parser_file_key) Add file and key arguments to all commands
-    for p in [parser, register_parser, delete_parser, update_parser, get_parser, reset_parser]:
+    for p in [parser, register_parser, delete_parser, update_parser, get_parser, reset_parser, start_parser]:
         p.add_argument('--env_file', type=str, default='./.env', help='path of .env file')
         p.add_argument('--key_path', type=str, default=None, help='path of key file')
     
