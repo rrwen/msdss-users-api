@@ -47,7 +47,7 @@
   
   
   
-    <title>How it Works &#8212; 0.1.3</title>
+    <title>Usage &#8212; 0.1.3</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/material.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -65,8 +65,8 @@
     <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="reference/index.html" />
-    <link rel="prev" title="Usage" href="usage.html" />
+    <link rel="next" title="How it Works" href="howitworks.html" />
+    <link rel="prev" title="Quick Start" href="quickstart.html" />
   
    
 
@@ -85,7 +85,7 @@
   <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
   <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
   <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
-  <a href="#howitworks" tabindex="1" class="md-skip"> Skip to content </a>
+  <a href="#usage" tabindex="1" class="md-skip"> Skip to content </a>
   <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
@@ -104,7 +104,7 @@
       <div class="md-flex__cell md-flex__cell--stretch">
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           <span class="md-header-nav__topic">msdss-users-api</span>
-          <span class="md-header-nav__topic"> How it Works </span>
+          <span class="md-header-nav__topic"> Usage </span>
         </div>
       </div>
       <div class="md-flex__cell md-flex__cell--shrink">
@@ -233,26 +233,35 @@
     <li class="md-nav__item">
     
     
-      <a href="usage.html" class="md-nav__link">Usage</a>
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Usage </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Usage</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#usage--page-root" class="md-nav__link">Usage</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#command-line-interface-cli" class="md-nav__link">Command Line Interface (CLI)</a>
+        </li>
+        <li class="md-nav__item"><a href="#python" class="md-nav__link">Python</a>
+        </li></ul>
+            </nav>
+        </li>
+    
+<li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/usage.rst.txt">Show Source</a> </li>
+
+  </ul>
+</nav>
       
     
     </li>
     <li class="md-nav__item">
     
     
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    <label class="md-nav__link md-nav__link--active" for="__toc"> How it Works </label>
-    
-      <a href="#" class="md-nav__link md-nav__link--active">How it Works</a>
-      
-        
-<nav class="md-nav md-nav--secondary">
-  <ul class="md-nav__list" data-md-scrollfix="">
-    
-<li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/howitworks.rst.txt">Show Source</a> </li>
-
-  </ul>
-</nav>
+      <a href="howitworks.html" class="md-nav__link">How it Works</a>
       
     
     </li>
@@ -275,9 +284,18 @@
               <div class="md-sidebar__inner">
                 
 <nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#usage--page-root" class="md-nav__link">Usage</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#command-line-interface-cli" class="md-nav__link">Command Line Interface (CLI)</a>
+        </li>
+        <li class="md-nav__item"><a href="#python" class="md-nav__link">Python</a>
+        </li></ul>
+            </nav>
+        </li>
     
-<li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/howitworks.rst.txt">Show Source</a> </li>
+<li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/usage.rst.txt">Show Source</a> </li>
 
 <li id="searchbox" class="md-nav__item"></li>
 
@@ -290,111 +308,101 @@
         <div class="md-content">
           <article class="md-content__inner md-typeset" role="main">
             
-  <section id="how-it-works">
-<h1 id="howitworks--page-root">How it Works<a class="headerlink" href="#howitworks--page-root" title="Permalink to this headline">¶</a></h1>
-<p>This package uses <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/">FastAPI Users</a> to create an extended <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.0.4)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a> application.</p>
-<p>Database connection variables and engine are handled by <a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/database.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.0.5)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a> while async database objects are provided by <a class="reference external" href="https://pypi.org/project/databases/">databases</a>.</p>
-<p>In order to create a <code class="docutils literal notranslate"><span class="pre">FastAPIUsers</span></code> object, this package follows the configuration instructions <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/overview/">here</a>, where user <a class="reference internal" href="reference/models.html#module-msdss_users_api.models" title="msdss_users_api.models"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">msdss_users_api.models</span></code></a>, <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/authentication/">authentication objects</a>, and database connections are passed as inputs.</p>
-<div class="graphviz"><img alt='digraph methods {
-compound=true;
-rankdir=TB;
-graph [pad="0.75", nodesep="0.25", ranksep="1"];
+  <section id="usage">
+<h1 id="usage--page-root">Usage<a class="headerlink" href="#usage--page-root" title="Permalink to this headline">¶</a></h1>
+<section id="command-line-interface-cli">
+<h2 id="command-line-interface-cli">Command Line Interface (CLI)<a class="headerlink" href="#command-line-interface-cli" title="Permalink to this headline">¶</a></h2>
+<p>Start an API server (go to <a class="reference external" href="http://localhost:8000/docs">http://localhost:8000/docs</a> to try the API):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">start</span>
+</pre></div>
+</div>
+<p>Register a user:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">register</span>
+</pre></div>
+</div>
+<p>Get user info:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">get</span> <span class="o">&lt;</span><span class="n">email</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Update a user’s attributes:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">update</span> <span class="o">&lt;</span><span class="n">email</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">is_superuser</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>Reset password for a user:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">reset</span> <span class="o">&lt;</span><span class="n">email</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Delete a user:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">delete</span> <span class="o">&lt;</span><span class="n">email</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not forget to setup your environmental variables (see <a href="#id1"><span class="problematic" id="id2">`Quick Start`_</span></a>)</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, you can get help for each command:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="o">--</span><span class="n">help</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">start</span> <span class="o">--</span><span class="n">help</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">register</span> <span class="o">--</span><span class="n">help</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">get</span> <span class="o">--</span><span class="n">help</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">update</span> <span class="o">--</span><span class="n">help</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">reset</span> <span class="o">--</span><span class="n">help</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">delete</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="python">
+<h2 id="python">Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
+<p>In Python, use the package via <a class="reference internal" href="reference/usersapi.html#msdss_users_api.core.UsersAPI" title="msdss_users_api.core.UsersAPI"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.core.UsersAPI</span></code></a>:</p>
+<div class="jupyter_cell jupyter_container docutils container">
+<div class="cell_input code_cell docutils container">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span>
+<span class="kn">from</span> <span class="nn">msdss_users_api</span> <span class="kn">import</span> <span class="n">UsersAPI</span>
+<span class="kn">from</span> <span class="nn">msdss_users_api.models</span> <span class="kn">import</span> <span class="n">User</span>
 
-usermodel[label="User" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-usercreatemodel[label="UserCreate" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-userupdatemodel[label="UserUpdate" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-userdbmodel[label="UserDB" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-usertablemodel[label="UserTable" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/"];
-usermanagermodel[label="UserManager" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/user-manager/"];
+<span class="c1"># Create app using env vars</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">(</span>
+    <span class="n">env_file</span><span class="o">=</span><span class="s1">'./.env'</span><span class="p">,</span>
+    <span class="n">key_path</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span>
 
-userdbfunc[label="create_user_db_func" shape=rect style=rounded URL=""];
-usermanagerfunc[label="create_user_manager_func" shape=rect style=rounded URL=""];
+<span class="c1"># Get a function dependency for the current active user</span>
+<span class="n">current_active_user</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-jwtauth[label="JWTAuthentication" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/"];
-cookieauth[label="CookieAuthentication" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/"];
+<span class="c1"># Add a protected route</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'/protected-route'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">protected_route</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">current_active_user</span><span class="p">)):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">'Hello, </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s1">'</span>
 
-baseapi[label="msdss-base-api" URL="https://rrwen.github.io/msdss-base-api/" style=filled];
-basedb[label="msdss-base-database" URL="https://rrwen.github.io/msdss-base-database/" style=filled];
-databases[label="databases" URL="https://pypi.org/project/databases/" style=filled];
-fastapiusers[label="FastAPI Users" URL="https://fastapi-users.github.io/fastapi-users/" style=filled];
-
-subgraph cluster0 {
-   label=&lt; &lt;B&gt;msdss_users_api.core.UsersAPI&lt;/B&gt; &gt;;
-
-   style=rounded;
-
-   subgraph cluster1 {
-      label=&lt; &lt;B&gt;msdss_users_api.tools&lt;/B&gt; &gt;;
-      userdbfunc -&gt; usermanagerfunc;
-   }
-   {basedb;databases} -&gt; userdbfunc[lhead=cluster1 ltail=cluster1];
-   usermanagerfunc -&gt; fastapiusers[lhead=cluster1 ltail=cluster1];
-
-   subgraph cluster2 {
-      label=&lt; &lt;B&gt;msdss_users_api.models&lt;/B&gt; &gt;;
-      usermodel;
-      usercreatemodel;
-      userupdatemodel;
-      userdbmodel;
-      usertablemodel;
-      usermanagermodel;
-   };
-   usermanagermodel -&gt; usermanagerfunc[lhead=cluster1 ltail=cluster2];
-   userdbmodel -&gt; fastapiusers[lhead=cluster2 ltail=cluster2];
-
-   subgraph cluster3 {
-       label=&lt; &lt;B&gt;fastapi_users.authentication&lt;/B&gt; &gt;;
-      jwtauth;
-      cookieauth;
-   }
-   cookieauth -&gt; fastapiusers[lhead=cluster3 ltail=cluster3];
-
-   fastapiusers -&gt; baseapi;
-}
-}' class="graphviz" src="_images/graphviz-1f55f4c446e418fb338522e46ae43986f705e688.png" usemap="#methods"/></div>
-<map id="methods" name="methods">
-<area alt="" coords="1001,268,1073,316" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" id="node1" shape="rect" title="User"/>
-<area alt="" coords="871,268,977,316" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" id="node2" shape="rect" title="UserCreate"/>
-<area alt="" coords="737,268,847,316" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" id="node3" shape="rect" title="UserUpdate"/>
-<area alt="" coords="629,268,712,316" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" id="node4" shape="rect" title="UserDB"/>
-<area alt="" coords="538,580,534,573,521,566,502,561,479,557,452,556,425,557,402,561,383,566,370,573,366,580,370,587,383,594,402,599,425,603,452,604,479,603,502,599,521,594,534,587" href="https://fastapi-users.github.io/fastapi-users/" id="node14" shape="poly" title="FastAPI Users"/>
-<area alt="" coords="507,268,605,316" href="https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/" id="node5" shape="rect" title="UserTable"/>
-<area alt="" coords="361,268,482,316" href="https://fastapi-users.github.io/fastapi-users/configuration/user-manager/" id="node6" shape="rect" title="UserManager"/>
-<area alt="" coords="567,412,734,460" href="https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/" id="node9" shape="rect" title="JWTAuthentication"/>
-<area alt="" coords="361,412,543,460" href="https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/" id="node10" shape="rect" title="CookieAuthentication"/>
-<area alt="" coords="542,724,538,717,525,710,505,705,480,701,452,700,424,701,399,705,379,710,366,717,362,724,366,731,379,738,399,743,424,747,452,748,480,747,505,743,525,738,538,731" href="https://rrwen.github.io/msdss-base-api/" id="node11" shape="poly" title="msdss-base-api"/>
-<area alt="" coords="507,148,501,141,485,134,459,129,426,125,389,124,353,125,320,129,294,134,277,141,271,148,277,155,294,162,320,167,353,171,389,172,426,171,459,167,485,162,501,155" href="https://rrwen.github.io/msdss-base-database/" id="node12" shape="poly" title="msdss-base-database"/>
-<area alt="" coords="247,148,244,141,235,134,221,129,204,125,185,124,166,125,149,129,136,134,127,141,124,148,127,155,136,162,149,167,166,171,185,172,204,171,221,167,235,162,244,155" href="https://pypi.org/project/databases/" id="node13" shape="poly" title="databases"/>
-</map><p>The command line uses methods from the <a class="reference external" href="https://github.com/fastapi-users/fastapi-users/blob/master/fastapi_users/manager.py">FastAPI UsersManager</a> to <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/cookbook/create-user-programmatically/">programmatically manage users</a>.</p>
-<p>Most of these are implemented under the <a class="reference internal" href="reference/tools.html#module-msdss_users_api.tools" title="msdss_users_api.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">msdss_users_api.tools</span></code></a> module, and run using <a class="reference internal" href="reference/cli.html#msdss_users_api.cli.run" title="msdss_users_api.cli.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.cli.run()</span></code></a>.</p>
-<div class="graphviz"><img alt='digraph methods {
-rankdir=TB;
-
-deleteuserfunc[label="delete_user (delete)" shape=rect style=rounded];
-getuserfunc[label="get_user (get)" shape=rect style=rounded];
-registeruserfunc[label="register_user (register)" shape=rect style=rounded];
-resetuserfunc[label="reset_user_password (reset)" shape=rect style=rounded];
-updateuserfunc[label="update_user (update)" shape=rect style=rounded];
-
-subgraph cluster0 {
-   label=&lt; &lt;B&gt;msdss_users_api.cli.run&lt;/B&gt; &gt;;
-
-   style=rounded;
-
-   subgraph cluster1 {
-      label=&lt; &lt;B&gt;msdss_users_api.tools&lt;/B&gt; &gt;;
-      rankdir=TB;
-      deleteuserfunc;
-      getuserfunc;
-      registeruserfunc;
-      resetuserfunc;
-      updateuserfunc;
-   };
-
-   usersapi[label="msdss_users_api.core.UsersAPI (start)" shape=rect];
-
-}
-}' class="graphviz" src="_images/graphviz-474838df5e4eb7c28d0e0dc62d0aedbb3415b388.png"/></div>
+<span class="c1"># Run the app with app.start()</span>
+<span class="c1"># API is hosted at http://localhost:8000</span>
+<span class="c1"># Try API at http://localhost:8000/docs</span>
+<span class="c1"># app.start()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not forget to setup your environmental variables (see <a href="#id3"><span class="problematic" id="id4">`Quick Start`_</span></a>)</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also manage users programmatically with the following functions:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="reference/tools.html#msdss_users_api.tools.register_user" title="msdss_users_api.tools.register_user"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.register_user()</span></code></a></p></li>
+<li><p><a class="reference internal" href="reference/tools.html#msdss_users_api.tools.get_user" title="msdss_users_api.tools.get_user"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.get_user()</span></code></a></p></li>
+<li><p><a class="reference internal" href="reference/tools.html#msdss_users_api.tools.update_user" title="msdss_users_api.tools.update_user"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.update_user()</span></code></a></p></li>
+<li><p><a class="reference internal" href="reference/tools.html#msdss_users_api.tools.reset_user_password" title="msdss_users_api.tools.reset_user_password"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.reset_user_password()</span></code></a></p></li>
+<li><p><a class="reference internal" href="reference/tools.html#msdss_users_api.tools.delete_user" title="msdss_users_api.tools.delete_user"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.delete_user()</span></code></a></p></li>
+</ul>
+</div>
+</section>
 </section>
 
 
@@ -407,7 +415,7 @@ subgraph cluster0 {
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
           
-            <a href="usage.html" title="Usage"
+            <a href="quickstart.html" title="Quick Start"
                class="md-flex md-footer-nav__link md-footer-nav__link--prev"
                rel="prev">
               <div class="md-flex__cell md-flex__cell--shrink">
@@ -416,17 +424,17 @@ subgraph cluster0 {
               <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
                 <span class="md-flex__ellipsis">
                   <span
-                      class="md-footer-nav__direction"> Previous </span> Usage </span>
+                      class="md-footer-nav__direction"> Previous </span> Quick Start </span>
               </div>
             </a>
           
           
-            <a href="reference/index.html" title="API Reference"
+            <a href="howitworks.html" title="How it Works"
                class="md-flex md-footer-nav__link md-footer-nav__link--next"
                rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
                 class="md-flex__ellipsis"> <span
-                class="md-footer-nav__direction"> Next </span> API Reference </span>
+                class="md-footer-nav__direction"> Next </span> How it Works </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink"><i
                 class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>

@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import inspect
 
 from getpass import getpass
 
@@ -67,6 +68,10 @@ def _get_parser():
     start_parser.add_argument('--host', type=str, default='127.0.0.1', help='address to host server')
     start_parser.add_argument('--port', type=int, default=8000, help='port to host server')
     start_parser.add_argument('--log_level', type=str, default='info', help='level of verbose messages to display')
+    start_parser.add_argument('--auth_prefix', type=str, default='/auth', help='path prefix for auth routes')
+    start_parser.add_argument('--users_prefix', type=str, default='/users', help='path prefix for users routes')
+    start_parser.add_argument('--auth_lifetime', type=int, default=3600, help='token/cookie lifetime before expiry in secs')
+    start_parser.add_argument('--disable_register_superuser', dest='register_router_superuser', action='store_false', help='disable superuser requirement for register route')
     start_parser.add_argument('--disable_auth_router', dest='enable_auth_router', action='store_false', help='disable auth router')
     start_parser.add_argument('--disable_register_router', dest='enable_register_router', action='store_false', help='disable register router')
     start_parser.add_argument('--disable_verify_router', dest='enable_verify_router', action='store_false', help='disable verify router')
@@ -74,7 +79,19 @@ def _get_parser():
     start_parser.add_argument('--disable_users_router', dest='enable_users_router', action='store_false', help='disable users router')
     start_parser.add_argument('--disable_jwt_auth', dest='enable_jwt_auth', action='store_false', help='disable jwt authentication')
     start_parser.add_argument('--disable_cookie_auth', dest='enable_cookie_auth', action='store_false', help='disable cookie authentication')
+    start_parser.add_argument('--secret_key', type=str, default='MSDSS_USERS_SECRET', help='env var name for secret phrase')
+    start_parser.add_argument('--jwt_secret_key', type=str, default='MSDSS_USERS_JWT_SECRET', help='env var name for jwt secret')
+    start_parser.add_argument('--cookie_secret_key', type=str, default='MSDSS_USERS_COOKIE_SECRET', help='env var name for cookie secret')
+    start_parser.add_argument('--reset_password_token_secret_key', type=str, default='MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET', help='env var name for reset password secret')
+    start_parser.add_argument('--verification_token_secret_key', type=str, default='MSDSS_USERS_VERIFICATION_TOKEN_SECRET', help='env var name for verify token secret')
+    start_parser.add_argument('--driver_key', type=str, default='MSDSS_DATABASE_DRIVER', help='env var name for db driver')
+    start_parser.add_argument('--user_key', type=str, default='MSDSS_DATABASE_USER', help='env var name for db user')
+    start_parser.add_argument('--password_key', type=str, default='MSDSS_DATABASE_PASSWORD', help='env var name for db user password')
+    start_parser.add_argument('--host_key', type=str, default='MSDSS_DATABASE_HOST', help='env var name for db host')
+    start_parser.add_argument('--port_key', type=str, default='MSDSS_DATABASE_PORT', help='env var name for db port')
+    start_parser.add_argument('--database_key', type=str, default='MSDSS_DATABASE_NAME', help='env var name for db name')
     start_parser.set_defaults(
+        register_router_superuser=True,
         enable_auth_router=True,
         enable_register_router=True,
         enable_verify_router=True,
@@ -178,6 +195,8 @@ def run():
 
     # (run_command) Run commands
     if command == 'register':
+
+        # (run_command_register) Execute user register
         kwargs['email'] = kwargs['email'] if kwargs['email'] else input('Email: ')
         kwargs['password'] = kwargs['password'] if kwargs['password'] else _prompt_password()
         asyncio.run(register_user(
@@ -185,38 +204,83 @@ def run():
             create_user_manager_context_kwargs=env_kwargs,
             **kwargs
         ))
+
     elif command == 'get':
+
+        # (run_command_get) Execute user get
         asyncio.run(get_user(
             show=True,
             create_user_db_context_kwargs=env_kwargs,
             create_user_manager_context_kwargs=env_kwargs,
             **kwargs
         ))
+
     elif command == 'delete':
+
+        # (run_command_delete) Execute user delete
         asyncio.run(delete_user(
             create_user_db_context_kwargs=env_kwargs,
             create_user_manager_context_kwargs=env_kwargs,
             **kwargs
         ))
+
     elif command == 'reset':
+
+        # (run_command_reset) Reset password for user
         kwargs['password'] = kwargs['password'] if kwargs['password'] else _prompt_password()
         asyncio.run(reset_user_password(
             create_user_db_context_kwargs=env_kwargs,
             create_user_manager_context_kwargs=env_kwargs,
             **kwargs
         ))
+
     elif command == 'update':
+
+        # (run_command_update) Execute user update
         kwargs = {k:v for k, v in kwargs.items() if v}
         asyncio.run(update_user(
             create_user_db_context_kwargs=env_kwargs,
             create_user_manager_context_kwargs=env_kwargs,
             **kwargs
         ))
+
     elif command == 'start':
+
+        # (run_command_start_env) Merge env args into standard args
         kwargs.update(env_kwargs)
+        
+        # (run_command_start_route) Extract route args
+        auth_prefix = kwargs.pop('auth_prefix')
+        users_prefix = kwargs.pop('users_prefix')
+        auth_lifetime = kwargs.pop('auth_lifetime')
+
+        # (run_command_start_serve) Extract server args
         app_kwargs = dict(
             host=kwargs.pop('host'),
             port=kwargs.pop('port'),
-            log_level=kwargs.pop('log_level'))
+            log_level=kwargs.pop('log_level')
+        )
+
+        # (run_command_start_defaults) Get default parameters
+        defaults = inspect.signature(UsersAPI).parameters
+        for k, v in defaults.items():
+            is_not_empty = v.default is not inspect.Parameter.empty 
+            if k not in kwargs and is_not_empty:
+                kwargs[k] = defaults[k].default
+
+        # (run_command_start_route_merge) Merge route args to standard args
+        kwargs['auth_router_jwt_include_kwargs']['prefix'] = auth_prefix + '/jwt'
+        kwargs['auth_router_cookie_include_kwargs']['prefix'] = auth_prefix
+        kwargs['register_router_include_kwargs']['prefix'] = auth_prefix
+        kwargs['verify_router_include_kwargs']['prefix'] = auth_prefix
+        kwargs['reset_password_router_include_kwargs']['prefix'] = auth_prefix
+        kwargs['users_router_include_kwargs']['prefix'] = users_prefix
+        kwargs['cookie_kwargs']['lifetime_seconds'] = auth_lifetime
+        kwargs['jwt_kwargs'].update(dict(
+            lifetime_seconds=auth_lifetime,
+            tokenUrl=auth_prefix[1:] + '/jwt/login'
+        ))
+
+        # (run_command_start) Execute users api server
         app = UsersAPI(**kwargs)
         app.start(**app_kwargs)

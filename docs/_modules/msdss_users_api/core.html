@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.core &#8212; 0.1.2</title>
+    <title>msdss_users_api.core &#8212; 0.1.3</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -87,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.1.2"
+        <a href="../../index.html" title="0.1.3"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.1.2 logo">
+                   alt="0.1.3 logo">
           
         </a>
       </div>
@@ -174,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.1.2</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.1.3</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -187,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.1.2" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.1.3" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.1.2">msdss-users-api</a>
+       title="0.1.3">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -225,6 +225,13 @@
     
     
       <a href="../../quickstart.html" class="md-nav__link">Quick Start</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../../usage.html" class="md-nav__link">Usage</a>
       
     
     </li>
@@ -272,7 +279,7 @@
 <span></span><span class="kn">import</span> <span class="nn">databases</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span><span class="p">,</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">Response</span>
 <span class="kn">from</span> <span class="nn">fastapi_users</span> <span class="kn">import</span> <span class="n">FastAPIUsers</span>
 <span class="kn">from</span> <span class="nn">fastapi_users.authentication</span> <span class="kn">import</span> <span class="n">CookieAuthentication</span><span class="p">,</span> <span class="n">JWTAuthentication</span>
 <span class="kn">from</span> <span class="nn">msdss_base_api</span> <span class="kn">import</span> <span class="n">API</span>
@@ -426,6 +433,8 @@
 <span class="sd">        The environmental variable name for ``database``.</span>
 <span class="sd">    log_warnings : bool</span>
 <span class="sd">        Whether to log warnings or not.</span>
+<span class="sd">    api : :class:`fastapi:fastapi.FastAPI`</span>
+<span class="sd">        API object for creating routes.</span>
 <span class="sd">    *args, **kwargs</span>
 <span class="sd">        Additional arguments passed to :class:`msdss_base_api:msdss_base_api.core.API`.</span>
 
@@ -433,33 +442,44 @@
 <span class="sd">    ----------</span>
 <span class="sd">    users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers`</span>
 <span class="sd">        Configured FastAPI Users object. See `FastAPIUsers object &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/&gt;`_.</span>
+<span class="sd">    users_database : :class:`msdss_base_database:msdss_base_database.core.Database`</span>
+<span class="sd">        Database object for users API.</span>
+<span class="sd">    users_routers : dict</span>
+<span class="sd">        Dictionary of user routers for the users API:</span>
+
+<span class="sd">        * ``auth_jwt`` (:class:`fastapi:fastapi.APIRouter`): configured auth router with jwt authentication (See parameter ``auth_router_jwt_kwargs``)</span>
+<span class="sd">        * ``auth_cookie`` (:class:`fastapi:fastapi.APIRouter`): configured auth router with cookie authentication (See parameter ``auth_router_cookie_kwargs``)</span>
+<span class="sd">        * ``register`` (:class:`fastapi:fastapi.APIRouter`): configured register router (see parameter ``register_router_kwargs``)</span>
+<span class="sd">        * ``verify`` (:class:`fastapi:fastapi.APIRouter`): configured verify router (see parameter ``verify_router_kwargs``)</span>
+<span class="sd">        * ``reset_password`` (:class:`fastapi:fastapi.APIRouter`): configured reset password router (see parameter ``reset_password_kwargs``)</span>
+<span class="sd">        * ``users`` (:class:`fastapi:fastapi.APIRouter`): configured users router (see parameter ``users_router_kwargs``)</span>
+
 <span class="sd">    _users_databases : dict</span>
 <span class="sd">        Dictionary of user database related objects:</span>
 
 <span class="sd">        * ``engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): Engine from parameter ``database_engine``.</span>
 <span class="sd">        * ``asynchronous`` (:class:`databases:databases.Database`): Async database from parameter ``async_database``.</span>
-<span class="sd">    </span>
+
+<span class="sd">    _users_events : dict(func)</span>
+<span class="sd">        Dictionary of event functions registered from auto-config:</span>
+
+<span class="sd">        * ``startup`` (func): startup function registered if ``setup_startup`` is ``True``</span>
+<span class="sd">        * ``shutdown`` (func): shutdown function registered if ``setup_shutdown`` is ``True``</span>
 <span class="sd">    _users_functions : dict(func)</span>
 <span class="sd">        Dictionary of user related functions from auto-config:</span>
 
 <span class="sd">        * ``get_user_db`` (func): get_user_db function auto-configured or from parameter ``get_user_db``. See :func:`msdss_users_api.tools.create_user_db_func`.</span>
 <span class="sd">        * ``get_user_manager`` (func): get_user_manager function auto-configured or from parameter ``get_user_manager``. See :func`msdss_users_api.tools.create_user_manager_func`.</span>
 <span class="sd">    </span>
-<span class="sd">    _users_events : dict(func)</span>
-<span class="sd">        Dictionary of event functions registered from auto-config:</span>
-
-<span class="sd">        * ``startup``: startup function registered if ``setup_startup`` is ``True``</span>
-<span class="sd">        * ``shutdown``: shutdown function registered if ``setup_shutdown`` is ``True``</span>
-<span class="sd">    </span>
 <span class="sd">    _users_models : dict</span>
 <span class="sd">        Dictionary of user models for the users API:</span>
 
-<span class="sd">        * User (:class:`msdss_users_api.models.User`): see parameter ``User``.</span>
-<span class="sd">        * UserCreate (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``.</span>
-<span class="sd">        * UserUpdate (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``.</span>
-<span class="sd">        * UserDB (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``.</span>
-<span class="sd">        * UserTable (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``.</span>
-<span class="sd">        * UserManager (:class:`msdss_users_api.models.UserManager`): see parameter ``UserManager``.</span>
+<span class="sd">        * ``User (:class:`msdss_users_api.models.User`): see parameter ``User``.</span>
+<span class="sd">        * ``UserCreate`` (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``.</span>
+<span class="sd">        * ``UserUpdate`` (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``.</span>
+<span class="sd">        * ``UserDB`` (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``.</span>
+<span class="sd">        * ``UserTable`` (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``.</span>
+<span class="sd">        * ``UserManager`` (:class:`msdss_users_api.models.UserManager`): see parameter ``UserManager``.</span>
 
 <span class="sd">    Author</span>
 <span class="sd">    ------</span>
@@ -575,8 +595,12 @@
         <span class="n">port_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_PORT'</span><span class="p">,</span>
         <span class="n">database_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_NAME'</span><span class="p">,</span>
         <span class="n">log_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">api</span><span class="o">=</span><span class="n">FastAPI</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s1">'MSDSS Users API'</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="s1">'0.1.3'</span>
+        <span class="p">),</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api</span><span class="o">=</span><span class="n">api</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="c1"># (UserAPI_env) Load env vars</span>
         <span class="n">has_env</span> <span class="o">=</span> <span class="n">env_exists</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">env_file</span><span class="p">,</span> <span class="n">key_path</span><span class="o">=</span><span class="n">key_path</span><span class="p">)</span>
@@ -687,6 +711,14 @@
         <span class="c1"># (UserAPI_attr) Add attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">users_api</span> <span class="o">=</span> <span class="n">users_api</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">users_database</span> <span class="o">=</span> <span class="n">db</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">users_routers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">auth_jwt</span><span class="o">=</span><span class="n">auth_jwt_router</span><span class="p">,</span>
+            <span class="n">auth_cookie</span><span class="o">=</span><span class="n">auth_cookie_router</span><span class="p">,</span>
+            <span class="n">register</span><span class="o">=</span><span class="n">register_router</span><span class="p">,</span>
+            <span class="n">verify</span><span class="o">=</span><span class="n">verify_router</span><span class="p">,</span>
+            <span class="n">reset_password</span><span class="o">=</span><span class="n">reset_password_router</span><span class="p">,</span>
+            <span class="n">users</span><span class="o">=</span><span class="n">users_router</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">engine</span> <span class="o">=</span> <span class="n">database_engine</span><span class="p">,</span>
             <span class="n">asynchronous</span> <span class="o">=</span> <span class="n">async_database</span>

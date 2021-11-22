@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.cli &#8212; 0.1.2</title>
+    <title>msdss_users_api.cli &#8212; 0.1.3</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -87,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.1.2"
+        <a href="../../index.html" title="0.1.3"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.1.2 logo">
+                   alt="0.1.3 logo">
           
         </a>
       </div>
@@ -174,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.1.2</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.1.3</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -187,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.1.2" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.1.3" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.1.2">msdss-users-api</a>
+       title="0.1.3">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -225,6 +225,13 @@
     
     
       <a href="../../quickstart.html" class="md-nav__link">Quick Start</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../../usage.html" class="md-nav__link">Usage</a>
       
     
     </li>
@@ -271,6 +278,7 @@
   <h1 id="modules-msdss-users-api-cli--page-root">Source code for msdss_users_api.cli</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 
 <span class="kn">from</span> <span class="nn">getpass</span> <span class="kn">import</span> <span class="n">getpass</span>
 
@@ -338,6 +346,10 @@
     <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--host'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'127.0.0.1'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'address to host server'</span><span class="p">)</span>
     <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--port'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">8000</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'port to host server'</span><span class="p">)</span>
     <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--log_level'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'info'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'level of verbose messages to display'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--auth_prefix'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'/auth'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'path prefix for auth routes'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--users_prefix'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'/users'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'path prefix for users routes'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--auth_lifetime'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'token/cookie lifetime before expiry in secs'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_register_superuser'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'register_router_superuser'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable superuser requirement for register route'</span><span class="p">)</span>
     <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_auth_router'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_auth_router'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable auth router'</span><span class="p">)</span>
     <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_register_router'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_register_router'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable register router'</span><span class="p">)</span>
     <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_verify_router'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_verify_router'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable verify router'</span><span class="p">)</span>
@@ -345,7 +357,19 @@
     <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_users_router'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_users_router'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable users router'</span><span class="p">)</span>
     <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_jwt_auth'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_jwt_auth'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable jwt authentication'</span><span class="p">)</span>
     <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--disable_cookie_auth'</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">'enable_cookie_auth'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">'store_false'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'disable cookie authentication'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--secret_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_USERS_SECRET'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for secret phrase'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--jwt_secret_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_USERS_JWT_SECRET'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for jwt secret'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--cookie_secret_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_USERS_COOKIE_SECRET'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for cookie secret'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--reset_password_token_secret_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for reset password secret'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--verification_token_secret_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_USERS_VERIFICATION_TOKEN_SECRET'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for verify token secret'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--driver_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_DRIVER'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for db driver'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--user_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_USER'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for db user'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--password_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_PASSWORD'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for db user password'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--host_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_HOST'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for db host'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--port_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_PORT'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for db port'</span><span class="p">)</span>
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">'--database_key'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_NAME'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'env var name for db name'</span><span class="p">)</span>
     <span class="n">start_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span>
+        <span class="n">register_router_superuser</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">enable_auth_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">enable_register_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">enable_verify_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -449,6 +473,8 @@
 
     <span class="c1"># (run_command) Run commands</span>
     <span class="k">if</span> <span class="n">command</span> <span class="o">==</span> <span class="s1">'register'</span><span class="p">:</span>
+
+        <span class="c1"># (run_command_register) Execute user register</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">'email'</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'email'</span><span class="p">]</span> <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'email'</span><span class="p">]</span> <span class="k">else</span> <span class="nb">input</span><span class="p">(</span><span class="s1">'Email: '</span><span class="p">)</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="k">else</span> <span class="n">_prompt_password</span><span class="p">()</span>
         <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">register_user</span><span class="p">(</span>
@@ -456,39 +482,84 @@
             <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">))</span>
+
     <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s1">'get'</span><span class="p">:</span>
+
+        <span class="c1"># (run_command_get) Execute user get</span>
         <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">get_user</span><span class="p">(</span>
             <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">create_user_db_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">))</span>
+
     <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s1">'delete'</span><span class="p">:</span>
+
+        <span class="c1"># (run_command_delete) Execute user delete</span>
         <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">delete_user</span><span class="p">(</span>
             <span class="n">create_user_db_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">))</span>
+
     <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s1">'reset'</span><span class="p">:</span>
+
+        <span class="c1"># (run_command_reset) Reset password for user</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="k">else</span> <span class="n">_prompt_password</span><span class="p">()</span>
         <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">reset_user_password</span><span class="p">(</span>
             <span class="n">create_user_db_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">))</span>
+
     <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s1">'update'</span><span class="p">:</span>
+
+        <span class="c1"># (run_command_update) Execute user update</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">}</span>
         <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">update_user</span><span class="p">(</span>
             <span class="n">create_user_db_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="n">env_kwargs</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
         <span class="p">))</span>
+
     <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s1">'start'</span><span class="p">:</span>
+
+        <span class="c1"># (run_command_start_env) Merge env args into standard args</span>
         <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">env_kwargs</span><span class="p">)</span>
+        
+        <span class="c1"># (run_command_start_route) Extract route args</span>
+        <span class="n">auth_prefix</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'auth_prefix'</span><span class="p">)</span>
+        <span class="n">users_prefix</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'users_prefix'</span><span class="p">)</span>
+        <span class="n">auth_lifetime</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'auth_lifetime'</span><span class="p">)</span>
+
+        <span class="c1"># (run_command_start_serve) Extract server args</span>
         <span class="n">app_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
             <span class="n">host</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'host'</span><span class="p">),</span>
             <span class="n">port</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'port'</span><span class="p">),</span>
-            <span class="n">log_level</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'log_level'</span><span class="p">))</span>
+            <span class="n">log_level</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'log_level'</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># (run_command_start_defaults) Get default parameters</span>
+        <span class="n">defaults</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">UsersAPI</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">is_not_empty</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span> 
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">is_not_empty</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaults</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">default</span>
+
+        <span class="c1"># (run_command_start_route_merge) Merge route args to standard args</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">'auth_router_jwt_include_kwargs'</span><span class="p">][</span><span class="s1">'prefix'</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth_prefix</span> <span class="o">+</span> <span class="s1">'/jwt'</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">'auth_router_cookie_include_kwargs'</span><span class="p">][</span><span class="s1">'prefix'</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth_prefix</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">'register_router_include_kwargs'</span><span class="p">][</span><span class="s1">'prefix'</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth_prefix</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">'verify_router_include_kwargs'</span><span class="p">][</span><span class="s1">'prefix'</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth_prefix</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">'reset_password_router_include_kwargs'</span><span class="p">][</span><span class="s1">'prefix'</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth_prefix</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">'users_router_include_kwargs'</span><span class="p">][</span><span class="s1">'prefix'</span><span class="p">]</span> <span class="o">=</span> <span class="n">users_prefix</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">'cookie_kwargs'</span><span class="p">][</span><span class="s1">'lifetime_seconds'</span><span class="p">]</span> <span class="o">=</span> <span class="n">auth_lifetime</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">'jwt_kwargs'</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">lifetime_seconds</span><span class="o">=</span><span class="n">auth_lifetime</span><span class="p">,</span>
+            <span class="n">tokenUrl</span><span class="o">=</span><span class="n">auth_prefix</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="s1">'/jwt/login'</span>
+        <span class="p">))</span>
+
+        <span class="c1"># (run_command_start) Execute users api server</span>
         <span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">app</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="o">**</span><span class="n">app_kwargs</span><span class="p">)</span></div>
 </pre></div>

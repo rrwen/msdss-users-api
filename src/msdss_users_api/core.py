@@ -1,7 +1,7 @@
 import databases
 import os
 
-from fastapi import Depends, Response
+from fastapi import Depends, FastAPI, Response
 from fastapi_users import FastAPIUsers
 from fastapi_users.authentication import CookieAuthentication, JWTAuthentication
 from msdss_base_api import API
@@ -155,6 +155,8 @@ class UsersAPI(API):
         The environmental variable name for ``database``.
     log_warnings : bool
         Whether to log warnings or not.
+    api : :class:`fastapi:fastapi.FastAPI`
+        API object for creating routes.
     *args, **kwargs
         Additional arguments passed to :class:`msdss_base_api:msdss_base_api.core.API`.
 
@@ -162,33 +164,44 @@ class UsersAPI(API):
     ----------
     users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers`
         Configured FastAPI Users object. See `FastAPIUsers object <https://fastapi-users.github.io/fastapi-users/configuration/routers/>`_.
+    users_database : :class:`msdss_base_database:msdss_base_database.core.Database`
+        Database object for users API.
+    users_routers : dict
+        Dictionary of user routers for the users API:
+
+        * ``auth_jwt`` (:class:`fastapi:fastapi.APIRouter`): configured auth router with jwt authentication (See parameter ``auth_router_jwt_kwargs``)
+        * ``auth_cookie`` (:class:`fastapi:fastapi.APIRouter`): configured auth router with cookie authentication (See parameter ``auth_router_cookie_kwargs``)
+        * ``register`` (:class:`fastapi:fastapi.APIRouter`): configured register router (see parameter ``register_router_kwargs``)
+        * ``verify`` (:class:`fastapi:fastapi.APIRouter`): configured verify router (see parameter ``verify_router_kwargs``)
+        * ``reset_password`` (:class:`fastapi:fastapi.APIRouter`): configured reset password router (see parameter ``reset_password_kwargs``)
+        * ``users`` (:class:`fastapi:fastapi.APIRouter`): configured users router (see parameter ``users_router_kwargs``)
+
     _users_databases : dict
         Dictionary of user database related objects:
 
         * ``engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): Engine from parameter ``database_engine``.
         * ``asynchronous`` (:class:`databases:databases.Database`): Async database from parameter ``async_database``.
-    
+
+    _users_events : dict(func)
+        Dictionary of event functions registered from auto-config:
+
+        * ``startup`` (func): startup function registered if ``setup_startup`` is ``True``
+        * ``shutdown`` (func): shutdown function registered if ``setup_shutdown`` is ``True``
     _users_functions : dict(func)
         Dictionary of user related functions from auto-config:
 
         * ``get_user_db`` (func): get_user_db function auto-configured or from parameter ``get_user_db``. See :func:`msdss_users_api.tools.create_user_db_func`.
         * ``get_user_manager`` (func): get_user_manager function auto-configured or from parameter ``get_user_manager``. See :func`msdss_users_api.tools.create_user_manager_func`.
     
-    _users_events : dict(func)
-        Dictionary of event functions registered from auto-config:
-
-        * ``startup``: startup function registered if ``setup_startup`` is ``True``
-        * ``shutdown``: shutdown function registered if ``setup_shutdown`` is ``True``
-    
     _users_models : dict
         Dictionary of user models for the users API:
 
-        * User (:class:`msdss_users_api.models.User`): see parameter ``User``.
-        * UserCreate (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``.
-        * UserUpdate (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``.
-        * UserDB (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``.
-        * UserTable (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``.
-        * UserManager (:class:`msdss_users_api.models.UserManager`): see parameter ``UserManager``.
+        * ``User (:class:`msdss_users_api.models.User`): see parameter ``User``.
+        * ``UserCreate`` (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``.
+        * ``UserUpdate`` (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``.
+        * ``UserDB`` (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``.
+        * ``UserTable`` (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``.
+        * ``UserManager`` (:class:`msdss_users_api.models.UserManager`): see parameter ``UserManager``.
 
     Author
     ------
@@ -304,8 +317,12 @@ class UsersAPI(API):
         port_key='MSDSS_DATABASE_PORT',
         database_key='MSDSS_DATABASE_NAME',
         log_warnings=True,
+        api=FastAPI(
+            title='MSDSS Users API',
+            version='0.1.3'
+        ),
         *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(api=api, *args, **kwargs)
 
         # (UserAPI_env) Load env vars
         has_env = env_exists(file_path=env_file, key_path=key_path)
@@ -416,6 +433,14 @@ class UsersAPI(API):
         # (UserAPI_attr) Add attributes
         self.users_api = users_api
         self.users_database = db
+        self.users_routers = dict(
+            auth_jwt=auth_jwt_router,
+            auth_cookie=auth_cookie_router,
+            register=register_router,
+            verify=verify_router,
+            reset_password=reset_password_router,
+            users=users_router
+        )
         self._users_databases = dict(
             engine = database_engine,
             asynchronous = async_database

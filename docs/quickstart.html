@@ -47,7 +47,7 @@
   
   
   
-    <title>Quick Start &#8212; 0.1.2</title>
+    <title>Quick Start &#8212; 0.1.3</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/material.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -65,7 +65,7 @@
     <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="How it Works" href="howitworks.html" />
+    <link rel="next" title="Usage" href="usage.html" />
     <link rel="prev" title="Install" href="install.html" />
   
    
@@ -90,11 +90,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="index.html" title="0.1.2"
+        <a href="index.html" title="0.1.3"
            class="md-header-nav__button md-logo">
           
               <img src="_static/logo.svg" height="26"
-                   alt="0.1.2 logo">
+                   alt="0.1.3 logo">
           
         </a>
       </div>
@@ -177,7 +177,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">0.1.2</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">0.1.3</a></li>
       </ul>
     </div>
   </nav>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="index.html" title="0.1.2" class="md-nav__button md-logo">
+    <a href="index.html" title="0.1.3" class="md-nav__button md-logo">
       
         <img src="_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="index.html"
-       title="0.1.2">msdss-users-api</a>
+       title="0.1.3">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -233,12 +233,32 @@
       
         
 <nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#quickstart--page-root" class="md-nav__link">Quick Start</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#setup-secrets" class="md-nav__link">Setup Secrets</a>
+        </li>
+        <li class="md-nav__item"><a href="#setup-database" class="md-nav__link">Setup Database</a>
+        </li>
+        <li class="md-nav__item"><a href="#create-superuser" class="md-nav__link">Create Superuser</a>
+        </li>
+        <li class="md-nav__item"><a href="#running-the-api" class="md-nav__link">Running the API</a>
+        </li></ul>
+            </nav>
+        </li>
     
 <li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/quickstart.rst.txt">Show Source</a> </li>
 
   </ul>
 </nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="usage.html" class="md-nav__link">Usage</a>
       
     
     </li>
@@ -268,7 +288,20 @@
               <div class="md-sidebar__inner">
                 
 <nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
   <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#quickstart--page-root" class="md-nav__link">Quick Start</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#setup-secrets" class="md-nav__link">Setup Secrets</a>
+        </li>
+        <li class="md-nav__item"><a href="#setup-database" class="md-nav__link">Setup Database</a>
+        </li>
+        <li class="md-nav__item"><a href="#create-superuser" class="md-nav__link">Create Superuser</a>
+        </li>
+        <li class="md-nav__item"><a href="#running-the-api" class="md-nav__link">Running the API</a>
+        </li></ul>
+            </nav>
+        </li>
     
 <li class="md-nav__item"><a class="md-nav__extra_link" href="_sources/quickstart.rst.txt">Show Source</a> </li>
 
@@ -285,20 +318,30 @@
             
   <section id="quick-start">
 <h1 id="quickstart--page-root">Quick Start<a class="headerlink" href="#quickstart--page-root" title="Permalink to this headline">¶</a></h1>
+<section id="setup-secrets">
+<h2 id="setup-secrets">Setup Secrets<a class="headerlink" href="#setup-secrets" title="Permalink to this headline">¶</a></h2>
 <p>After installing the package, set up environment variables using <code class="docutils literal notranslate"><span class="pre">msdss-dotenv</span></code> in a command line terminal:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="n">init</span>
 <span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_SECRET</span> <span class="n">secret</span><span class="o">-</span><span class="n">phrase</span>
-<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_JWT_SECRET</span> <span class="n">secret</span><span class="o">-</span><span class="n">phrase</span><span class="o">-</span><span class="mi">02</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET</span> <span class="n">secret</span><span class="o">-</span><span class="n">phrase</span><span class="o">-</span><span class="mi">02</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_VERIFICATION_TOKEN_SECRET</span> <span class="n">secret</span><span class="o">-</span><span class="n">phrase</span><span class="o">-</span><span class="mi">03</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can generate a strong <code class="docutils literal notranslate"><span class="pre">secret-phrase</span></code> and <code class="docutils literal notranslate"><span class="pre">secret-phrase-02</span></code> with:</p>
+<p>You can generate a strong secret phrases with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">openssl</span> <span class="n">rand</span> <span class="o">-</span><span class="nb">hex</span> <span class="mi">32</span>
 </pre></div>
 </div>
 </div>
-<p>Then setup the database environment variables:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Copy and save these secret phrases as they will be needed to authenticate your users.</p>
+</div>
+</section>
+<section id="setup-database">
+<h2 id="setup-database">Setup Database<a class="headerlink" href="#setup-database" title="Permalink to this headline">¶</a></h2>
+<p>Setup the database environment variables:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_DATABASE_DRIVER</span> <span class="n">postgresql</span>
 <span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_DATABASE_USER</span> <span class="n">msdss</span>
 <span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_DATABASE_PASSWORD</span> <span class="n">msdss123</span>
@@ -307,38 +350,28 @@
 <span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_DATABASE_NAME</span> <span class="n">msdss</span>
 </pre></div>
 </div>
-<p>Finally, create a <code class="docutils literal notranslate"><span class="pre">superuser</span></code> with the <code class="docutils literal notranslate"><span class="pre">msdss-users</span></code> command line interface:</p>
+</section>
+<section id="create-superuser">
+<h2 id="create-superuser">Create Superuser<a class="headerlink" href="#create-superuser" title="Permalink to this headline">¶</a></h2>
+<p>Create a <code class="docutils literal notranslate"><span class="pre">superuser</span></code> with the <code class="docutils literal notranslate"><span class="pre">msdss-users</span></code> command line interface:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">register</span> <span class="o">--</span><span class="n">superuser</span>
 </pre></div>
 </div>
-<p>In Python, use the package via <a class="reference internal" href="reference/usersapi.html#msdss_users_api.core.UsersAPI" title="msdss_users_api.core.UsersAPI"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.core.UsersAPI</span></code></a>:</p>
-<div class="jupyter_cell jupyter_container docutils container">
-<div class="cell_input code_cell docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span>
-<span class="kn">from</span> <span class="nn">msdss_users_api</span> <span class="kn">import</span> <span class="n">UsersAPI</span>
-<span class="kn">from</span> <span class="nn">msdss_users_api.models</span> <span class="kn">import</span> <span class="n">User</span>
-
-<span class="c1"># Create app using env vars</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">()</span>
-
-<span class="c1"># Get a function dependency for the current active user</span>
-<span class="n">current_active_user</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># Add a protected route</span>
-<span class="nd">@app</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'/protected-route'</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">protected_route</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">current_active_user</span><span class="p">)):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">'Hello, </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s1">'</span>
-
-<span class="c1"># Run the app with app.start()</span>
-<span class="c1"># API is hosted at http://localhost:8000</span>
-<span class="c1"># Try API at http://localhost:8000/docs</span>
-<span class="c1"># app.start()</span>
+</section>
+<section id="running-the-api">
+<h2 id="running-the-api">Running the API<a class="headerlink" href="#running-the-api" title="Permalink to this headline">¶</a></h2>
+<p>Run a <code class="docutils literal notranslate"><span class="pre">msdss-users-api</span></code> server with the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="n">start</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can get help for the command line with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msdss</span><span class="o">-</span><span class="n">users</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-</div>
-</div>
+</section>
 </section>
 
 
@@ -365,12 +398,12 @@
             </a>
           
           
-            <a href="howitworks.html" title="How it Works"
+            <a href="usage.html" title="Usage"
                class="md-flex md-footer-nav__link md-footer-nav__link--next"
                rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
                 class="md-flex__ellipsis"> <span
-                class="md-footer-nav__direction"> Next </span> How it Works </span>
+                class="md-footer-nav__direction"> Next </span> Usage </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink"><i
                 class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>

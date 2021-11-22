@@ -1,23 +1,34 @@
 Quick Start
 ===========
 
+Setup Secrets
+-------------
+
 After installing the package, set up environment variables using ``msdss-dotenv`` in a command line terminal:
 
 .. code::
    
    msdss-dotenv init
    msdss-dotenv set MSDSS_USERS_SECRET secret-phrase
-   msdss-dotenv set MSDSS_USERS_JWT_SECRET secret-phrase-02
+   msdss-dotenv set MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET secret-phrase-02
+   msdss-dotenv set MSDSS_USERS_VERIFICATION_TOKEN_SECRET secret-phrase-03
 
 .. note::
 
-    You can generate a strong ``secret-phrase`` and ``secret-phrase-02`` with: 
+    You can generate a strong secret phrases with:
     
     .. code::
 
         openssl rand -hex 32
 
-Then setup the database environment variables:
+.. warning::
+
+    Copy and save these secret phrases as they will be needed to authenticate your users.
+
+Setup Database
+--------------
+
+Setup the database environment variables:
 
 .. code::
 
@@ -28,33 +39,28 @@ Then setup the database environment variables:
     msdss-dotenv set MSDSS_DATABASE_PORT 5432
     msdss-dotenv set MSDSS_DATABASE_NAME msdss
 
-Finally, create a ``superuser`` with the ``msdss-users`` command line interface:
+Create Superuser
+----------------
+
+Create a ``superuser`` with the ``msdss-users`` command line interface:
 
 .. code::
 
     msdss-users register --superuser
 
-In Python, use the package via :class:`msdss_users_api.core.UsersAPI`:
+Running the API
+---------------
 
-.. jupyter-execute::
-    :hide-output:
+Run a ``msdss-users-api`` server with the following command:
 
-    from fastapi import Depends
-    from msdss_users_api import UsersAPI
-    from msdss_users_api.models import User
+.. code::
 
-    # Create app using env vars
-    app = UsersAPI()
+    msdss-users start
 
-    # Get a function dependency for the current active user
-    current_active_user = app.get_current_user(active=True)
+.. note::
 
-    # Add a protected route
-    @app.add('GET', '/protected-route')
-    def protected_route(user: User = Depends(current_active_user)):
-        return f'Hello, {user.email}'
+    You can get help for the command line with:
+    
+    .. code::
 
-    # Run the app with app.start()
-    # API is hosted at http://localhost:8000
-    # Try API at http://localhost:8000/docs
-    # app.start()
+        msdss-users --help
