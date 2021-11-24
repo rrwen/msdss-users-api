@@ -86,18 +86,3 @@ class UserTable(Base, fastapi_users.db.SQLAlchemyBaseUserTable):
             print(c)
     """
     pass
-
-class UserManager(fastapi_users.BaseUserManager[UserCreate, UserDB]):
-    """
-    See `UserManager model <https://fastapi-users.github.io/fastapi-users/configuration/user-manager/>`_ from ``fastapi-users``.
-
-    Example
-    -------
-    .. jupyter-execute::
-
-        from msdss_users_api.models import *
-        from pprint import pprint
-
-        pprint(dir(UserManager))
-    """
-    user_db_model = UserDB

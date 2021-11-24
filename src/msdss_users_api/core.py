@@ -37,8 +37,6 @@ class UsersAPI(API):
     users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers` or None
         FastAPI Users object. See `FastAPIUsers object <https://fastapi-users.github.io/fastapi-users/configuration/routers/>`_.
         If ``None``, then one will be setup based on other parameters.
-    users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers` or None
-        A FastAPIUsers object to setup routes with. If ``None``, one will be setup using the params.
     enable_auth_router : bool
         Whether to include the Fast API Users api route.
     enable_register_router : bool
@@ -77,7 +75,7 @@ class UsersAPI(API):
         Whether to limit registration control to superusers only. If ``dependencies`` are set in parameter ``register_router_include_kwargs``, then a superuser dependency will be added to the list if ``True``.
     verify_router_kwargs : dict
         Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_verify_router`. See `Verify router <https://fastapi-users.github.io/fastapi-users/configuration/routers/verify/>`_.
-    verify_router_include_kwarg : dict
+    verify_router_include_kwargs : dict
         Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users verify router.
     reset_password_router_kwargs : dict
         Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_reset_password_router`. See `Reset password router <https://fastapi-users.github.io/fastapi-users/configuration/routers/reset/>`_.
@@ -113,18 +111,14 @@ class UsersAPI(API):
         UserTable model for FastAPI Users. See :class:`msdss_users_api.models.UserTable`.
     UserManager : :class:`msdss_users_api.models.UserManager`
         UserManager model for FastAPI Users. See :class:`msdss_users_api.models.UserManager`.
-    database_engine : :func:`sqlalchemy:sqlalchemy.create_engine` or  None
-        SQLAlchemy engine object. If ``None``, one will be created from the database connection params.
-    async_database : :class:`databases:databases.Database` or None
-        Async database object from ``databases``. If ``None``, one will be created from database connection params.
     get_user_db : func or None
         Function for getting the FastAPI Users DB object. If ``None``, one will be setup from params. See `FastAPI Users database config <https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/>`_.
     get_user_manager : func or None
         Function for getting the FastAPI UserManager object. If ``None``, one will be setup from params. See `FastAPI Users UserManager <https://fastapi-users.github.io/fastapi-users/configuration/user-manager/>`_.
     cookie_auth : :class:`fastapi_users:fastapi_users.authentication.CookieAuthentication` or None
-        A cookie authentication object from FastAPI Users. See `CookieAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/>`_.
+        A cookie authentication object from FastAPI Users. See `CookieAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/>`_. If ``None``, one will be auto-configured if ``enable_cookie_auth`` is ``True``.
     jwt_auth : :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication` or None
-        A JSON Web Token (JWT) authentication object from FastAPI Users. See `JWTAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/>`_.
+        A JSON Web Token (JWT) authentication object from FastAPI Users. See `JWTAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/>`_. If ``None``, one will be auto-configured if ``enable_jwt_auth`` is ``True``.
     load_env : bool
         Whether to load variables from a file with environmental variables at ``env_file`` or not.
     env_file : str
@@ -153,8 +147,6 @@ class UsersAPI(API):
         The environmental variable name for ``port``.
     database_key : str
         The environmental variable name for ``database``.
-    log_warnings : bool
-        Whether to log warnings or not.
     api : :class:`fastapi:fastapi.FastAPI`
         API object for creating routes.
     *args, **kwargs
@@ -162,46 +154,28 @@ class UsersAPI(API):
 
     Attributes
     ----------
-    users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers`
-        Configured FastAPI Users object. See `FastAPIUsers object <https://fastapi-users.github.io/fastapi-users/configuration/routers/>`_.
-    users_database : :class:`msdss_base_database:msdss_base_database.core.Database`
+    database : :class:`msdss_base_database:msdss_base_database.core.Database`
         Database object for users API.
-    users_routers : dict
-        Dictionary of user routers for the users API:
+    dependencies : dict(func)
+        Dictionary of user related dependency functions from auto-config:
 
-        * ``auth_jwt`` (:class:`fastapi:fastapi.APIRouter`): configured auth router with jwt authentication (See parameter ``auth_router_jwt_kwargs``)
-        * ``auth_cookie`` (:class:`fastapi:fastapi.APIRouter`): configured auth router with cookie authentication (See parameter ``auth_router_cookie_kwargs``)
-        * ``register`` (:class:`fastapi:fastapi.APIRouter`): configured register router (see parameter ``register_router_kwargs``)
-        * ``verify`` (:class:`fastapi:fastapi.APIRouter`): configured verify router (see parameter ``verify_router_kwargs``)
-        * ``reset_password`` (:class:`fastapi:fastapi.APIRouter`): configured reset password router (see parameter ``reset_password_kwargs``)
-        * ``users`` (:class:`fastapi:fastapi.APIRouter`): configured users router (see parameter ``users_router_kwargs``)
-
-    _users_databases : dict
-        Dictionary of user database related objects:
-
-        * ``engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): Engine from parameter ``database_engine``.
-        * ``asynchronous`` (:class:`databases:databases.Database`): Async database from parameter ``async_database``.
-
-    _users_events : dict(func)
-        Dictionary of event functions registered from auto-config:
-
-        * ``startup`` (func): startup function registered if ``setup_startup`` is ``True``
-        * ``shutdown`` (func): shutdown function registered if ``setup_shutdown`` is ``True``
-    _users_functions : dict(func)
-        Dictionary of user related functions from auto-config:
-
-        * ``get_user_db`` (func): get_user_db function auto-configured or from parameter ``get_user_db``. See :func:`msdss_users_api.tools.create_user_db_func`.
-        * ``get_user_manager`` (func): get_user_manager function auto-configured or from parameter ``get_user_manager``. See :func`msdss_users_api.tools.create_user_manager_func`.
+        * ``get_user_db`` (func): get_user_db function auto-configured or from parameter ``get_user_db`` - see :func:`msdss_users_api.tools.create_user_db_func`
+        * ``get_user_manager`` (func): get_user_manager function auto-configured or from parameter ``get_user_manager`` - see :func`msdss_users_api.tools.create_user_manager_func`
     
-    _users_models : dict
+    models : dict
         Dictionary of user models for the users API:
 
-        * ``User (:class:`msdss_users_api.models.User`): see parameter ``User``.
-        * ``UserCreate`` (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``.
-        * ``UserUpdate`` (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``.
-        * ``UserDB`` (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``.
-        * ``UserTable`` (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``.
-        * ``UserManager`` (:class:`msdss_users_api.models.UserManager`): see parameter ``UserManager``.
+        * ``User (:class:`msdss_users_api.models.User`): see parameter ``User``
+        * ``UserCreate`` (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``
+        * ``UserUpdate`` (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``
+        * ``UserDB`` (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``
+        * ``UserTable`` (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``
+        * ``UserManager`` (:class:`msdss_users_api.models.UserManager`): see parameter ``UserManager``
+
+    misc : dict
+        Dictionary of miscellaneous values:
+
+        * ``fastapi_users`` (:class:`fastapi_users:fastapi_users.FastAPIUsers`): configured FastAPI Users object - see `FastAPIUsers object <https://fastapi-users.github.io/fastapi-users/configuration/routers/>`_
 
     Author
     ------
@@ -316,7 +290,6 @@ class UsersAPI(API):
         host_key='MSDSS_DATABASE_HOST',
         port_key='MSDSS_DATABASE_PORT',
         database_key='MSDSS_DATABASE_NAME',
-        log_warnings=True,
         api=FastAPI(
             title='MSDSS Users API',
             version='0.1.3'
@@ -341,7 +314,7 @@ class UsersAPI(API):
             database = os.getenv(database_key, database)
         
         # (UserAPI_warn) Warn if default secret is used
-        if secret == 'msdss-secret' and log_warnings:
+        if secret == 'msdss-secret':
             self.logger.warning('Default secret was used - please change secret phrase!')
 
         # (UserAPI_vars) Setup vars
@@ -367,7 +340,7 @@ class UsersAPI(API):
         
         # (UserAPI_func) Setup required functions
         get_user_db = create_user_db_func(database_engine, async_database, sqlalchemy_base=Base, user_table_model=UserTable, user_db_model=UserDB) if get_user_db is None else get_user_db
-        UserManager = create_user_manager_model(secret, reset_password_token_secret=reset_password_token_secret, verification_token_secret=verification_token_secret) if UserManager is None else UserManager
+        UserManager = create_user_manager(secret, reset_password_token_secret=reset_password_token_secret, verification_token_secret=verification_token_secret) if UserManager is None else UserManager
         get_user_manager = create_user_manager_func(get_user_db, UserManager) if get_user_manager is None else get_user_manager
 
         # (UserAPI_api) Setup users api obj

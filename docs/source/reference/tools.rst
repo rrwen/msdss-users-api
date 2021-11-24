@@ -23,10 +23,10 @@ create_user_manager_func
 
 .. autoclass:: msdss_users_api.tools.create_user_manager_func
 
-create_user_manager_model
+create_user_manager
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: msdss_users_api.tools.create_user_manager_model
+.. autoclass:: msdss_users_api.tools.create_user_manager
 
 delete_user
 ^^^^^^^^^^^
