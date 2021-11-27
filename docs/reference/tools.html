@@ -311,7 +311,7 @@
 <h2 id="create-api-objects">create_api_objects<a class="headerlink" href="#create-api-objects" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="msdss_users_api.tools.create_api_objects">
-<span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_api_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_manager_settings={}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt_settings={'lifetime_seconds':</span> <span class="pre">900</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tokenUrl':</span> <span class="pre">'auth/jwt/login'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookie_settings={'lifetime_seconds':</span> <span class="pre">2592000}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database=&lt;msdss_base_database.core.Database</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database_engine=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">async_database=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_cookie=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_jwt=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookie=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Base=&lt;class</span> <span class="pre">'sqlalchemy.orm.decl_api.Base'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">User=&lt;class</span> <span class="pre">'msdss_users_api.models.User'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserCreate=&lt;class</span> <span class="pre">'msdss_users_api.models.UserCreate'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserUpdate=&lt;class</span> <span class="pre">'msdss_users_api.models.UserUpdate'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserDB=&lt;class</span> <span class="pre">'msdss_users_api.models.UserDB'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserTable=&lt;class</span> <span class="pre">'msdss_users_api.models.UserTable'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserManager=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_api_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_api_objects" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_api_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_manager_settings={}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt_settings={'lifetime_seconds':</span> <span class="pre">900</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tokenUrl':</span> <span class="pre">'auth/jwt/login'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookie_settings={'lifetime_seconds':</span> <span class="pre">2592000}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database=&lt;msdss_base_database.core.Database</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_cookie=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_jwt=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookie=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Base=&lt;class</span> <span class="pre">'sqlalchemy.orm.decl_api.Base'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">User=&lt;class</span> <span class="pre">'msdss_users_api.models.User'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserCreate=&lt;class</span> <span class="pre">'msdss_users_api.models.UserCreate'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserUpdate=&lt;class</span> <span class="pre">'msdss_users_api.models.UserUpdate'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserDB=&lt;class</span> <span class="pre">'msdss_users_api.models.UserDB'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserTable=&lt;class</span> <span class="pre">'msdss_users_api.models.UserTable'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserManager=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_api_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_api_objects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates all the needed dependencies and models to build a <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/routers/">FastAPIUsers object</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -355,8 +355,6 @@ tokenUrl = auth/jwt/login
 </div>
 </p></li>
 <li><p><strong>database</strong> (<a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/core.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.1.1)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a>) – Database to use for managing users.</p></li>
-<li><p><strong>database_engine</strong> (<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.create_engine()</span></code></a> or  None) – SQLAlchemy engine object. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, one will be created from parameter <code class="docutils literal notranslate"><span class="pre">database</span></code>.</p></li>
-<li><p><strong>async_database</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code> or None) – Async database object from <code class="docutils literal notranslate"><span class="pre">databases</span></code>. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, one will be created from parameter <code class="docutils literal notranslate"><span class="pre">database</span></code>.</p></li>
 <li><p><strong>enable_cookie</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to enable cookie based authentication or not.</p></li>
 <li><p><strong>enable_jwt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to enable JSON Web Token (JWT) based authentication or not.</p></li>
 <li><p><strong>cookie</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">fastapi_users:fastapi_users.authentication.CookieAuthentication</span></code> or None) – <p>A cookie authentication object from FastAPI Users. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, one will be created from parameter <code class="docutils literal notranslate"><span class="pre">cookie_settings</span></code>.
@@ -382,8 +380,8 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">databases</span></code> (dict): dictionary of database related objects</dt><dd><ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">database</span></code> (<a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/core.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.1.1)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a>): database object from parameter <code class="docutils literal notranslate"><span class="pre">database</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">database_engine</span></code> (<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.create_engine()</span></code></a>): Engine from parameter <code class="docutils literal notranslate"><span class="pre">database_engine</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">async_database</span></code> (<code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code>): Async database from parameter <code class="docutils literal notranslate"><span class="pre">async_database</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">database_engine</span></code> (<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.create_engine()</span></code></a>): SQLAlchemy engine object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">async_database</span></code> (<code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code>): Async database object</p></li>
 </ul>
 </dd>
 </dl>
@@ -398,7 +396,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </li>
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">models</span></code> (dict): dictionary of models</dt><dd><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">User</span> <span class="pre">(:class:`msdss_users_api.models.User`):</span> <span class="pre">see</span> <span class="pre">parameter</span> <span class="pre">``User</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">User</span></code> (<a class="reference internal" href="models.html#msdss_users_api.models.User" title="msdss_users_api.models.User"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.User</span></code></a>): see parameter <code class="docutils literal notranslate"><span class="pre">User</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">UserCreate</span></code> (<a class="reference internal" href="models.html#msdss_users_api.models.UserCreate" title="msdss_users_api.models.UserCreate"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserCreate</span></code></a>): see parameter <code class="docutils literal notranslate"><span class="pre">UserCreate</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">UserUpdate</span></code> (<a class="reference internal" href="models.html#msdss_users_api.models.UserUpdate" title="msdss_users_api.models.UserUpdate"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserUpdate</span></code></a>): see parameter <code class="docutils literal notranslate"><span class="pre">UserUpdate</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">UserDB</span></code> (<a class="reference internal" href="models.html#msdss_users_api.models.UserDB" title="msdss_users_api.models.UserDB"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.models.UserDB</span></code></a>): see parameter <code class="docutils literal notranslate"><span class="pre">UserDB</span></code></p></li>
@@ -741,9 +739,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com already exists
-</pre></div>
-</div>
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User deleted test@example.com
+User deleted test@example.com
 </pre></div>
 </div>
 </div>
@@ -799,7 +795,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User created test@example.com
-id: 8147cba4-044b-4d9a-9226-520eb89582dc
+id: bf96d377-c840-4a6d-bd91-2c3e2bee9dc6
 email: test@example.com
 is_active: True
 is_superuser: False
@@ -957,7 +953,7 @@ is_verified: False
 
 before_update:
 
-id: 8147cba4-044b-4d9a-9226-520eb89582dc
+id: bf96d377-c840-4a6d-bd91-2c3e2bee9dc6
 email: test@example.com
 is_active: True
 is_superuser: False
@@ -966,7 +962,7 @@ User updated test@example.com
 
 after_update:
 
-id: 8147cba4-044b-4d9a-9226-520eb89582dc
+id: bf96d377-c840-4a6d-bd91-2c3e2bee9dc6
 email: test@example.com
 is_active: True
 is_superuser: False

@@ -48,7 +48,7 @@ class UsersAPI(API):
     
     load_env : bool
         Whether to load variables from a file with environmental variables at ``env_file`` or not.
-    env : :class:`msdss_base_database.env.DatabaseDotEnv`
+    env : :class:`msdss_users_api.env.UsersDotEnv`
         An object to set environment variables related to users configuration.
         These environment variables will overwrite the parameters above if they exist.
 

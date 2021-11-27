@@ -3,7 +3,7 @@ routers
 
 .. automodule:: msdss_users_api.routers
 
-get_user_routers
-----------------
+get_users_router
+-----------------
 
-.. autofunc:: msdss_users_api.routers.get_users_routers
+.. autofunction:: msdss_users_api.routers.get_users_router

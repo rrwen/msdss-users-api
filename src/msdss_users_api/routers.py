@@ -45,6 +45,8 @@ def get_users_router(
     users_get_user_settings=None,
     *args, **kwargs):
     """
+    Get a users router.
+
     Parameters
     ----------
     api_objects : dict or None
@@ -96,7 +98,7 @@ def get_users_router(
     Returns
     -------
     :class:`fastapi:fastapi.routing.APIRouter`
-            A router object used for organizing larger applications and for modularity. See `FastAPI bigger apps <https://fastapi.tiangolo.com/tutorial/bigger-applications/>`_
+        A router object used for organizing larger applications and for modularity. See `FastAPI bigger apps <https://fastapi.tiangolo.com/tutorial/bigger-applications/>`_
 
     Author
     ------

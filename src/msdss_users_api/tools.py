@@ -21,8 +21,6 @@ def create_api_objects(
     jwt_settings=DEFAULT_JWT_SETTINGS,
     cookie_settings=DEFAULT_COOKIE_SETTINGS,
     database=Database(),
-    database_engine=None,
-    async_database=None,
     enable_cookie=True,
     enable_jwt=True,
     cookie=None,
@@ -85,10 +83,6 @@ def create_api_objects(
 
     database : :class:`msdss_base_database:msdss_base_database.core.Database`
         Database to use for managing users.
-    database_engine : :func:`sqlalchemy:sqlalchemy.create_engine` or  None
-        SQLAlchemy engine object. If ``None``, one will be created from parameter ``database``.
-    async_database : :class:`databases:databases.Database` or None
-        Async database object from ``databases``. If ``None``, one will be created from parameter ``database``.
     enable_cookie : bool
         Whether to enable cookie based authentication or not.
     enable_jwt : bool
@@ -123,13 +117,13 @@ def create_api_objects(
         * ``users_api`` (:class:`fastapi_users:fastapi_users.FastAPIUsers`): configured FastAPI Users object
         * ``databases`` (dict): dictionary of database related objects
             * ``database`` (:class:`msdss_base_database:msdss_base_database.core.Database`): database object from parameter ``database``
-            * ``database_engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): Engine from parameter ``database_engine``.
-            * ``async_database`` (:class:`databases:databases.Database`): Async database from parameter ``async_database``.
+            * ``database_engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): SQLAlchemy engine object
+            * ``async_database`` (:class:`databases:databases.Database`): Async database object
         * ``dependencies`` (dict(func)): dictionary of dependencies
             * ``get_user_db`` (func): get_user_db function auto-configured - see :func:`msdss_users_api.tools.create_user_db_func`.
             * ``get_user_manager`` (func): get_user_manager function auto-configured - see :func`msdss_users_api.tools.create_user_manager_func`.
         * ``models`` (dict): dictionary of models
-            * ``User (:class:`msdss_users_api.models.User`): see parameter ``User``
+            * ``User`` (:class:`msdss_users_api.models.User`): see parameter ``User``
             * ``UserCreate`` (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``
             * ``UserUpdate`` (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``
             * ``UserDB`` (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``
@@ -177,8 +171,8 @@ def create_api_objects(
         jwt_settings[param] = jwt_settings.get(param, default)
 
     # (setup_fastapi_users_db) Setup database connections
-    database_engine = database_engine if database_engine else database._connection
-    async_database = async_database if async_database else databases.Database(str(database_engine.url))
+    database_engine = database._connection
+    async_database = databases.Database(str(database_engine.url))
     
     # (setup_fastapi_users_auth_combine) Combine cookie and jwt auth if needed
     auth = []

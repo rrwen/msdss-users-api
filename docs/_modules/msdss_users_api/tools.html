@@ -299,8 +299,6 @@
     <span class="n">jwt_settings</span><span class="o">=</span><span class="n">DEFAULT_JWT_SETTINGS</span><span class="p">,</span>
     <span class="n">cookie_settings</span><span class="o">=</span><span class="n">DEFAULT_COOKIE_SETTINGS</span><span class="p">,</span>
     <span class="n">database</span><span class="o">=</span><span class="n">Database</span><span class="p">(),</span>
-    <span class="n">database_engine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">async_database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">enable_cookie</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">enable_jwt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">cookie</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -363,10 +361,6 @@
 
 <span class="sd">    database : :class:`msdss_base_database:msdss_base_database.core.Database`</span>
 <span class="sd">        Database to use for managing users.</span>
-<span class="sd">    database_engine : :func:`sqlalchemy:sqlalchemy.create_engine` or  None</span>
-<span class="sd">        SQLAlchemy engine object. If ``None``, one will be created from parameter ``database``.</span>
-<span class="sd">    async_database : :class:`databases:databases.Database` or None</span>
-<span class="sd">        Async database object from ``databases``. If ``None``, one will be created from parameter ``database``.</span>
 <span class="sd">    enable_cookie : bool</span>
 <span class="sd">        Whether to enable cookie based authentication or not.</span>
 <span class="sd">    enable_jwt : bool</span>
@@ -401,13 +395,13 @@
 <span class="sd">        * ``users_api`` (:class:`fastapi_users:fastapi_users.FastAPIUsers`): configured FastAPI Users object</span>
 <span class="sd">        * ``databases`` (dict): dictionary of database related objects</span>
 <span class="sd">            * ``database`` (:class:`msdss_base_database:msdss_base_database.core.Database`): database object from parameter ``database``</span>
-<span class="sd">            * ``database_engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): Engine from parameter ``database_engine``.</span>
-<span class="sd">            * ``async_database`` (:class:`databases:databases.Database`): Async database from parameter ``async_database``.</span>
+<span class="sd">            * ``database_engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): SQLAlchemy engine object</span>
+<span class="sd">            * ``async_database`` (:class:`databases:databases.Database`): Async database object</span>
 <span class="sd">        * ``dependencies`` (dict(func)): dictionary of dependencies</span>
 <span class="sd">            * ``get_user_db`` (func): get_user_db function auto-configured - see :func:`msdss_users_api.tools.create_user_db_func`.</span>
 <span class="sd">            * ``get_user_manager`` (func): get_user_manager function auto-configured - see :func`msdss_users_api.tools.create_user_manager_func`.</span>
 <span class="sd">        * ``models`` (dict): dictionary of models</span>
-<span class="sd">            * ``User (:class:`msdss_users_api.models.User`): see parameter ``User``</span>
+<span class="sd">            * ``User`` (:class:`msdss_users_api.models.User`): see parameter ``User``</span>
 <span class="sd">            * ``UserCreate`` (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``</span>
 <span class="sd">            * ``UserUpdate`` (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``</span>
 <span class="sd">            * ``UserDB`` (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``</span>
@@ -455,8 +449,8 @@
         <span class="n">jwt_settings</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="n">jwt_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 
     <span class="c1"># (setup_fastapi_users_db) Setup database connections</span>
-    <span class="n">database_engine</span> <span class="o">=</span> <span class="n">database_engine</span> <span class="k">if</span> <span class="n">database_engine</span> <span class="k">else</span> <span class="n">database</span><span class="o">.</span><span class="n">_connection</span>
-    <span class="n">async_database</span> <span class="o">=</span> <span class="n">async_database</span> <span class="k">if</span> <span class="n">async_database</span> <span class="k">else</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">database_engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+    <span class="n">database_engine</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">_connection</span>
+    <span class="n">async_database</span> <span class="o">=</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">database_engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
     
     <span class="c1"># (setup_fastapi_users_auth_combine) Combine cookie and jwt auth if needed</span>
     <span class="n">auth</span> <span class="o">=</span> <span class="p">[]</span>
