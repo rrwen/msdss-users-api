@@ -30,7 +30,7 @@ Delete a user:
 
 .. warning::
 
-    Do not forget to setup your environmental variables (see `Quick Start`_)
+    Do not forget to setup your environmental variables (see :ref:`quick-start`)
 
 .. note::
 
@@ -57,16 +57,13 @@ In Python, use the package via :class:`msdss_users_api.core.UsersAPI`:
     from msdss_users_api.models import User
 
     # Create app using env vars
-    app = UsersAPI(
-        env_file='./.env',
-        key_path=None
-    )
+    app = UsersAPI()
 
     # Get a function dependency for the current active user
     current_active_user = app.get_current_user(active=True)
 
     # Add a protected route
-    @app.add('GET', '/protected-route')
+    @app.route('GET', '/protected-route')
     def protected_route(user: User = Depends(current_active_user)):
         return f'Hello, {user.email}'
 
@@ -77,7 +74,7 @@ In Python, use the package via :class:`msdss_users_api.core.UsersAPI`:
 
 .. warning::
 
-    Do not forget to setup your environmental variables (see `Quick Start`_)
+    Do not forget to setup your environmental variables (see :ref:`quick-start`)
 
 .. note::
 

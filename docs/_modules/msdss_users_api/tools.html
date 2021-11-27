@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.tools &#8212; 0.1.0</title>
+    <title>msdss_users_api.tools &#8212; 0.2.0</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -87,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.1.0"
+        <a href="../../index.html" title="0.2.0"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.1.0 logo">
+                   alt="0.2.0 logo">
           
         </a>
       </div>
@@ -174,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.1.0</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.2.0</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -187,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.1.0" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.2.0" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.1.0">msdss-users-api</a>
+       title="0.2.0">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -225,6 +225,13 @@
     
     
       <a href="../../quickstart.html" class="md-nav__link">Quick Start</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="../../usage.html" class="md-nav__link">Usage</a>
       
     
     </li>
@@ -269,79 +276,261 @@
           <article class="md-content__inner md-typeset" role="main">
             
   <h1 id="modules-msdss-users-api-tools--page-root">Source code for msdss_users_api.tools</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">import</span> <span class="nn">databases</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">from</span> <span class="nn">msdss_users_api.defaults</span> <span class="kn">import</span> <span class="n">DEFAULT_COOKIE_SETTINGS</span><span class="p">,</span> <span class="n">DEFAULT_JWT_SETTINGS</span>
 <span class="kn">import</span> <span class="nn">pydantic</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">databases</span>
 
 <span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span>
+<span class="kn">from</span> <span class="nn">fastapi_users</span> <span class="kn">import</span> <span class="n">FastAPIUsers</span>
+<span class="kn">from</span> <span class="nn">fastapi_users.authentication</span> <span class="kn">import</span> <span class="n">CookieAuthentication</span><span class="p">,</span> <span class="n">JWTAuthentication</span>
 <span class="kn">from</span> <span class="nn">fastapi_users.db</span> <span class="kn">import</span> <span class="n">SQLAlchemyUserDatabase</span>
 <span class="kn">from</span> <span class="nn">fastapi_users.jwt</span> <span class="kn">import</span> <span class="n">generate_jwt</span>
 <span class="kn">from</span> <span class="nn">fastapi_users.manager</span> <span class="kn">import</span> <span class="n">UserAlreadyExists</span><span class="p">,</span> <span class="n">UserNotExists</span>
 <span class="kn">from</span> <span class="nn">msdss_base_database</span> <span class="kn">import</span> <span class="n">Database</span>
-<span class="kn">from</span> <span class="nn">msdss_base_dotenv</span> <span class="kn">import</span> <span class="n">env_exists</span><span class="p">,</span> <span class="n">load_env_file</span>
 
+<span class="kn">from</span> <span class="nn">.defaults</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.env</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.managers</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="create_user_db_context"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_user_db_context">[docs]</a><span class="k">def</span> <span class="nf">create_user_db_context</span><span class="p">(</span>
-    <span class="n">engine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="create_api_objects"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_api_objects">[docs]</a><span class="k">def</span> <span class="nf">create_api_objects</span><span class="p">(</span>
+    <span class="n">user_manager_settings</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">jwt_settings</span><span class="o">=</span><span class="n">DEFAULT_JWT_SETTINGS</span><span class="p">,</span>
+    <span class="n">cookie_settings</span><span class="o">=</span><span class="n">DEFAULT_COOKIE_SETTINGS</span><span class="p">,</span>
+    <span class="n">database</span><span class="o">=</span><span class="n">Database</span><span class="p">(),</span>
+    <span class="n">database_engine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">async_database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">load_env</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">env_file</span><span class="o">=</span><span class="s1">'./.env'</span><span class="p">,</span>
-    <span class="n">key_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">driver_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_DRIVER'</span><span class="p">,</span>
-    <span class="n">user_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_USER'</span><span class="p">,</span>
-    <span class="n">password_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_PASSWORD'</span><span class="p">,</span>
-    <span class="n">host_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_HOST'</span><span class="p">,</span>
-    <span class="n">port_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_PORT'</span><span class="p">,</span>
-    <span class="n">database_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_NAME'</span><span class="p">,</span>
-    <span class="n">engine_kwargs</span><span class="o">=</span><span class="p">{},</span>
-    <span class="n">async_database_kwargs</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">enable_cookie</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">enable_jwt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">cookie</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">jwt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">Base</span><span class="o">=</span><span class="n">Base</span><span class="p">,</span>
+    <span class="n">User</span><span class="o">=</span><span class="n">User</span><span class="p">,</span>
+    <span class="n">UserCreate</span><span class="o">=</span><span class="n">UserCreate</span><span class="p">,</span>
+    <span class="n">UserUpdate</span><span class="o">=</span><span class="n">UserUpdate</span><span class="p">,</span>
+    <span class="n">UserDB</span><span class="o">=</span><span class="n">UserDB</span><span class="p">,</span>
+    <span class="n">UserTable</span><span class="o">=</span><span class="n">UserTable</span><span class="p">,</span>
+    <span class="n">UserManager</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Creates all the needed dependencies and models to build a `FastAPIUsers object &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/&gt;`_.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    user_manager_settings : dict</span>
+<span class="sd">        Keyword arguments to be passed to :func:`msdss_users_api.tools.create_user_manager`.</span>
+<span class="sd">        </span>
+<span class="sd">        Requires setting at least the following keys:</span>
+
+<span class="sd">        * ``reset_password_token_secret`` (str): secret used to secure password reset tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``)</span>
+<span class="sd">        * ``verification_token_secret`` (str): secret used to secure verification tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``)</span>
+
+<span class="sd">    cookie_settings : dict</span>
+<span class="sd">        Dictionary of keyword arguments passed to :class:`fastapi_users:fastapi_users.authentication.CookieAuthentication`.</span>
+<span class="sd">        See `CookieAuthentication &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/&gt;`_.</span>
+<span class="sd">        </span>
+<span class="sd">        Requires setting at least the following keys if ``enable_cookie`` is ``True``:</span>
+
+<span class="sd">        * ``secret`` (str): secret for JWT encryption. Use a strong phrase (e.g. ``openssl rand -hex 32``)</span>
+
+<span class="sd">        Other defaults will also be set if not specified:</span>
+
+<span class="sd">        .. jupyter-execute::</span>
+<span class="sd">            :hide-code:</span>
+<span class="sd">            </span>
+<span class="sd">            from msdss_users_api.defaults import DEFAULT_COOKIE_SETTINGS</span>
+
+<span class="sd">            for k, v in DEFAULT_COOKIE_SETTINGS.items():</span>
+<span class="sd">                print(f'{k} = {v}')</span>
+
+<span class="sd">    jwt_settings : dict</span>
+<span class="sd">        Dictionary of keyword arguments passed to :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication`. </span>
+<span class="sd">        See `JWTAuthentication &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/&gt;`_.</span>
+
+<span class="sd">        Requires setting at least the following keys if ``enable_jwt`` is ``True``:</span>
+
+<span class="sd">        * ``secret`` (str): secret for cookie encryption. Use a strong phrase (e.g. ``openssl rand -hex 32``)</span>
+
+<span class="sd">        Other defaults will also be set if not specified:</span>
+
+<span class="sd">        .. jupyter-execute::</span>
+<span class="sd">            :hide-code:</span>
+
+<span class="sd">            from msdss_users_api.defaults import DEFAULT_JWT_SETTINGS</span>
+
+<span class="sd">            for k, v in DEFAULT_JWT_SETTINGS.items():</span>
+<span class="sd">                print(f'{k} = {v}')</span>
+
+<span class="sd">    database : :class:`msdss_base_database.msdss_base_database.core.Database`</span>
+<span class="sd">        Database to use for managing users.</span>
+<span class="sd">    database_engine : :func:`sqlalchemy:sqlalchemy.create_engine` or  None</span>
+<span class="sd">        SQLAlchemy engine object. If ``None``, one will be created from parameter ``database``.</span>
+<span class="sd">    async_database : :class:`databases:databases.Database` or None</span>
+<span class="sd">        Async database object from ``databases``. If ``None``, one will be created from parameter ``database``.</span>
+<span class="sd">    enable_cookie : bool</span>
+<span class="sd">        Whether to enable cookie based authentication or not.</span>
+<span class="sd">    enable_jwt : bool</span>
+<span class="sd">        Whether to enable JSON Web Token (JWT) based authentication or not.</span>
+<span class="sd">    cookie : :class:`fastapi_users:fastapi_users.authentication.CookieAuthentication` or None</span>
+<span class="sd">        A cookie authentication object from FastAPI Users. If ``None``, one will be created from parameter ``cookie_settings``.</span>
+<span class="sd">        See `CookieAuthentication &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/&gt;`_.</span>
+<span class="sd">    jwt : :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication` or None</span>
+<span class="sd">        A JSON Web Token (JWT) authentication object from FastAPI Users. If ``None``, one will be created from parameter ``jwt_settings``.</span>
+<span class="sd">        See `JWTAuthentication &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/&gt;`_.</span>
+<span class="sd">    Base : class</span>
+<span class="sd">        Class returned from :func:`sqlalchemy:sqlalchemy.orm.declarative_base`.</span>
+<span class="sd">    User : :class:`msdss_users_api.models.User`</span>
+<span class="sd">        User model for FastAPI Users. See :class:`msdss_users_api.models.User`.</span>
+<span class="sd">    UserCreate : :class:`msdss_users_api.models.UserCreate`</span>
+<span class="sd">        UserCreate model for FastAPI Users. See :class:`msdss_users_api.models.UserCreate`.</span>
+<span class="sd">    UserUpdate : :class:`msdss_users_api.models.UserUpdate`</span>
+<span class="sd">        UserUpdate model for FastAPI Users. See :class:`msdss_users_api.models.UserUpdate`.</span>
+<span class="sd">    UserDB : :class:`msdss_users_api.models.UserDB`</span>
+<span class="sd">        UserDB model for FastAPI Users. See :class:`msdss_users_api.models.UserDB`.</span>
+<span class="sd">    UserTable : :class:`msdss_users_api.models.UserTable`</span>
+<span class="sd">        UserTable model for FastAPI Users. See :class:`msdss_users_api.models.UserTable`.</span>
+<span class="sd">    UserManager : :class:`msdss_users_api.managers.UserManager` or None</span>
+<span class="sd">        UserManager model for FastAPI Users. See :class:`msdss_users_api.managers.UserManager`.</span>
+<span class="sd">        If ``None``, one will be created using :func:`msdss_users_api.tools.create_user_manager`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        A dictionary containing the following:</span>
+
+<span class="sd">        * ``users_api`` (:class:`fastapi_users:fastapi_users.FastAPIUsers`): configured FastAPI Users object</span>
+<span class="sd">        * ``databases`` (dict): dictionary of database related objects</span>
+<span class="sd">            * ``database`` (:class:`msdss_base_database:msdss_base_database.core.Database`): database object from parameter ``database``</span>
+<span class="sd">            * ``database_engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): Engine from parameter ``database_engine``.</span>
+<span class="sd">            * ``async_database`` (:class:`databases:databases.Database`): Async database from parameter ``async_database``.</span>
+<span class="sd">        * ``dependencies`` (dict(func)): dictionary of dependencies</span>
+<span class="sd">            * ``get_user_db`` (func): get_user_db function auto-configured - see :func:`msdss_users_api.tools.create_user_db_func`.</span>
+<span class="sd">            * ``get_user_manager`` (func): get_user_manager function auto-configured - see :func`msdss_users_api.tools.create_user_manager_func`.</span>
+<span class="sd">        * ``models`` (dict): dictionary of models</span>
+<span class="sd">            * ``User (:class:`msdss_users_api.models.User`): see parameter ``User``</span>
+<span class="sd">            * ``UserCreate`` (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``</span>
+<span class="sd">            * ``UserUpdate`` (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``</span>
+<span class="sd">            * ``UserDB`` (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``</span>
+<span class="sd">            * ``UserTable`` (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``</span>
+<span class="sd">            * ``UserManager`` (:class:`msdss_users_api.managers.UserManager`): see parameter ``UserManager``</span>
+<span class="sd">        * ``auth`` (dict): dictionary of auth related objects</span>
+<span class="sd">            * ``jwt`` (:class:`fastapi_users:fastapi_users.authentication.JWTAuthentication`): see parameter ``jwt``</span>
+<span class="sd">            * ``cookie`` (:class:`fastapi_users:fastapi_users.authentication.CookieAuthentication`): see parameter ``cookie``</span>
+
+<span class="sd">    Author</span>
+<span class="sd">    ------</span>
+<span class="sd">    Richard Wen &lt;rrwen.dev@gmail.com&gt;</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    .. jupyter-execute::</span>
+
+<span class="sd">        from msdss_users_api.tools import *</span>
+
+<span class="sd">        # Setup user manager secrets</span>
+<span class="sd">        user_manager_settings = dict(</span>
+<span class="sd">            reset_password_token_secret='reset-secret', # CHANGE TO STRONG PHRASE</span>
+<span class="sd">            verification_token_secret='verify-secret' # CHANGE TO STRONG PHRASE</span>
+<span class="sd">        )</span>
+
+<span class="sd">        # Setup jwt and cookie secret</span>
+<span class="sd">        jwt_settings = dict(secret='jwt-secret') # CHANGE TO STRONG PHRASE</span>
+<span class="sd">        cookie_settings = dict(secret='cookie-secret') # CHANGE TO STRONG PHRASE</span>
+
+<span class="sd">        # Create FastAPI Users object</span>
+<span class="sd">        api_objects = create_api_objects(</span>
+<span class="sd">            user_manager_settings=user_manager_settings,</span>
+<span class="sd">            jwt_settings=jwt_settings,</span>
+<span class="sd">            cookie_settings=cookie_settings</span>
+<span class="sd">        )</span>
+
+<span class="sd">        # Get FastAPI Users Object</span>
+<span class="sd">        users_api = api_objects['users_api']</span>
+<span class="sd">    """</span>
+
+    <span class="c1"># (setup_fastapi_users_vars) Setup vars</span>
+    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">default</span> <span class="ow">in</span> <span class="n">DEFAULT_COOKIE_SETTINGS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">cookie_settings</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="n">cookie_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">default</span> <span class="ow">in</span> <span class="n">DEFAULT_JWT_SETTINGS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">jwt_settings</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="n">jwt_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+
+    <span class="c1"># (setup_fastapi_users_db) Setup database connections</span>
+    <span class="n">database_engine</span> <span class="o">=</span> <span class="n">database_engine</span> <span class="k">if</span> <span class="n">database_engine</span> <span class="k">else</span> <span class="n">database</span><span class="o">.</span><span class="n">_connection</span>
+    <span class="n">async_database</span> <span class="o">=</span> <span class="n">async_database</span> <span class="k">if</span> <span class="n">async_database</span> <span class="k">else</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">database_engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+    
+    <span class="c1"># (setup_fastapi_users_auth_combine) Combine cookie and jwt auth if needed</span>
+    <span class="n">auth</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">enable_cookie</span><span class="p">:</span>
+        <span class="n">cookie</span> <span class="o">=</span> <span class="n">cookie</span> <span class="k">if</span> <span class="n">cookie</span> <span class="k">else</span> <span class="n">CookieAuthentication</span><span class="p">(</span><span class="o">**</span><span class="n">cookie_settings</span><span class="p">)</span>
+        <span class="n">auth</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cookie</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">enable_jwt</span><span class="p">:</span>
+        <span class="n">jwt</span> <span class="o">=</span> <span class="n">jwt</span> <span class="k">if</span> <span class="n">jwt</span> <span class="k">else</span> <span class="n">JWTAuthentication</span><span class="p">(</span><span class="o">**</span><span class="n">jwt_settings</span><span class="p">)</span>
+        <span class="n">auth</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jwt</span><span class="p">)</span>
+    
+    <span class="c1"># (setup_fastapi_users_func) Setup required functions</span>
+    <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">create_user_db_func</span><span class="p">(</span><span class="n">database_engine</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">Base</span><span class="o">=</span><span class="n">Base</span><span class="p">,</span> <span class="n">UserTable</span><span class="o">=</span><span class="n">UserTable</span><span class="p">,</span> <span class="n">UserDB</span><span class="o">=</span><span class="n">UserDB</span><span class="p">)</span>
+    <span class="n">UserManager</span> <span class="o">=</span> <span class="n">UserManager</span> <span class="k">if</span> <span class="n">UserManager</span> <span class="k">else</span> <span class="n">create_user_manager</span><span class="p">(</span><span class="o">**</span><span class="n">user_manager_settings</span><span class="p">)</span>
+    <span class="n">get_user_manager</span> <span class="o">=</span> <span class="n">create_user_manager_func</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
+
+    <span class="c1"># (setup_fastapi_user_create) Create users api func</span>
+    <span class="n">users_api</span> <span class="o">=</span> <span class="n">FastAPIUsers</span><span class="p">(</span>
+        <span class="n">get_user_manager</span><span class="p">,</span>
+        <span class="n">auth</span><span class="p">,</span>
+        <span class="n">User</span><span class="p">,</span>
+        <span class="n">UserCreate</span><span class="p">,</span>
+        <span class="n">UserUpdate</span><span class="p">,</span>
+        <span class="n">UserDB</span>
+    <span class="p">)</span>
+
+    <span class="c1"># (setup_fastapi_users_return) Return users api and constructed objects</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">users_api</span><span class="o">=</span><span class="n">users_api</span><span class="p">,</span>
+        <span class="n">databases</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">,</span>
+            <span class="n">database_engine</span><span class="o">=</span><span class="n">database_engine</span><span class="p">,</span>
+            <span class="n">async_database</span><span class="o">=</span><span class="n">async_database</span>
+        <span class="p">),</span>
+        <span class="n">dependencies</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span>
+            <span class="n">get_user_manager</span><span class="o">=</span><span class="n">get_user_manager</span>
+        <span class="p">),</span>
+        <span class="n">models</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">User</span><span class="o">=</span><span class="n">User</span><span class="p">,</span>
+            <span class="n">UserCreate</span><span class="o">=</span><span class="n">UserCreate</span><span class="p">,</span>
+            <span class="n">UserUpdate</span><span class="o">=</span><span class="n">UserUpdate</span><span class="p">,</span>
+            <span class="n">UserDB</span><span class="o">=</span><span class="n">UserDB</span><span class="p">,</span>
+            <span class="n">UserTable</span><span class="o">=</span><span class="n">UserTable</span><span class="p">,</span>
+            <span class="n">UserManager</span><span class="o">=</span><span class="n">UserManager</span>
+        <span class="p">),</span>
+        <span class="n">auth</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">jwt</span><span class="o">=</span><span class="n">jwt</span><span class="p">,</span>
+            <span class="n">cookie</span><span class="o">=</span><span class="n">cookie</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+<div class="viewcode-block" id="create_user_db_context"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_user_db_context">[docs]</a><span class="k">def</span> <span class="nf">create_user_db_context</span><span class="p">(</span>
+    <span class="n">database</span><span class="o">=</span><span class="n">Database</span><span class="p">(),</span>
     <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Create a context manager for an auto-configured :func:`msdss_users_api.tools.create_user_db_func` function.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    engine : :class:`sqlalchemy:sqlalchemy.engine.Engine` or None</span>
-<span class="sd">        SQLAlchemy engine object to use for creating tables. If ``None``, one will be auto-configured from the ``env_file``.</span>
-<span class="sd">    async_database : :class:`databases:databases.Database`</span>
-<span class="sd">        The async database object to use for managing users. See `databases &lt;https://pypi.org/project/databases/&gt;`_. If ``None``, one will be auto-configured from the ``env_file``.</span>
-<span class="sd">    load_env : bool</span>
-<span class="sd">        Whether to load variables from a file with environmental variables at ``env_file`` or not.</span>
-<span class="sd">    env_file : str</span>
-<span class="sd">        The path of the file with environmental variables.</span>
-<span class="sd">    key_path : str</span>
-<span class="sd">        The path of the key file for the ``env_file``.</span>
-<span class="sd">    driver_key : str</span>
-<span class="sd">        The environmental variable name for ``driver``.</span>
-<span class="sd">    user_key : str</span>
-<span class="sd">        The environmental variable name for ``user``.</span>
-<span class="sd">    password_key : str</span>
-<span class="sd">        The environmental variable name for ``password``.</span>
-<span class="sd">    host_key : str</span>
-<span class="sd">        The environmental variable name for ``key``.</span>
-<span class="sd">    port_key : str</span>
-<span class="sd">        The environmental variable name for ``port``.</span>
-<span class="sd">    database_key : str</span>
-<span class="sd">        The environmental variable name for ``database``.</span>
-<span class="sd">    engine_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :class:`msdss_base_database:msdss_base_database.core.Database` if ``engine`` is ``None``.</span>
-<span class="sd">    async_database_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :class:`databases:databases.Database` if ``async_database`` is ``None``.</span>
+<span class="sd">    database : :class:`msdss_base_database.msdss_base_database.core.Database`</span>
+<span class="sd">        Database to use for managing users.</span>
 <span class="sd">    *args, **kwargs</span>
 <span class="sd">        Additional arguments passed to :func:`msdss_users_api.tools.create_user_db_func`.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
-<span class="sd">    (:func:`contextlib.asynccontextmanager`, func, :class:`databases:databases.Database`, :class:`sqlalchemy:sqlalchemy.engine.Engine`)</span>
-<span class="sd">        Returns a tuple of (in order):</span>
+<span class="sd">    dict</span>
+<span class="sd">        Returns a dictionary with the following keys:</span>
 <span class="sd">        </span>
-<span class="sd">        * Function returned from :func:`contextlib.asynccontextmanager` created from an auto-configured :func:`msdss_users_api.tools.create_user_db_func` function</span>
-<span class="sd">        * Function for the user database dependency from ``get_user_db`` or auto-configured :func:`msdss_users_api.tools.create_user_db_func`.</span>
-<span class="sd">        * Async database from parameter ``async_database`` or auto-configured :class:`databases:databases.Database` from env vars</span>
-<span class="sd">        * Engine from parameter ``engine`` or auto-configured :class:`sqlalchemy:sqlalchemy.engine.Engine` from env vars</span>
+<span class="sd">        * ``get_user_db_context`` (:func:`contextlib.asynccontextmanager`): function returned from :func:`contextlib.asynccontextmanager` created from an auto-configured :func:`msdss_users_api.tools.create_user_db_func` function</span>
+<span class="sd">        * ``get_user_db`` (func): user db function from :func:`msdss_users_api.tools.create_user_db_func`</span>
+<span class="sd">        * ``async_database`` (:class:`databases:databases.Database`): auto-configured :class:`databases:databases.Database` from env vars</span>
+<span class="sd">        * ``database_engine`` (:class:`sqlalchemy:sqlalchemy.engine.Engine`): auto-configured :class:`sqlalchemy:sqlalchemy.engine.Engine` from env vars</span>
 
 <span class="sd">    Author</span>
 <span class="sd">    ------</span>
@@ -354,34 +543,31 @@
 
 <span class="sd">        from msdss_users_api.tools import *</span>
 <span class="sd">        </span>
-<span class="sd">        get_user_db_context, get_user_db, async_database, engine = create_user_db_context()</span>
+<span class="sd">        results = create_user_db_context()</span>
+<span class="sd">        get_user_db_context = results['get_user_db_context']</span>
+<span class="sd">        async_database = results['async_database']</span>
 <span class="sd">    """</span>
-
-    <span class="c1"># (get_user_db_context_env) Load env vars</span>
-    <span class="n">has_env</span> <span class="o">=</span> <span class="n">env_exists</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">env_file</span><span class="p">,</span> <span class="n">key_path</span><span class="o">=</span><span class="n">key_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">load_env</span> <span class="ow">and</span> <span class="n">has_env</span><span class="p">:</span>
-        <span class="n">engine_kwargs</span><span class="p">[</span><span class="s1">'driver'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">driver_key</span><span class="p">,</span> <span class="s1">'postgresql'</span><span class="p">)</span>
-        <span class="n">engine_kwargs</span><span class="p">[</span><span class="s1">'user'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">user_key</span><span class="p">,</span> <span class="s1">'msdss'</span><span class="p">)</span>
-        <span class="n">engine_kwargs</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">password_key</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">)</span>
-        <span class="n">engine_kwargs</span><span class="p">[</span><span class="s1">'host'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">host_key</span><span class="p">,</span> <span class="s1">'localhost'</span><span class="p">)</span>
-        <span class="n">engine_kwargs</span><span class="p">[</span><span class="s1">'port'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">port_key</span><span class="p">,</span> <span class="s1">'5432'</span><span class="p">)</span>
-        <span class="n">engine_kwargs</span><span class="p">[</span><span class="s1">'database'</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">database_key</span><span class="p">,</span> <span class="s1">'msdss'</span><span class="p">)</span>
     
     <span class="c1"># (create_user_db_func_db) Create databases</span>
-    <span class="n">engine</span> <span class="o">=</span> <span class="n">engine</span> <span class="k">if</span> <span class="n">engine</span> <span class="k">else</span> <span class="n">Database</span><span class="p">(</span><span class="o">**</span><span class="n">engine_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">_connection</span>
-    <span class="n">async_database</span> <span class="o">=</span> <span class="n">async_database</span> <span class="k">if</span> <span class="n">async_database</span> <span class="k">else</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">url</span><span class="p">),</span> <span class="o">**</span><span class="n">async_database_kwargs</span><span class="p">)</span>
+    <span class="n">database_engine</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">_connection</span>
+    <span class="n">async_database</span> <span class="o">=</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">database_engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
     
     <span class="c1"># (get_user_db_context_return) Return user db context</span>
-    <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">create_user_db_func</span><span class="p">(</span><span class="n">engine</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span> <span class="n">async_database</span><span class="o">=</span><span class="n">async_database</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">contextlib</span><span class="o">.</span><span class="n">asynccontextmanager</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">),</span> <span class="n">get_user_db</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">engine</span><span class="p">)</span>
+    <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">create_user_db_func</span><span class="p">(</span><span class="n">database_engine</span><span class="o">=</span><span class="n">database_engine</span><span class="p">,</span> <span class="n">async_database</span><span class="o">=</span><span class="n">async_database</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">get_user_db_context</span><span class="o">=</span><span class="n">contextlib</span><span class="o">.</span><span class="n">asynccontextmanager</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">),</span>
+        <span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span>
+        <span class="n">async_database</span><span class="o">=</span><span class="n">async_database</span><span class="p">,</span>
+        <span class="n">database_engine</span><span class="o">=</span><span class="n">database_engine</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
 <div class="viewcode-block" id="create_user_db_func"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_user_db_func">[docs]</a><span class="k">def</span> <span class="nf">create_user_db_func</span><span class="p">(</span>
-    <span class="n">engine</span><span class="p">,</span>
-    <span class="n">async_database</span><span class="p">,</span>
-    <span class="n">sqlalchemy_base</span><span class="o">=</span><span class="n">Base</span><span class="p">,</span>
-    <span class="n">user_table_model</span><span class="o">=</span><span class="n">UserTable</span><span class="p">,</span>
-    <span class="n">user_db_model</span><span class="o">=</span><span class="n">UserDB</span><span class="p">):</span>
+    <span class="n">database_engine</span><span class="p">,</span>
+    <span class="n">async_database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">Base</span><span class="o">=</span><span class="n">Base</span><span class="p">,</span>
+    <span class="n">UserTable</span><span class="o">=</span><span class="n">UserTable</span><span class="p">,</span>
+    <span class="n">UserDB</span><span class="o">=</span><span class="n">UserDB</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Create a function to return the the database adapter dependency.</span>
 
@@ -389,15 +575,15 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    engine : :class:`sqlalchemy:sqlalchemy.engine.Engine`</span>
-<span class="sd">        SQLAlchemy engine object to use for creating tables.</span>
-<span class="sd">    async_database : :class:`databases:databases.Database`</span>
-<span class="sd">        The async database object to use for managing users. See `databases &lt;https://pypi.org/project/databases/&gt;`_.</span>
-<span class="sd">    sqlalchemy_base : :func:`sqlalchemy:sqlalchemy.orm.declarative_base`</span>
+<span class="sd">    database_engine : :func:`sqlalchemy:sqlalchemy.create_engine`</span>
+<span class="sd">        SQLAlchemy engine object.</span>
+<span class="sd">    async_database : :class:`databases:databases.Database` or None</span>
+<span class="sd">        Async database object from ``databases``. If ``None``, one will be created from parameter ``database_engine``.</span>
+<span class="sd">    Base : :func:`sqlalchemy:sqlalchemy.orm.declarative_base`</span>
 <span class="sd">        The base class from sqlalchemy. See :func:`sqlalchemy:sqlalchemy.orm.declarative_base`.</span>
-<span class="sd">    user_table_model : :class:`msdss_users_api.models.UserTable`</span>
+<span class="sd">    UserTable : :class:`msdss_users_api.models.UserTable`</span>
 <span class="sd">        The user table model to use for the database dependency. See :class:`msdss_users_api.models.UserTable`.</span>
-<span class="sd">    user_db_model : :class:`msdss_users_api.models.UserDB`</span>
+<span class="sd">    UserDB : :class:`msdss_users_api.models.UserDB`</span>
 <span class="sd">        The user database model for the database dependency. See :class:`msdss_users_api.models.UserDB`.</span>
 
 <span class="sd">    Return</span>
@@ -419,69 +605,97 @@
 <span class="sd">        from msdss_users_api.tools import create_user_db_func</span>
 
 <span class="sd">        # Create a database object</span>
-<span class="sd">        db = Database()</span>
-
-<span class="sd">        # Get the engine object from the database</span>
-<span class="sd">        engine = db._connection</span>
-
-<span class="sd">        # Get the async database</span>
-<span class="sd">        async_database = databases.Database(str(engine.url))</span>
+<span class="sd">        db = Database()._connection</span>
 
 <span class="sd">        # Get the user db func</span>
-<span class="sd">        get_user_db = create_user_db_func(engine, async_database)</span>
+<span class="sd">        get_user_db = create_user_db_func(db)</span>
 <span class="sd">    """</span>
 
+    <span class="c1"># (create_user_db_func_db) Get engine and async database</span>
+    <span class="n">async_database</span> <span class="o">=</span> <span class="n">async_database</span> <span class="k">if</span> <span class="n">async_database</span> <span class="k">else</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">database_engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+
     <span class="c1"># (create_user_db_func_table) Create user table in database</span>
-    <span class="n">sqlalchemy_base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
-    <span class="n">table</span> <span class="o">=</span> <span class="n">user_table_model</span><span class="o">.</span><span class="n">__table__</span>
+    <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">database_engine</span><span class="p">)</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">UserTable</span><span class="o">.</span><span class="n">__table__</span>
 
     <span class="c1"># (create_user_db_func_return) Return the get_user_db function</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">out</span><span class="p">():</span>
-        <span class="k">yield</span> <span class="n">SQLAlchemyUserDatabase</span><span class="p">(</span><span class="n">user_db_model</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">SQLAlchemyUserDatabase</span><span class="p">(</span><span class="n">UserDB</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">table</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+<div class="viewcode-block" id="create_user_manager"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_user_manager">[docs]</a><span class="k">def</span> <span class="nf">create_user_manager</span><span class="p">(</span>
+    <span class="n">reset_password_token_secret</span><span class="p">,</span>
+    <span class="n">verification_token_secret</span><span class="p">,</span>
+    <span class="n">__base__</span><span class="o">=</span><span class="n">UserManager</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Create a function to return the the user manager class.</span>
+
+<span class="sd">    See `UserManager configuration &lt;https://fastapi-users.github.io/fastapi-users/configuration/user-manager/&gt;`_ for FastAPI Users,</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    reset_password_token_secret : str</span>
+<span class="sd">        Secret to use for reset password token encryption.</span>
+<span class="sd">    verification_token_secret : str</span>
+<span class="sd">        Secret to use for verification tokens encryption.</span>
+<span class="sd">    __base__: :class:`msdss_users_api.managers.UserManager`</span>
+<span class="sd">        The base user manager model from FastAPI Users. See :class:`msdss_users_api.managers.UserManager`.</span>
+<span class="sd">    *args, **kwargs</span>
+<span class="sd">        Additional arguments passed to :func:`pydantic:pydantic.create_model`. See `pydantic dynamic model creation &lt;https://pydantic-docs.helpmanual.io/usage/models/#dynamic-model-creation&gt;`_.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    :class:`msdss_users_api.managers.UserManager`</span>
+<span class="sd">       A configured :class:`msdss_users_api.managers.UserManager`.</span>
+
+<span class="sd">    Author</span>
+<span class="sd">    ------</span>
+<span class="sd">    Richard Wen &lt;rrwen.dev@gmail.com&gt;</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    .. jupyter-execute::</span>
+
+<span class="sd">        from msdss_users_api.tools import create_user_manager</span>
+
+<span class="sd">        UserManager = create_user_manager('msdss-reset-secret', 'msdss-verify-secret')</span>
+<span class="sd">    """</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span>
+        <span class="s1">'UserManager'</span><span class="p">,</span>
+        <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="n">reset_password_token_secret</span><span class="p">,</span>
+        <span class="n">verification_token_secret</span><span class="o">=</span><span class="n">verification_token_secret</span><span class="p">,</span>
+        <span class="n">__base__</span><span class="o">=</span><span class="n">__base__</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
 <div class="viewcode-block" id="create_user_manager_context"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_user_manager_context">[docs]</a><span class="k">def</span> <span class="nf">create_user_manager_context</span><span class="p">(</span>
-    <span class="n">secret</span><span class="o">=</span><span class="s1">'msdss-secret'</span><span class="p">,</span>
-    <span class="n">get_user_db</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">verification_token_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">user_manager_model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">get_user_db</span><span class="p">,</span>
+    <span class="n">user_manager_settings</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">UserManager</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">load_env</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">env_file</span><span class="o">=</span><span class="s1">'./.env'</span><span class="p">,</span>
-    <span class="n">key_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_SECRET'</span><span class="p">,</span>
-    <span class="n">reset_password_token_secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET'</span><span class="p">,</span>
-    <span class="n">verification_token_secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_VERIFICATION_TOKEN_SECRET'</span><span class="p">,</span>
-    <span class="n">create_user_manager_kwargs</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="n">env</span><span class="o">=</span><span class="n">UsersDotEnv</span><span class="p">()):</span>
     <span class="sd">"""</span>
 <span class="sd">    Create a context manager for an auto-configured :func:`msdss_users_api.tools.create_user_manager_func` function.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    secret : str</span>
-<span class="sd">        A secret for security encryption and protecting user data. Use a strong phrase (e.g. ``openssl rand -hex 32``).</span>
 <span class="sd">    get_user_db : func</span>
 <span class="sd">        Function for the user database dependency. See :func:`msdss_users_api.tools.create_user_db_func`.</span>
-<span class="sd">    reset_password_token_secret : str</span>
-<span class="sd">        Secret used to secure password reset tokens. If ``None``, it will default to param ``secret``.</span>
-<span class="sd">    verification_token_secret : str or None</span>
-<span class="sd">        Secret used to secure verification tokens. If ``None``, it will default to param ``secret``.</span>
-<span class="sd">    user_manager_model : :class:`msdss_users_api.models.UserManager`</span>
-<span class="sd">        The user manager model from FastAPI Users. See :class:`msdss_users_api.models.UserManager` and :func:`msdss_users_api.tools.create_user_manager`.</span>
+<span class="sd">    user_manager_settings : dict</span>
+<span class="sd">        Keyword arguments passed to :func:`msdss_users_api.tools.create_user_manager`</span>
+
+<span class="sd">        Requires at least the following parameters:</span>
+
+<span class="sd">        * ``reset_password_token_secret`` (str): secret used to secure password reset tokens- use a strong phrase (e.g. ``openssl rand -hex 32``)</span>
+<span class="sd">        * ``verification_token_secret`` (str): secret used to secure verification tokens - use a strong phrase (e.g. ``openssl rand -hex 32``)</span>
+
+<span class="sd">    UserManager : :class:`msdss_users_api.managers.UserManager` or None</span>
+<span class="sd">        The user manager model from FastAPI Users. See :class:`msdss_users_api.managers.UserManager` and :func:`msdss_users_api.tools.create_user_manager`. If ``None``, one will be created from ``user_manager_settings``.</span>
 <span class="sd">    load_env : bool</span>
 <span class="sd">        Whether to load variables from a file with environmental variables at ``env_file`` or not.</span>
-<span class="sd">    env_file : str</span>
-<span class="sd">        The path of the file with environmental variables.</span>
-<span class="sd">    key_path : str</span>
-<span class="sd">        The path of the key file for the ``env_file``.</span>
-<span class="sd">    secret_key : str</span>
-<span class="sd">        The environmental variable name for ``secret``.</span>
-<span class="sd">    reset_password_token_secret_key : str</span>
-<span class="sd">        The environmental variable name for ``reset_password_token_secret``.</span>
-<span class="sd">    verification_token_secret_key : str</span>
-<span class="sd">        The environmental variable name for ``verification_token_secret``.</span>
-<span class="sd">    create_user_manager_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :func:`msdss_users_api.tools.create_user_manager`</span>
+<span class="sd">    env : :class:`msdss_users_api.env.UsersDotEnv`</span>
+<span class="sd">        Object to load environment variables from. If the ``env_file`` and variable exists, it will overwrite parameters ``reset_password_token`` and ``verification_token_secret``.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
@@ -498,39 +712,41 @@
 <span class="sd">    .. jupyter-execute::</span>
 
 <span class="sd">        from msdss_users_api.tools import *</span>
-<span class="sd">        </span>
-<span class="sd">        get_user_manager_context = create_user_manager_context('msdss-secret')</span>
-<span class="sd">    """</span>
 
-    <span class="c1"># (get_user_manager_warn) Warn if default secret is used</span>
-    <span class="k">if</span> <span class="n">secret</span> <span class="o">==</span> <span class="s1">'msdss-secret'</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'Default secret was used - please change secret phrase!'</span><span class="p">)</span>
+<span class="sd">        # Create a database object</span>
+<span class="sd">        db = Database()._connection</span>
+
+<span class="sd">        # Get the user db func</span>
+<span class="sd">        get_user_db = create_user_db_func(db)</span>
+
+<span class="sd">        # Create user manager secrets</span>
+<span class="sd">        user_manager_settings = dict(</span>
+<span class="sd">            reset_password_token_secret='reset-secret',</span>
+<span class="sd">            verification_token_secret='verification-secret'</span>
+<span class="sd">        )</span>
+<span class="sd">        </span>
+<span class="sd">        # Get user manager context</span>
+<span class="sd">        get_user_manager_context = create_user_manager_context(</span>
+<span class="sd">            get_user_db,</span>
+<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">        )</span>
+<span class="sd">    """</span>
     
     <span class="c1"># (get_user_manager_context_env) Load env vars</span>
-    <span class="n">has_env</span> <span class="o">=</span> <span class="n">env_exists</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">env_file</span><span class="p">,</span> <span class="n">key_path</span><span class="o">=</span><span class="n">key_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">load_env</span> <span class="ow">and</span> <span class="n">has_env</span><span class="p">:</span>
-        <span class="n">load_env_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">env_file</span><span class="p">,</span> <span class="n">key_path</span><span class="o">=</span><span class="n">key_path</span><span class="p">)</span>
-        <span class="n">secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span>
-        <span class="n">reset_password_token_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">reset_password_token_secret_key</span><span class="p">,</span> <span class="n">reset_password_token_secret_key</span><span class="p">)</span>
-        <span class="n">verification_token_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">verification_token_secret_key</span><span class="p">,</span> <span class="n">verification_token_secret</span><span class="p">)</span>
-    
-    <span class="c1"># (get_user_manager_vars) Set default vars</span>
-    <span class="n">reset_password_token_secret</span> <span class="o">=</span> <span class="n">reset_password_token_secret</span> <span class="k">if</span> <span class="n">reset_password_token_secret</span> <span class="k">else</span> <span class="n">secret</span>
-    <span class="n">verification_token_secret</span> <span class="o">=</span> <span class="n">verification_token_secret</span> <span class="k">if</span> <span class="n">verification_token_secret</span> <span class="k">else</span> <span class="n">secret</span>
+    <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">load_env</span><span class="p">:</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="n">user_manager_settings</span><span class="p">[</span><span class="s1">'reset_password_token_secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'reset_password_token_secret'</span><span class="p">)</span>
+        <span class="n">user_manager_settings</span><span class="p">[</span><span class="s1">'verification_token_secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'verification_token_secret'</span><span class="p">)</span>
 
     <span class="c1"># (get_user_manager_context_func) Create user manager func</span>
-    <span class="n">user_manager_model</span> <span class="o">=</span> <span class="n">user_manager_model</span> <span class="k">if</span> <span class="n">user_manager_model</span> <span class="k">else</span> <span class="n">create_user_manager</span><span class="p">(</span>
-        <span class="n">secret</span><span class="p">,</span>
-        <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="n">reset_password_token_secret</span><span class="p">,</span>
-        <span class="n">verification_token_secret</span><span class="o">=</span><span class="n">verification_token_secret</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">create_user_manager_kwargs</span><span class="p">)</span>
-    <span class="n">get_user_manager</span> <span class="o">=</span> <span class="n">create_user_manager_func</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">,</span> <span class="n">user_manager_model</span><span class="p">)</span>
+    <span class="n">UserManager</span> <span class="o">=</span> <span class="n">UserManager</span> <span class="k">if</span> <span class="n">UserManager</span> <span class="k">else</span> <span class="n">create_user_manager</span><span class="p">(</span><span class="o">**</span><span class="n">user_manager_settings</span><span class="p">)</span>
+    <span class="n">get_user_manager</span> <span class="o">=</span> <span class="n">create_user_manager_func</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
 
     <span class="c1"># (get_user_manager_context_return) Return user manager context</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">asynccontextmanager</span><span class="p">(</span><span class="n">get_user_manager</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="create_user_manager_func"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_user_manager_func">[docs]</a><span class="k">def</span> <span class="nf">create_user_manager_func</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">,</span> <span class="n">user_manager_model</span><span class="o">=</span><span class="n">UserManager</span><span class="p">):</span>
+<div class="viewcode-block" id="create_user_manager_func"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_user_manager_func">[docs]</a><span class="k">def</span> <span class="nf">create_user_manager_func</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">,</span> <span class="n">UserManager</span><span class="o">=</span><span class="n">UserManager</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Create a function to return the the user manager class.</span>
 
@@ -540,13 +756,13 @@
 <span class="sd">    ----------</span>
 <span class="sd">    get_user_db : func</span>
 <span class="sd">        Function for the user database dependency. See :func:`msdss_users_api.tools.create_user_db_func`.</span>
-<span class="sd">    user_manager_model : :class:`msdss_users_api.models.UserManager`</span>
-<span class="sd">        The user manager model from FastAPI Users. See :class:`msdss_users_api.models.UserManager` and :func:`msdss_users_api.tools.create_user_manager`.</span>
+<span class="sd">    UserManager : :class:`msdss_users_api.managers.UserManager`</span>
+<span class="sd">        The user manager model from FastAPI Users. See :class:`msdss_users_api.managers.UserManager`.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
 <span class="sd">    func</span>
-<span class="sd">        A function yielding a configured :class:`msdss_users_api.models.UserManager`.</span>
+<span class="sd">        A function yielding a configured :class:`msdss_users_api.managers.UserManager`.</span>
 
 <span class="sd">    Author</span>
 <span class="sd">    ------</span>
@@ -562,82 +778,22 @@
 <span class="sd">        from msdss_users_api.tools import *</span>
 
 <span class="sd">        # Create a database object</span>
-<span class="sd">        db = Database()</span>
-
-<span class="sd">        # Get the engine object from the database</span>
-<span class="sd">        engine = db._connection</span>
-
-<span class="sd">        # Get the async database</span>
-<span class="sd">        async_database = databases.Database(str(engine.url))</span>
+<span class="sd">        db = Database()._connection</span>
 
 <span class="sd">        # Get the user db func</span>
-<span class="sd">        get_user_db = create_user_db_func(engine, async_database)</span>
+<span class="sd">        get_user_db = create_user_db_func(db)</span>
 
 <span class="sd">        # Create a user manager model</span>
-<span class="sd">        UserManager = create_user_manager('msdss-secret')</span>
+<span class="sd">        UserManager = create_user_manager('msdss-reset-secret', 'msdss-verify-secret')</span>
 
 <span class="sd">        # Get the user manager func</span>
 <span class="sd">        get_user_manager = create_user_manager_func(get_user_db, UserManager)</span>
 <span class="sd">    """</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">out</span><span class="p">(</span><span class="n">user_db</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">)):</span>
-        <span class="k">yield</span> <span class="n">user_manager_model</span><span class="p">(</span><span class="n">user_db</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">UserManager</span><span class="p">(</span><span class="n">user_db</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 
-<div class="viewcode-block" id="create_user_manager"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_user_manager">[docs]</a><span class="k">def</span> <span class="nf">create_user_manager</span><span class="p">(</span>
-    <span class="n">secret</span><span class="p">,</span>
-    <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">verification_token_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">base_user_manager_model</span><span class="o">=</span><span class="n">UserManager</span><span class="p">,</span>
-    <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    Create a function to return the the user manager class.</span>
-
-<span class="sd">    See `UserManager configuration &lt;https://fastapi-users.github.io/fastapi-users/configuration/user-manager/&gt;`_ for FastAPI Users,</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    secret : str</span>
-<span class="sd">        Secret to use for reset password tokens and verification tokens encryption.</span>
-<span class="sd">    reset_password_token_secret : str or None</span>
-<span class="sd">        Secret to use for reset password token encryption. If ``None``, then it will default to param ``secret``.</span>
-<span class="sd">    verification_token_secret : str or None</span>
-<span class="sd">        Secret to use for verification tokens encryption. If ``None``, then it will default to param ``secret``.</span>
-<span class="sd">    base_user_manager_model : :class:`msdss_users_api.models.UserManager`</span>
-<span class="sd">        The user manager model from FastAPI Users. See :class:`msdss_users_api.models.UserManager`.</span>
-<span class="sd">    *args, **kwargs</span>
-<span class="sd">        Additional arguments passed to :func:`pydantic:pydantic.create_model`. See `pydantic dynamic model creation &lt;https://pydantic-docs.helpmanual.io/usage/models/#dynamic-model-creation&gt;`_.</span>
-
-<span class="sd">    Return</span>
-<span class="sd">    ------</span>
-<span class="sd">    :class:`msdss_users_api.models.UserManager`</span>
-<span class="sd">       A configured :class:`msdss_users_api.models.UserManager`.</span>
-
-<span class="sd">    Author</span>
-<span class="sd">    ------</span>
-<span class="sd">    Richard Wen &lt;rrwen.dev@gmail.com&gt;</span>
-
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    .. jupyter-execute::</span>
-
-<span class="sd">        from msdss_users_api.tools import create_user_manager</span>
-
-<span class="sd">        UserManager = create_user_manager('msdss-secret')</span>
-<span class="sd">    """</span>
-
-    <span class="c1"># (create_user_manager_vars) Set default vars</span>
-    <span class="n">reset_password_token_secret</span> <span class="o">=</span> <span class="n">secret</span> <span class="k">if</span> <span class="n">reset_password_token_secret</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">reset_password_token_secret</span>
-    <span class="n">verification_token_secret</span> <span class="o">=</span> <span class="n">secret</span> <span class="k">if</span> <span class="n">verification_token_secret</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">verification_token_secret</span>
-
-    <span class="c1"># (create_user_manager_return) Returns created user manager model</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">pydantic</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span>
-        <span class="s1">'UserManager'</span><span class="p">,</span>
-        <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="n">reset_password_token_secret</span><span class="p">,</span>
-        <span class="n">verification_token_secret</span><span class="o">=</span><span class="n">verification_token_secret</span><span class="p">,</span>
-        <span class="n">__base__</span><span class="o">=</span><span class="n">base_user_manager_model</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">out</span></div>
-
-<div class="viewcode-block" id="delete_user"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.delete_user">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">create_user_db_context_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="p">{}):</span>
+<div class="viewcode-block" id="delete_user"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.delete_user">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">user_db_context_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="p">{}):</span>
     <span class="sd">"""</span>
 <span class="sd">    Delete a user.</span>
 
@@ -645,9 +801,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    email : str</span>
 <span class="sd">        Email for the user.</span>
-<span class="sd">    create_user_db_context_kwargs : dict</span>
+<span class="sd">    user_db_context_kwargs : dict</span>
 <span class="sd">        Arguments passed to :class:`msdss_users_api.tools.create_user_db_context`.</span>
-<span class="sd">    create_user_manager_context_kwargs : dict</span>
+<span class="sd">    user_manager_context_kwargs : dict</span>
 <span class="sd">        Arguments passed to :class:`msdss_users_api.tools.create_user_manager_context`.</span>
 
 <span class="sd">    Author</span>
@@ -661,13 +817,26 @@
 
 <span class="sd">        from msdss_users_api.tools import *</span>
 
-<span class="sd">        await register_user('test@example.com', 'msdss123')</span>
-<span class="sd">        await delete_user('test@example.com')</span>
+<span class="sd">        # Create user manager secrets</span>
+<span class="sd">        user_manager_settings = dict(</span>
+<span class="sd">            reset_password_token_secret='reset-secret',</span>
+<span class="sd">            verification_token_secret='verification-secret'</span>
+<span class="sd">        )</span>
+<span class="sd">        kwargs = dict(</span>
+<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">        )</span>
+
+<span class="sd">        # Del users</span>
+<span class="sd">        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)</span>
+<span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">    """</span>
 
     <span class="c1"># (delete_user_context) Get db and manager context functions</span>
-    <span class="n">get_user_db_context</span><span class="p">,</span> <span class="n">get_user_db</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">(</span><span class="o">**</span><span class="n">create_user_db_context_kwargs</span><span class="p">)</span>
-    <span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span> <span class="o">**</span><span class="n">create_user_manager_context_kwargs</span><span class="p">)</span>
+    <span class="n">user_db_context</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">(</span><span class="o">**</span><span class="n">user_db_context_kwargs</span><span class="p">)</span>
+    <span class="n">get_user_db_context</span> <span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'get_user_db_context'</span><span class="p">]</span>
+    <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'get_user_db'</span><span class="p">]</span>
+    <span class="n">async_database</span><span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'async_database'</span><span class="p">]</span>
+    <span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span> <span class="o">**</span><span class="n">user_manager_context_kwargs</span><span class="p">)</span>
 
     <span class="c1"># (delete_user_run) Run delete user function</span>
     <span class="k">try</span><span class="p">:</span>
@@ -682,7 +851,7 @@
     <span class="k">finally</span><span class="p">:</span>
         <span class="k">await</span> <span class="n">async_database</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="get_user"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.get_user">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_hashed_password</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">create_user_db_context_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="p">{}):</span>
+<div class="viewcode-block" id="get_user"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.get_user">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_hashed_password</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">user_db_context_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="p">{}):</span>
     <span class="sd">"""</span>
 <span class="sd">    Get attributes for a user.</span>
 
@@ -694,9 +863,9 @@
 <span class="sd">        Whether to print user attributes or not.</span>
 <span class="sd">    include_hashed_password : bool</span>
 <span class="sd">        Whether to include the ``hashed_password`` attribute.</span>
-<span class="sd">    create_user_db_context_kwargs : dict</span>
+<span class="sd">    user_db_context_kwargs : dict</span>
 <span class="sd">        Arguments passed to :class:`msdss_users_api.tools.create_user_db_context`.</span>
-<span class="sd">    create_user_manager_context_kwargs : dict</span>
+<span class="sd">    user_manager_context_kwargs : dict</span>
 <span class="sd">        Arguments passed to :class:`msdss_users_api.tools.create_user_manager_context`.</span>
 
 <span class="sd">    Author</span>
@@ -715,14 +884,27 @@
 
 <span class="sd">        from msdss_users_api.tools import register_user, get_user</span>
 
-<span class="sd">        await register_user('test@example.com', 'msdss123')</span>
-<span class="sd">        user = await get_user('test@example.com', show=True)</span>
+<span class="sd">        # Create user manager secrets</span>
+<span class="sd">        user_manager_settings = dict(</span>
+<span class="sd">            reset_password_token_secret='reset-secret',</span>
+<span class="sd">            verification_token_secret='verification-secret'</span>
+<span class="sd">        )</span>
+<span class="sd">        kwargs = dict(</span>
+<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">        )</span>
+
+<span class="sd">        # Get user</span>
+<span class="sd">        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)</span>
+<span class="sd">        user = await get_user('test@example.com', show=True, user_manager_context_kwargs=kwargs)</span>
 
 <span class="sd">    """</span>
 
     <span class="c1"># (get_user_context) Get db and manager context functions</span>
-    <span class="n">get_user_db_context</span><span class="p">,</span> <span class="n">get_user_db</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">(</span><span class="o">**</span><span class="n">create_user_db_context_kwargs</span><span class="p">)</span>
-    <span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span> <span class="o">**</span><span class="n">create_user_manager_context_kwargs</span><span class="p">)</span>
+    <span class="n">user_db_context</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">(</span><span class="o">**</span><span class="n">user_db_context_kwargs</span><span class="p">)</span>
+    <span class="n">get_user_db_context</span> <span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'get_user_db_context'</span><span class="p">]</span>
+    <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'get_user_db'</span><span class="p">]</span>
+    <span class="n">async_database</span><span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'async_database'</span><span class="p">]</span>
+    <span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span> <span class="o">**</span><span class="n">user_manager_context_kwargs</span><span class="p">)</span>
 
     <span class="c1"># (get_user_run) Run get user function</span>
     <span class="k">try</span><span class="p">:</span>
@@ -751,8 +933,8 @@
     <span class="n">email</span><span class="p">,</span>
     <span class="n">password</span><span class="p">,</span>
     <span class="n">superuser</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">create_user_db_context_kwargs</span><span class="o">=</span><span class="p">{},</span>
-    <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">user_db_context_kwargs</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="p">{},</span>
     <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Register a user.</span>
@@ -765,9 +947,9 @@
 <span class="sd">        Password for the user.</span>
 <span class="sd">    superuser : bool</span>
 <span class="sd">        Whether the user is a superuser or not.</span>
-<span class="sd">    create_user_db_context_kwargs : dict</span>
+<span class="sd">    user_db_context_kwargs : dict</span>
 <span class="sd">        Arguments passed to :class:`msdss_users_api.tools.create_user_db_context`.</span>
-<span class="sd">    create_user_manager_context_kwargs : dict</span>
+<span class="sd">    user_manager_context_kwargs : dict</span>
 <span class="sd">        Arguments passed to :class:`msdss_users_api.tools.create_user_manager_context`.</span>
 <span class="sd">    *args, **kwargs</span>
 <span class="sd">        Additional arguments passed to :class:`msdss_users_api.models.UserCreate`.</span>
@@ -782,13 +964,26 @@
 <span class="sd">    .. jupyter-execute::</span>
 
 <span class="sd">        from msdss_users_api.tools import *</span>
+
+<span class="sd">        # Create user manager secrets</span>
+<span class="sd">        user_manager_settings = dict(</span>
+<span class="sd">            reset_password_token_secret='reset-secret',</span>
+<span class="sd">            verification_token_secret='verification-secret'</span>
+<span class="sd">        )</span>
+<span class="sd">        kwargs = dict(</span>
+<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">        )</span>
 <span class="sd">        </span>
-<span class="sd">        await register_user('test@example.com', 'msdss123')</span>
+<span class="sd">        # Register user</span>
+<span class="sd">        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">    """</span>
     
     <span class="c1"># (register_user_context) Get db and manager context functions</span>
-    <span class="n">get_user_db_context</span><span class="p">,</span> <span class="n">get_user_db</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">(</span><span class="o">**</span><span class="n">create_user_db_context_kwargs</span><span class="p">)</span>
-    <span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span> <span class="o">**</span><span class="n">create_user_manager_context_kwargs</span><span class="p">)</span>
+    <span class="n">user_db_context</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">(</span><span class="o">**</span><span class="n">user_db_context_kwargs</span><span class="p">)</span>
+    <span class="n">get_user_db_context</span> <span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'get_user_db_context'</span><span class="p">]</span>
+    <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'get_user_db'</span><span class="p">]</span>
+    <span class="n">async_database</span><span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'async_database'</span><span class="p">]</span>
+    <span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span> <span class="o">**</span><span class="n">user_manager_context_kwargs</span><span class="p">)</span>
 
     <span class="c1"># (register_user_run) Run create user function</span>
     <span class="k">try</span><span class="p">:</span>
@@ -807,7 +1002,7 @@
     <span class="k">finally</span><span class="p">:</span>
         <span class="k">await</span> <span class="n">async_database</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="reset_user_password"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.reset_user_password">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">reset_user_password</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">create_user_db_context_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="p">{}):</span>
+<div class="viewcode-block" id="reset_user_password"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.reset_user_password">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">reset_user_password</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">user_db_context_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="p">{}):</span>
     <span class="sd">"""</span>
 <span class="sd">    Reset password for a user.</span>
 
@@ -817,9 +1012,9 @@
 <span class="sd">        Email for the user.</span>
 <span class="sd">    password : str</span>
 <span class="sd">        New password for the user.</span>
-<span class="sd">    create_user_db_context_kwargs : dict</span>
+<span class="sd">    user_db_context_kwargs : dict</span>
 <span class="sd">        Arguments passed to :class:`msdss_users_api.tools.create_user_db_context`.</span>
-<span class="sd">    create_user_manager_context_kwargs : dict</span>
+<span class="sd">    user_manager_context_kwargs : dict</span>
 <span class="sd">        Arguments passed to :class:`msdss_users_api.tools.create_user_manager_context`.</span>
 
 <span class="sd">    Author</span>
@@ -833,13 +1028,26 @@
 
 <span class="sd">        from msdss_users_api.tools import *</span>
 
-<span class="sd">        await register_user('test@example.com', 'msdss123')</span>
-<span class="sd">        await reset_user_password('test@example.com', 'msdss321')</span>
+<span class="sd">        # Create user manager secrets</span>
+<span class="sd">        user_manager_settings = dict(</span>
+<span class="sd">            reset_password_token_secret='reset-secret',</span>
+<span class="sd">            verification_token_secret='verification-secret'</span>
+<span class="sd">        )</span>
+<span class="sd">        kwargs = dict(</span>
+<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">        )</span>
+
+<span class="sd">        # Reset user</span>
+<span class="sd">        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)</span>
+<span class="sd">        await reset_user_password('test@example.com', 'msdss321', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">    """</span>
 
     <span class="c1"># (reset_user_password_context) Get db and manager context functions</span>
-    <span class="n">get_user_db_context</span><span class="p">,</span> <span class="n">get_user_db</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">(</span><span class="o">**</span><span class="n">create_user_db_context_kwargs</span><span class="p">)</span>
-    <span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span> <span class="o">**</span><span class="n">create_user_manager_context_kwargs</span><span class="p">)</span>
+    <span class="n">user_db_context</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">(</span><span class="o">**</span><span class="n">user_db_context_kwargs</span><span class="p">)</span>
+    <span class="n">get_user_db_context</span> <span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'get_user_db_context'</span><span class="p">]</span>
+    <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'get_user_db'</span><span class="p">]</span>
+    <span class="n">async_database</span><span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'async_database'</span><span class="p">]</span>
+    <span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span> <span class="o">**</span><span class="n">user_manager_context_kwargs</span><span class="p">)</span>
 
     <span class="c1"># (reset_user_password_run) Run password reset user function</span>
     <span class="k">try</span><span class="p">:</span>
@@ -871,8 +1079,8 @@
 
 <div class="viewcode-block" id="update_user"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.update_user">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">update_user</span><span class="p">(</span>
     <span class="n">email</span><span class="p">,</span>
-    <span class="n">create_user_db_context_kwargs</span><span class="o">=</span><span class="p">{},</span>
-    <span class="n">create_user_manager_context_kwargs</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">user_db_context_kwargs</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="p">{},</span>
     <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Update a user.</span>
@@ -881,9 +1089,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    email : str</span>
 <span class="sd">        Email for the user.</span>
-<span class="sd">    create_user_db_context_kwargs : dict</span>
+<span class="sd">    user_db_context_kwargs : dict</span>
 <span class="sd">        Arguments passed to :class:`msdss_users_api.tools.create_user_db_context`.</span>
-<span class="sd">    create_user_manager_context_kwargs : dict</span>
+<span class="sd">    user_manager_context_kwargs : dict</span>
 <span class="sd">        Arguments passed to :class:`msdss_users_api.tools.create_user_manager_context`.</span>
 <span class="sd">    *args, **kwargs</span>
 <span class="sd">        Additional arguments passed to :class:`msdss_users_api.models.UserUpdate`.</span>
@@ -898,21 +1106,33 @@
 <span class="sd">    .. jupyter-execute::</span>
 
 <span class="sd">        from msdss_users_api.tools import *</span>
+
+<span class="sd">        # Create user manager secrets</span>
+<span class="sd">        user_manager_settings = dict(</span>
+<span class="sd">            reset_password_token_secret='reset-secret',</span>
+<span class="sd">            verification_token_secret='verification-secret'</span>
+<span class="sd">        )</span>
+<span class="sd">        kwargs = dict(</span>
+<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">        )</span>
 <span class="sd">        </span>
 <span class="sd">        # Create a test user</span>
-<span class="sd">        await register_user('test@example.com', 'msdss123')</span>
+<span class="sd">        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">        print('\\nbefore_update:\\n')</span>
-<span class="sd">        user = await get_user('test@example.com', show=True)</span>
+<span class="sd">        user = await get_user('test@example.com', show=True, user_manager_context_kwargs=kwargs)</span>
 <span class="sd">        </span>
 <span class="sd">        # Update the test user</span>
-<span class="sd">        await update_user('test@example.com', is_verified=True)</span>
+<span class="sd">        await update_user('test@example.com', is_verified=True, user_manager_context_kwargs=kwargs)</span>
 <span class="sd">        print('\\nafter_update:\\n')</span>
-<span class="sd">        user = await get_user('test@example.com', show=True)</span>
+<span class="sd">        user = await get_user('test@example.com', show=True, user_manager_context_kwargs=kwargs)</span>
 <span class="sd">    """</span>
     
     <span class="c1"># (register_user_context) Get db and manager context functions</span>
-    <span class="n">get_user_db_context</span><span class="p">,</span> <span class="n">get_user_db</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">(</span><span class="o">**</span><span class="n">create_user_db_context_kwargs</span><span class="p">)</span>
-    <span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span> <span class="o">**</span><span class="n">create_user_manager_context_kwargs</span><span class="p">)</span>
+    <span class="n">user_db_context</span> <span class="o">=</span> <span class="n">create_user_db_context</span><span class="p">(</span><span class="o">**</span><span class="n">user_db_context_kwargs</span><span class="p">)</span>
+    <span class="n">get_user_db_context</span> <span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'get_user_db_context'</span><span class="p">]</span>
+    <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'get_user_db'</span><span class="p">]</span>
+    <span class="n">async_database</span><span class="o">=</span> <span class="n">user_db_context</span><span class="p">[</span><span class="s1">'async_database'</span><span class="p">]</span>
+    <span class="n">get_user_manager_context</span> <span class="o">=</span> <span class="n">create_user_manager_context</span><span class="p">(</span><span class="n">get_user_db</span><span class="o">=</span><span class="n">get_user_db</span><span class="p">,</span> <span class="o">**</span><span class="n">user_manager_context_kwargs</span><span class="p">)</span>
 
     <span class="c1"># (register_user_run) Run create user function</span>
     <span class="k">try</span><span class="p">:</span>

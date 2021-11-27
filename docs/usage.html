@@ -47,7 +47,7 @@
   
   
   
-    <title>Usage &#8212; 0.1.3</title>
+    <title>Usage &#8212; 0.2.0</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/material.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -90,11 +90,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="index.html" title="0.1.3"
+        <a href="index.html" title="0.2.0"
            class="md-header-nav__button md-logo">
           
               <img src="_static/logo.svg" height="26"
-                   alt="0.1.3 logo">
+                   alt="0.2.0 logo">
           
         </a>
       </div>
@@ -177,7 +177,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">0.1.3</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">0.2.0</a></li>
       </ul>
     </div>
   </nav>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="index.html" title="0.1.3" class="md-nav__button md-logo">
+    <a href="index.html" title="0.2.0" class="md-nav__button md-logo">
       
         <img src="_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="index.html"
-       title="0.1.3">msdss-users-api</a>
+       title="0.2.0">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -338,7 +338,7 @@
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Do not forget to setup your environmental variables (see <a href="#id1"><span class="problematic" id="id2">`Quick Start`_</span></a>)</p>
+<p>Do not forget to setup your environmental variables (see <a class="reference internal" href="quickstart.html#quick-start"><span class="std std-ref">Quick Start</span></a>)</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -356,7 +356,7 @@
 </section>
 <section id="python">
 <h2 id="python">Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
-<p>In Python, use the package via <a class="reference internal" href="reference/usersapi.html#msdss_users_api.core.UsersAPI" title="msdss_users_api.core.UsersAPI"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.core.UsersAPI</span></code></a>:</p>
+<p>In Python, use the package via <a class="reference internal" href="reference/core.html#msdss_users_api.core.UsersAPI" title="msdss_users_api.core.UsersAPI"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.core.UsersAPI</span></code></a>:</p>
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span>
@@ -364,16 +364,13 @@
 <span class="kn">from</span> <span class="nn">msdss_users_api.models</span> <span class="kn">import</span> <span class="n">User</span>
 
 <span class="c1"># Create app using env vars</span>
-<span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">(</span>
-    <span class="n">env_file</span><span class="o">=</span><span class="s1">'./.env'</span><span class="p">,</span>
-    <span class="n">key_path</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">)</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">UsersAPI</span><span class="p">()</span>
 
 <span class="c1"># Get a function dependency for the current active user</span>
 <span class="n">current_active_user</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Add a protected route</span>
-<span class="nd">@app</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'/protected-route'</span><span class="p">)</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">'GET'</span><span class="p">,</span> <span class="s1">'/protected-route'</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">protected_route</span><span class="p">(</span><span class="n">user</span><span class="p">:</span> <span class="n">User</span> <span class="o">=</span> <span class="n">Depends</span><span class="p">(</span><span class="n">current_active_user</span><span class="p">)):</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s1">'Hello, </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s1">'</span>
 
@@ -389,7 +386,7 @@
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Do not forget to setup your environmental variables (see <a href="#id3"><span class="problematic" id="id4">`Quick Start`_</span></a>)</p>
+<p>Do not forget to setup your environmental variables (see <a class="reference internal" href="quickstart.html#quick-start"><span class="std std-ref">Quick Start</span></a>)</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>

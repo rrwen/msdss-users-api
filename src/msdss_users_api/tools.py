@@ -1,9 +1,7 @@
+from msdss_users_api.defaults import DEFAULT_COOKIE_SETTINGS, DEFAULT_JWT_SETTINGS
+import pydantic
 import contextlib
 import databases
-import os
-from msdss_users_api.defaults import DEFAULT_DATABASE_KWARGS
-import pydantic
-import warnings
 
 from fastapi import Depends
 from fastapi_users import FastAPIUsers
@@ -12,70 +10,192 @@ from fastapi_users.db import SQLAlchemyUserDatabase
 from fastapi_users.jwt import generate_jwt
 from fastapi_users.manager import UserAlreadyExists, UserNotExists
 from msdss_base_database import Database
-from msdss_base_dotenv import env_exists, load_env_file
 
+from .defaults import *
+from .env import *
 from .managers import *
 from .models import *
 
-def create_fastapi_users(
-    secret,
-    reset_password_token_secret,
-    verification_token_secret,
+def create_api_objects(
+    user_manager_settings={},
+    jwt_settings=DEFAULT_JWT_SETTINGS,
+    cookie_settings=DEFAULT_COOKIE_SETTINGS,
+    database=Database(),
+    database_engine=None,
+    async_database=None,
     enable_cookie=True,
     enable_jwt=True,
-    driver='postgresql',
-    user='msdss',
-    password='msdss123',
-    host='localhost',
-    port='5432',
-    database='msdss',
-    user_manager_kwargs={},
     cookie=None,
-    cookie_kwargs={
-        'lifetime_seconds': 3600
-    },
     jwt=None,
-    jwt_kwargs= {
-        'lifetime_seconds': 3600,
-        'tokenUrl': 'auth/jwt/login'
-    },
     Base=Base,
     User=User,
     UserCreate=UserCreate,
     UserUpdate=UserUpdate,
     UserDB=UserDB,
     UserTable=UserTable,
-    get_user_db=None):
+    UserManager=None):
+    """
+    Creates all the needed dependencies and models to build a `FastAPIUsers object <https://fastapi-users.github.io/fastapi-users/configuration/routers/>`_.
+
+    Parameters
+    ----------
+    user_manager_settings : dict
+        Keyword arguments to be passed to :func:`msdss_users_api.tools.create_user_manager`.
+        
+        Requires setting at least the following keys:
+
+        * ``reset_password_token_secret`` (str): secret used to secure password reset tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``)
+        * ``verification_token_secret`` (str): secret used to secure verification tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``)
+
+    cookie_settings : dict
+        Dictionary of keyword arguments passed to :class:`fastapi_users:fastapi_users.authentication.CookieAuthentication`.
+        See `CookieAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/>`_.
+        
+        Requires setting at least the following keys if ``enable_cookie`` is ``True``:
+
+        * ``secret`` (str): secret for JWT encryption. Use a strong phrase (e.g. ``openssl rand -hex 32``)
+
+        Other defaults will also be set if not specified:
+
+        .. jupyter-execute::
+            :hide-code:
+            
+            from msdss_users_api.defaults import DEFAULT_COOKIE_SETTINGS
+
+            for k, v in DEFAULT_COOKIE_SETTINGS.items():
+                print(f'{k} = {v}')
+
+    jwt_settings : dict
+        Dictionary of keyword arguments passed to :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication`. 
+        See `JWTAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/>`_.
+
+        Requires setting at least the following keys if ``enable_jwt`` is ``True``:
+
+        * ``secret`` (str): secret for cookie encryption. Use a strong phrase (e.g. ``openssl rand -hex 32``)
+
+        Other defaults will also be set if not specified:
+
+        .. jupyter-execute::
+            :hide-code:
+
+            from msdss_users_api.defaults import DEFAULT_JWT_SETTINGS
+
+            for k, v in DEFAULT_JWT_SETTINGS.items():
+                print(f'{k} = {v}')
+
+    database : :class:`msdss_base_database.msdss_base_database.core.Database`
+        Database to use for managing users.
+    database_engine : :func:`sqlalchemy:sqlalchemy.create_engine` or  None
+        SQLAlchemy engine object. If ``None``, one will be created from parameter ``database``.
+    async_database : :class:`databases:databases.Database` or None
+        Async database object from ``databases``. If ``None``, one will be created from parameter ``database``.
+    enable_cookie : bool
+        Whether to enable cookie based authentication or not.
+    enable_jwt : bool
+        Whether to enable JSON Web Token (JWT) based authentication or not.
+    cookie : :class:`fastapi_users:fastapi_users.authentication.CookieAuthentication` or None
+        A cookie authentication object from FastAPI Users. If ``None``, one will be created from parameter ``cookie_settings``.
+        See `CookieAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/>`_.
+    jwt : :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication` or None
+        A JSON Web Token (JWT) authentication object from FastAPI Users. If ``None``, one will be created from parameter ``jwt_settings``.
+        See `JWTAuthentication <https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/>`_.
+    Base : class
+        Class returned from :func:`sqlalchemy:sqlalchemy.orm.declarative_base`.
+    User : :class:`msdss_users_api.models.User`
+        User model for FastAPI Users. See :class:`msdss_users_api.models.User`.
+    UserCreate : :class:`msdss_users_api.models.UserCreate`
+        UserCreate model for FastAPI Users. See :class:`msdss_users_api.models.UserCreate`.
+    UserUpdate : :class:`msdss_users_api.models.UserUpdate`
+        UserUpdate model for FastAPI Users. See :class:`msdss_users_api.models.UserUpdate`.
+    UserDB : :class:`msdss_users_api.models.UserDB`
+        UserDB model for FastAPI Users. See :class:`msdss_users_api.models.UserDB`.
+    UserTable : :class:`msdss_users_api.models.UserTable`
+        UserTable model for FastAPI Users. See :class:`msdss_users_api.models.UserTable`.
+    UserManager : :class:`msdss_users_api.managers.UserManager` or None
+        UserManager model for FastAPI Users. See :class:`msdss_users_api.managers.UserManager`.
+        If ``None``, one will be created using :func:`msdss_users_api.tools.create_user_manager`
+
+    Returns
+    -------
+    dict
+        A dictionary containing the following:
+
+        * ``users_api`` (:class:`fastapi_users:fastapi_users.FastAPIUsers`): configured FastAPI Users object
+        * ``databases`` (dict): dictionary of database related objects
+            * ``database`` (:class:`msdss_base_database:msdss_base_database.core.Database`): database object from parameter ``database``
+            * ``database_engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): Engine from parameter ``database_engine``.
+            * ``async_database`` (:class:`databases:databases.Database`): Async database from parameter ``async_database``.
+        * ``dependencies`` (dict(func)): dictionary of dependencies
+            * ``get_user_db`` (func): get_user_db function auto-configured - see :func:`msdss_users_api.tools.create_user_db_func`.
+            * ``get_user_manager`` (func): get_user_manager function auto-configured - see :func`msdss_users_api.tools.create_user_manager_func`.
+        * ``models`` (dict): dictionary of models
+            * ``User (:class:`msdss_users_api.models.User`): see parameter ``User``
+            * ``UserCreate`` (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``
+            * ``UserUpdate`` (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``
+            * ``UserDB`` (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``
+            * ``UserTable`` (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``
+            * ``UserManager`` (:class:`msdss_users_api.managers.UserManager`): see parameter ``UserManager``
+        * ``auth`` (dict): dictionary of auth related objects
+            * ``jwt`` (:class:`fastapi_users:fastapi_users.authentication.JWTAuthentication`): see parameter ``jwt``
+            * ``cookie`` (:class:`fastapi_users:fastapi_users.authentication.CookieAuthentication`): see parameter ``cookie``
+
+    Author
+    ------
+    Richard Wen <rrwen.dev@gmail.com>
+
+    Example
+    -------
+    .. jupyter-execute::
+
+        from msdss_users_api.tools import *
+
+        # Setup user manager secrets
+        user_manager_settings = dict(
+            reset_password_token_secret='reset-secret', # CHANGE TO STRONG PHRASE
+            verification_token_secret='verify-secret' # CHANGE TO STRONG PHRASE
+        )
+
+        # Setup jwt and cookie secret
+        jwt_settings = dict(secret='jwt-secret') # CHANGE TO STRONG PHRASE
+        cookie_settings = dict(secret='cookie-secret') # CHANGE TO STRONG PHRASE
+
+        # Create FastAPI Users object
+        api_objects = create_api_objects(
+            user_manager_settings=user_manager_settings,
+            jwt_settings=jwt_settings,
+            cookie_settings=cookie_settings
+        )
+
+        # Get FastAPI Users Object
+        users_api = api_objects['users_api']
+    """
 
     # (setup_fastapi_users_vars) Setup vars
-    jwt_kwargs['secret'] = jwt_kwargs.get('secret', secret)
-    cookie_kwargs['secret'] = cookie_kwargs.get('secret', secret)
-    user_manager_kwargs['reset_password_token_secret'] = reset_password_token_secret
-    user_manager_kwargs['verification_token_secret'] = verification_token_secret
+    for param, default in DEFAULT_COOKIE_SETTINGS.items():
+        cookie_settings[param] = cookie_settings.get(param, default)
+    for param, default in DEFAULT_JWT_SETTINGS.items():
+        jwt_settings[param] = jwt_settings.get(param, default)
 
     # (setup_fastapi_users_db) Setup database connections
-    db = Database(driver=driver, user=user, password=password, host=host, port=port, database=database)
-    database_engine = db._connection
-    async_database = databases.Database(str(database_engine.url))
-
-    # (setup_fastapi_users_auth) Setup auth for users
-    jwt = jwt if jwt else JWTAuthentication(**jwt_kwargs)
-    cookie = cookie if cookie else CookieAuthentication(**cookie_kwargs)
+    database_engine = database_engine if database_engine else database._connection
+    async_database = async_database if async_database else databases.Database(str(database_engine.url))
     
     # (setup_fastapi_users_auth_combine) Combine cookie and jwt auth if needed
     auth = []
     if enable_cookie:
+        cookie = cookie if cookie else CookieAuthentication(**cookie_settings)
         auth.append(cookie)
     if enable_jwt:
+        jwt = jwt if jwt else JWTAuthentication(**jwt_settings)
         auth.append(jwt)
     
     # (setup_fastapi_users_func) Setup required functions
-    get_user_db = get_user_db if get_user_db else create_user_db_func(database_engine, async_database, sqlalchemy_base=Base, user_table_model=UserTable, user_db_model=UserDB)
-    UserManager = create_user_manager(**user_manager_kwargs)
+    get_user_db = create_user_db_func(database_engine, async_database, Base=Base, UserTable=UserTable, UserDB=UserDB)
+    UserManager = UserManager if UserManager else create_user_manager(**user_manager_settings)
     get_user_manager = create_user_manager_func(get_user_db, UserManager)
 
-    # (setup_fastapi_users_return) Return users api obj
-    out = FastAPIUsers(
+    # (setup_fastapi_user_create) Create users api func
+    users_api = FastAPIUsers(
         get_user_manager,
         auth,
         User,
@@ -83,10 +203,36 @@ def create_fastapi_users(
         UserUpdate,
         UserDB
     )
+
+    # (setup_fastapi_users_return) Return users api and constructed objects
+    out = dict(
+        users_api=users_api,
+        databases=dict(
+            database=database,
+            database_engine=database_engine,
+            async_database=async_database
+        ),
+        dependencies=dict(
+            get_user_db=get_user_db,
+            get_user_manager=get_user_manager
+        ),
+        models=dict(
+            User=User,
+            UserCreate=UserCreate,
+            UserUpdate=UserUpdate,
+            UserDB=UserDB,
+            UserTable=UserTable,
+            UserManager=UserManager
+        ),
+        auth=dict(
+            jwt=jwt,
+            cookie=cookie
+        )
+    )
     return out
 
 def create_user_db_context(
-    database=Database(**DEFAULT_DATABASE_KWARGS),
+    database=Database(),
     *args, **kwargs):
     """
     Create a context manager for an auto-configured :func:`msdss_users_api.tools.create_user_db_func` function.
@@ -94,15 +240,7 @@ def create_user_db_context(
     Parameters
     ----------
     database : :class:`msdss_base_database.msdss_base_database.core.Database`
-        Database to use for managing users. The default Database has the following argument settings:
-
-        .. jupyter-execute::
-            :hide-code:
-
-            from msdss_users_api import DEFAULT_DATABASE_KWARGS
-            from pprint import pprint
-            pprint(DEFAULT_DATABASE_KWARGS)
-
+        Database to use for managing users.
     *args, **kwargs
         Additional arguments passed to :func:`msdss_users_api.tools.create_user_db_func`.
 
@@ -133,21 +271,22 @@ def create_user_db_context(
     """
     
     # (create_user_db_func_db) Create databases
-    engine = database._connection
-    async_database = databases.Database(str(engine.url))
+    database_engine = database._connection
+    async_database = databases.Database(str(database_engine.url))
     
     # (get_user_db_context_return) Return user db context
-    get_user_db = create_user_db_func(engine=engine, async_database=async_database, *args, **kwargs)
+    get_user_db = create_user_db_func(database_engine=database_engine, async_database=async_database, *args, **kwargs)
     out = dict(
         get_user_db_context=contextlib.asynccontextmanager(get_user_db),
         get_user_db=get_user_db,
         async_database=async_database,
-        database_engine=engine
+        database_engine=database_engine
     )
     return out
 
 def create_user_db_func(
-    database=Database(**DEFAULT_DATABASE_KWARGS),
+    database_engine,
+    async_database=None,
     Base=Base,
     UserTable=UserTable,
     UserDB=UserDB):
@@ -158,16 +297,10 @@ def create_user_db_func(
 
     Parameters
     ----------
-    database : :class:`msdss_base_database.msdss_base_database.core.Database`
-        Database to use for managing users. The default Database has the following argument settings:
-
-        .. jupyter-execute::
-            :hide-code:
-
-            from msdss_users_api import DEFAULT_DATABASE_KWARGS
-            from pprint import pprint
-            pprint(DEFAULT_DATABASE_KWARGS)
-            
+    database_engine : :func:`sqlalchemy:sqlalchemy.create_engine`
+        SQLAlchemy engine object.
+    async_database : :class:`databases:databases.Database` or None
+        Async database object from ``databases``. If ``None``, one will be created from parameter ``database_engine``.
     Base : :func:`sqlalchemy:sqlalchemy.orm.declarative_base`
         The base class from sqlalchemy. See :func:`sqlalchemy:sqlalchemy.orm.declarative_base`.
     UserTable : :class:`msdss_users_api.models.UserTable`
@@ -194,141 +327,22 @@ def create_user_db_func(
         from msdss_users_api.tools import create_user_db_func
 
         # Create a database object
-        db = Database()
+        db = Database()._connection
 
         # Get the user db func
         get_user_db = create_user_db_func(db)
     """
 
     # (create_user_db_func_db) Get engine and async database
-    engine = database._connection
-    async_database = databases.Database(str(engine.url))
+    async_database = async_database if async_database else databases.Database(str(database_engine.url))
 
     # (create_user_db_func_table) Create user table in database
-    Base.metadata.create_all(engine)
+    Base.metadata.create_all(database_engine)
     table = UserTable.__table__
 
     # (create_user_db_func_return) Return the get_user_db function
     async def out():
         yield SQLAlchemyUserDatabase(UserDB, async_database, table)
-    return out
-
-def create_user_manager_context(
-    reset_password_token_secret,
-    verification_token_secret,
-    get_user_db,
-    UserManager=None,
-    load_env=True,
-    env_file='./.env',
-    key_path=None,
-    reset_password_token_secret_key='MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET',
-    verification_token_secret_key='MSDSS_USERS_VERIFICATION_TOKEN_SECRET',
-    user_manager_kwargs={}):
-    """
-    Create a context manager for an auto-configured :func:`msdss_users_api.tools.create_user_manager_func` function.
-
-    Parameters
-    ----------
-    reset_password_token_secret : str
-        Secret used to secure password reset tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``).
-    verification_token_secret : str or None
-        Secret used to secure verification tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``).
-    get_user_db : func
-        Function for the user database dependency. See :func:`msdss_users_api.tools.create_user_db_func`.
-    UserManager : :class:`msdss_users_api.models.UserManager`
-        The user manager model from FastAPI Users. See :class:`msdss_users_api.models.UserManager` and :func:`msdss_users_api.tools.create_user_manager`. If ``None``, one will be created.
-    load_env : bool
-        Whether to load variables from a file with environmental variables at ``env_file`` or not.
-    env_file : str
-        The path of the file with environmental variables.
-    key_path : str
-        The path of the key file for the ``env_file``.
-    reset_password_token_secret_key : str
-        The environmental variable name for ``reset_password_token_secret``.
-    verification_token_secret_key : str
-        The environmental variable name for ``verification_token_secret``.
-    user_manager_kwargs : dict
-        Keyword arguments passed to :func:`msdss_users_api.tools.create_user_manager`
-
-    Return
-    ------
-    :func:`contextlib.asynccontextmanager`
-        Function returned from :func:`contextlib.asynccontextmanager` created from an auto-configured :func:`msdss_users_api.tools.create_user_manager_func` function.
-
-    Author
-    ------
-    Richard Wen <rrwen.dev@gmail.com>
-
-    Example
-    -------
-
-    .. jupyter-execute::
-
-        from msdss_users_api.tools import *
-        
-        get_user_manager_context = create_user_manager_context('msdss-reset-secret', 'msdss-verify-secret')
-    """
-    
-    # (get_user_manager_context_env) Load env vars
-    has_env = env_exists(file_path=env_file, key_path=key_path)
-    if load_env and has_env:
-        load_env_file(file_path=env_file, key_path=key_path)
-        user_manager_kwargs['reset_password_token_secret'] = os.getenv(reset_password_token_secret_key, reset_password_token_secret_key)
-        user_manager_kwargs['verification_token_secret'] = os.getenv(verification_token_secret_key, verification_token_secret)
-
-    # (get_user_manager_context_func) Create user manager func
-    UserManager = UserManager if UserManager else create_user_manager(**user_manager_kwargs)
-    get_user_manager = create_user_manager_func(get_user_db, UserManager)
-
-    # (get_user_manager_context_return) Return user manager context
-    out = contextlib.asynccontextmanager(get_user_manager)
-    return out
-
-def create_user_manager_func(get_user_db, UserManager=UserManager):
-    """
-    Create a function to return the the user manager class.
-
-    See `UserManager configuration <https://fastapi-users.github.io/fastapi-users/configuration/user-manager/>`_ for FastAPI Users,
-
-    Parameters
-    ----------
-    get_user_db : func
-        Function for the user database dependency. See :func:`msdss_users_api.tools.create_user_db_func`.
-    UserManager : :class:`msdss_users_api.models.UserManager`
-        The user manager model from FastAPI Users. See :class:`msdss_users_api.models.UserManager`.
-
-    Return
-    ------
-    func
-        A function yielding a configured :class:`msdss_users_api.models.UserManager`.
-
-    Author
-    ------
-    Richard Wen <rrwen.dev@gmail.com>
-
-    Example
-    -------
-    .. jupyter-execute::
-
-        import databases
-
-        from msdss_base_database import Database
-        from msdss_users_api.tools import *
-
-        # Create a database object
-        db = Database()
-
-        # Get the user db func
-        get_user_db = create_user_db_func(db)
-
-        # Create a user manager model
-        UserManager = create_user_manager('msdss-reset-secret', 'msdss-verify-secret')
-
-        # Get the user manager func
-        get_user_manager = create_user_manager_func(get_user_db, UserManager)
-    """
-    async def out(user_db=Depends(get_user_db)):
-        yield UserManager(user_db)
     return out
 
 def create_user_manager(
@@ -347,15 +361,15 @@ def create_user_manager(
         Secret to use for reset password token encryption.
     verification_token_secret : str
         Secret to use for verification tokens encryption.
-    __base__: :class:`msdss_users_api.models.UserManager`
-        The base user manager model from FastAPI Users. See :class:`msdss_users_api.models.UserManager`.
+    __base__: :class:`msdss_users_api.managers.UserManager`
+        The base user manager model from FastAPI Users. See :class:`msdss_users_api.managers.UserManager`.
     *args, **kwargs
         Additional arguments passed to :func:`pydantic:pydantic.create_model`. See `pydantic dynamic model creation <https://pydantic-docs.helpmanual.io/usage/models/#dynamic-model-creation>`_.
 
     Return
     ------
-    :class:`msdss_users_api.models.UserManager`
-       A configured :class:`msdss_users_api.models.UserManager`.
+    :class:`msdss_users_api.managers.UserManager`
+       A configured :class:`msdss_users_api.managers.UserManager`.
 
     Author
     ------
@@ -375,6 +389,130 @@ def create_user_manager(
         verification_token_secret=verification_token_secret,
         __base__=__base__,
         *args, **kwargs)
+    return out
+
+def create_user_manager_context(
+    get_user_db,
+    user_manager_settings={},
+    UserManager=None,
+    load_env=True,
+    env=UsersDotEnv()):
+    """
+    Create a context manager for an auto-configured :func:`msdss_users_api.tools.create_user_manager_func` function.
+
+    Parameters
+    ----------
+    get_user_db : func
+        Function for the user database dependency. See :func:`msdss_users_api.tools.create_user_db_func`.
+    user_manager_settings : dict
+        Keyword arguments passed to :func:`msdss_users_api.tools.create_user_manager`
+
+        Requires at least the following parameters:
+
+        * ``reset_password_token_secret`` (str): secret used to secure password reset tokens- use a strong phrase (e.g. ``openssl rand -hex 32``)
+        * ``verification_token_secret`` (str): secret used to secure verification tokens - use a strong phrase (e.g. ``openssl rand -hex 32``)
+
+    UserManager : :class:`msdss_users_api.managers.UserManager` or None
+        The user manager model from FastAPI Users. See :class:`msdss_users_api.managers.UserManager` and :func:`msdss_users_api.tools.create_user_manager`. If ``None``, one will be created from ``user_manager_settings``.
+    load_env : bool
+        Whether to load variables from a file with environmental variables at ``env_file`` or not.
+    env : :class:`msdss_users_api.env.UsersDotEnv`
+        Object to load environment variables from. If the ``env_file`` and variable exists, it will overwrite parameters ``reset_password_token`` and ``verification_token_secret``.
+
+    Return
+    ------
+    :func:`contextlib.asynccontextmanager`
+        Function returned from :func:`contextlib.asynccontextmanager` created from an auto-configured :func:`msdss_users_api.tools.create_user_manager_func` function.
+
+    Author
+    ------
+    Richard Wen <rrwen.dev@gmail.com>
+
+    Example
+    -------
+
+    .. jupyter-execute::
+
+        from msdss_users_api.tools import *
+
+        # Create a database object
+        db = Database()._connection
+
+        # Get the user db func
+        get_user_db = create_user_db_func(db)
+
+        # Create user manager secrets
+        user_manager_settings = dict(
+            reset_password_token_secret='reset-secret',
+            verification_token_secret='verification-secret'
+        )
+        
+        # Get user manager context
+        get_user_manager_context = create_user_manager_context(
+            get_user_db,
+            user_manager_settings=user_manager_settings
+        )
+    """
+    
+    # (get_user_manager_context_env) Load env vars
+    if env.exists() and load_env:
+        env.load()
+        user_manager_settings['reset_password_token_secret'] = env.get('reset_password_token_secret')
+        user_manager_settings['verification_token_secret'] = env.get('verification_token_secret')
+
+    # (get_user_manager_context_func) Create user manager func
+    UserManager = UserManager if UserManager else create_user_manager(**user_manager_settings)
+    get_user_manager = create_user_manager_func(get_user_db, UserManager)
+
+    # (get_user_manager_context_return) Return user manager context
+    out = contextlib.asynccontextmanager(get_user_manager)
+    return out
+
+def create_user_manager_func(get_user_db, UserManager=UserManager):
+    """
+    Create a function to return the the user manager class.
+
+    See `UserManager configuration <https://fastapi-users.github.io/fastapi-users/configuration/user-manager/>`_ for FastAPI Users,
+
+    Parameters
+    ----------
+    get_user_db : func
+        Function for the user database dependency. See :func:`msdss_users_api.tools.create_user_db_func`.
+    UserManager : :class:`msdss_users_api.managers.UserManager`
+        The user manager model from FastAPI Users. See :class:`msdss_users_api.managers.UserManager`.
+
+    Return
+    ------
+    func
+        A function yielding a configured :class:`msdss_users_api.managers.UserManager`.
+
+    Author
+    ------
+    Richard Wen <rrwen.dev@gmail.com>
+
+    Example
+    -------
+    .. jupyter-execute::
+
+        import databases
+
+        from msdss_base_database import Database
+        from msdss_users_api.tools import *
+
+        # Create a database object
+        db = Database()._connection
+
+        # Get the user db func
+        get_user_db = create_user_db_func(db)
+
+        # Create a user manager model
+        UserManager = create_user_manager('msdss-reset-secret', 'msdss-verify-secret')
+
+        # Get the user manager func
+        get_user_manager = create_user_manager_func(get_user_db, UserManager)
+    """
+    async def out(user_db=Depends(get_user_db)):
+        yield UserManager(user_db)
     return out
 
 async def delete_user(email, user_db_context_kwargs={}, user_manager_context_kwargs={}):
@@ -401,8 +539,18 @@ async def delete_user(email, user_db_context_kwargs={}, user_manager_context_kwa
 
         from msdss_users_api.tools import *
 
-        await register_user('test@example.com', 'msdss123')
-        await delete_user('test@example.com')
+        # Create user manager secrets
+        user_manager_settings = dict(
+            reset_password_token_secret='reset-secret',
+            verification_token_secret='verification-secret'
+        )
+        kwargs = dict(
+            user_manager_settings=user_manager_settings
+        )
+
+        # Del users
+        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)
+        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
     """
 
     # (delete_user_context) Get db and manager context functions
@@ -425,7 +573,7 @@ async def delete_user(email, user_db_context_kwargs={}, user_manager_context_kwa
     finally:
         await async_database.disconnect()
 
-async def get_user(email, show=False, include_hashed_password=False, create_user_db_context_kwargs={}, create_user_manager_context_kwargs={}):
+async def get_user(email, show=False, include_hashed_password=False, user_db_context_kwargs={}, user_manager_context_kwargs={}):
     """
     Get attributes for a user.
 
@@ -437,9 +585,9 @@ async def get_user(email, show=False, include_hashed_password=False, create_user
         Whether to print user attributes or not.
     include_hashed_password : bool
         Whether to include the ``hashed_password`` attribute.
-    create_user_db_context_kwargs : dict
+    user_db_context_kwargs : dict
         Arguments passed to :class:`msdss_users_api.tools.create_user_db_context`.
-    create_user_manager_context_kwargs : dict
+    user_manager_context_kwargs : dict
         Arguments passed to :class:`msdss_users_api.tools.create_user_manager_context`.
 
     Author
@@ -458,14 +606,27 @@ async def get_user(email, show=False, include_hashed_password=False, create_user
 
         from msdss_users_api.tools import register_user, get_user
 
-        await register_user('test@example.com', 'msdss123')
-        user = await get_user('test@example.com', show=True)
+        # Create user manager secrets
+        user_manager_settings = dict(
+            reset_password_token_secret='reset-secret',
+            verification_token_secret='verification-secret'
+        )
+        kwargs = dict(
+            user_manager_settings=user_manager_settings
+        )
+
+        # Get user
+        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)
+        user = await get_user('test@example.com', show=True, user_manager_context_kwargs=kwargs)
 
     """
 
     # (get_user_context) Get db and manager context functions
-    get_user_db_context, get_user_db, async_database, engine = create_user_db_context(**create_user_db_context_kwargs)
-    get_user_manager_context = create_user_manager_context(get_user_db=get_user_db, **create_user_manager_context_kwargs)
+    user_db_context = create_user_db_context(**user_db_context_kwargs)
+    get_user_db_context = user_db_context['get_user_db_context']
+    get_user_db = user_db_context['get_user_db']
+    async_database= user_db_context['async_database']
+    get_user_manager_context = create_user_manager_context(get_user_db=get_user_db, **user_manager_context_kwargs)
 
     # (get_user_run) Run get user function
     try:
@@ -494,8 +655,8 @@ async def register_user(
     email,
     password,
     superuser=False,
-    create_user_db_context_kwargs={},
-    create_user_manager_context_kwargs={},
+    user_db_context_kwargs={},
+    user_manager_context_kwargs={},
     *args, **kwargs):
     """
     Register a user.
@@ -508,9 +669,9 @@ async def register_user(
         Password for the user.
     superuser : bool
         Whether the user is a superuser or not.
-    create_user_db_context_kwargs : dict
+    user_db_context_kwargs : dict
         Arguments passed to :class:`msdss_users_api.tools.create_user_db_context`.
-    create_user_manager_context_kwargs : dict
+    user_manager_context_kwargs : dict
         Arguments passed to :class:`msdss_users_api.tools.create_user_manager_context`.
     *args, **kwargs
         Additional arguments passed to :class:`msdss_users_api.models.UserCreate`.
@@ -525,13 +686,26 @@ async def register_user(
     .. jupyter-execute::
 
         from msdss_users_api.tools import *
+
+        # Create user manager secrets
+        user_manager_settings = dict(
+            reset_password_token_secret='reset-secret',
+            verification_token_secret='verification-secret'
+        )
+        kwargs = dict(
+            user_manager_settings=user_manager_settings
+        )
         
-        await register_user('test@example.com', 'msdss123')
+        # Register user
+        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)
     """
     
     # (register_user_context) Get db and manager context functions
-    get_user_db_context, get_user_db, async_database, engine = create_user_db_context(**create_user_db_context_kwargs)
-    get_user_manager_context = create_user_manager_context(get_user_db=get_user_db, **create_user_manager_context_kwargs)
+    user_db_context = create_user_db_context(**user_db_context_kwargs)
+    get_user_db_context = user_db_context['get_user_db_context']
+    get_user_db = user_db_context['get_user_db']
+    async_database= user_db_context['async_database']
+    get_user_manager_context = create_user_manager_context(get_user_db=get_user_db, **user_manager_context_kwargs)
 
     # (register_user_run) Run create user function
     try:
@@ -550,7 +724,7 @@ async def register_user(
     finally:
         await async_database.disconnect()
 
-async def reset_user_password(email, password, create_user_db_context_kwargs={}, create_user_manager_context_kwargs={}):
+async def reset_user_password(email, password, user_db_context_kwargs={}, user_manager_context_kwargs={}):
     """
     Reset password for a user.
 
@@ -560,9 +734,9 @@ async def reset_user_password(email, password, create_user_db_context_kwargs={},
         Email for the user.
     password : str
         New password for the user.
-    create_user_db_context_kwargs : dict
+    user_db_context_kwargs : dict
         Arguments passed to :class:`msdss_users_api.tools.create_user_db_context`.
-    create_user_manager_context_kwargs : dict
+    user_manager_context_kwargs : dict
         Arguments passed to :class:`msdss_users_api.tools.create_user_manager_context`.
 
     Author
@@ -576,13 +750,26 @@ async def reset_user_password(email, password, create_user_db_context_kwargs={},
 
         from msdss_users_api.tools import *
 
-        await register_user('test@example.com', 'msdss123')
-        await reset_user_password('test@example.com', 'msdss321')
+        # Create user manager secrets
+        user_manager_settings = dict(
+            reset_password_token_secret='reset-secret',
+            verification_token_secret='verification-secret'
+        )
+        kwargs = dict(
+            user_manager_settings=user_manager_settings
+        )
+
+        # Reset user
+        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)
+        await reset_user_password('test@example.com', 'msdss321', user_manager_context_kwargs=kwargs)
     """
 
     # (reset_user_password_context) Get db and manager context functions
-    get_user_db_context, get_user_db, async_database, engine = create_user_db_context(**create_user_db_context_kwargs)
-    get_user_manager_context = create_user_manager_context(get_user_db=get_user_db, **create_user_manager_context_kwargs)
+    user_db_context = create_user_db_context(**user_db_context_kwargs)
+    get_user_db_context = user_db_context['get_user_db_context']
+    get_user_db = user_db_context['get_user_db']
+    async_database= user_db_context['async_database']
+    get_user_manager_context = create_user_manager_context(get_user_db=get_user_db, **user_manager_context_kwargs)
 
     # (reset_user_password_run) Run password reset user function
     try:
@@ -614,8 +801,8 @@ async def reset_user_password(email, password, create_user_db_context_kwargs={},
 
 async def update_user(
     email,
-    create_user_db_context_kwargs={},
-    create_user_manager_context_kwargs={},
+    user_db_context_kwargs={},
+    user_manager_context_kwargs={},
     *args, **kwargs):
     """
     Update a user.
@@ -624,9 +811,9 @@ async def update_user(
     ----------
     email : str
         Email for the user.
-    create_user_db_context_kwargs : dict
+    user_db_context_kwargs : dict
         Arguments passed to :class:`msdss_users_api.tools.create_user_db_context`.
-    create_user_manager_context_kwargs : dict
+    user_manager_context_kwargs : dict
         Arguments passed to :class:`msdss_users_api.tools.create_user_manager_context`.
     *args, **kwargs
         Additional arguments passed to :class:`msdss_users_api.models.UserUpdate`.
@@ -641,21 +828,33 @@ async def update_user(
     .. jupyter-execute::
 
         from msdss_users_api.tools import *
+
+        # Create user manager secrets
+        user_manager_settings = dict(
+            reset_password_token_secret='reset-secret',
+            verification_token_secret='verification-secret'
+        )
+        kwargs = dict(
+            user_manager_settings=user_manager_settings
+        )
         
         # Create a test user
-        await register_user('test@example.com', 'msdss123')
+        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)
         print('\\nbefore_update:\\n')
-        user = await get_user('test@example.com', show=True)
+        user = await get_user('test@example.com', show=True, user_manager_context_kwargs=kwargs)
         
         # Update the test user
-        await update_user('test@example.com', is_verified=True)
+        await update_user('test@example.com', is_verified=True, user_manager_context_kwargs=kwargs)
         print('\\nafter_update:\\n')
-        user = await get_user('test@example.com', show=True)
+        user = await get_user('test@example.com', show=True, user_manager_context_kwargs=kwargs)
     """
     
     # (register_user_context) Get db and manager context functions
-    get_user_db_context, get_user_db, async_database, engine = create_user_db_context(**create_user_db_context_kwargs)
-    get_user_manager_context = create_user_manager_context(get_user_db=get_user_db, **create_user_manager_context_kwargs)
+    user_db_context = create_user_db_context(**user_db_context_kwargs)
+    get_user_db_context = user_db_context['get_user_db_context']
+    get_user_db = user_db_context['get_user_db']
+    async_database= user_db_context['async_database']
+    get_user_manager_context = create_user_manager_context(get_user_db=get_user_db, **user_manager_context_kwargs)
 
     # (register_user_run) Run create user function
     try:

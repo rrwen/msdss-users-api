@@ -31,4 +31,4 @@ UserTable
 UserManager
 ^^^^^^^^^^^
 
-.. autoclass:: msdss_users_api.models.UserManager
+.. autoclass:: msdss_users_api.managers.UserManager

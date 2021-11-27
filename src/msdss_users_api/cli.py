@@ -3,8 +3,10 @@ import asyncio
 import inspect
 
 from getpass import getpass
+from msdss_base_database import Database, DatabaseDotEnv
 
 from .core import *
+from .env import *
 from .tools import *
 
 def _get_parser():
@@ -68,38 +70,19 @@ def _get_parser():
     start_parser.add_argument('--host', type=str, default='127.0.0.1', help='address to host server')
     start_parser.add_argument('--port', type=int, default=8000, help='port to host server')
     start_parser.add_argument('--log_level', type=str, default='info', help='level of verbose messages to display')
-    start_parser.add_argument('--auth_prefix', type=str, default='/auth', help='path prefix for auth routes')
-    start_parser.add_argument('--users_prefix', type=str, default='/users', help='path prefix for users routes')
-    start_parser.add_argument('--auth_lifetime', type=int, default=3600, help='token/cookie lifetime before expiry in secs')
-    start_parser.add_argument('--disable_register_superuser', dest='register_router_superuser', action='store_false', help='disable superuser requirement for register route')
-    start_parser.add_argument('--disable_auth_router', dest='enable_auth_router', action='store_false', help='disable auth router')
-    start_parser.add_argument('--disable_register_router', dest='enable_register_router', action='store_false', help='disable register router')
-    start_parser.add_argument('--disable_verify_router', dest='enable_verify_router', action='store_false', help='disable verify router')
-    start_parser.add_argument('--disable_reset_password_router', dest='enable_reset_password_router', action='store_false', help='disable reset password router')
-    start_parser.add_argument('--disable_users_router', dest='enable_users_router', action='store_false', help='disable users router')
-    start_parser.add_argument('--disable_jwt_auth', dest='enable_jwt_auth', action='store_false', help='disable jwt authentication')
-    start_parser.add_argument('--disable_cookie_auth', dest='enable_cookie_auth', action='store_false', help='disable cookie authentication')
-    start_parser.add_argument('--secret_key', type=str, default='MSDSS_USERS_SECRET', help='env var name for secret phrase')
-    start_parser.add_argument('--jwt_secret_key', type=str, default='MSDSS_USERS_JWT_SECRET', help='env var name for jwt secret')
-    start_parser.add_argument('--cookie_secret_key', type=str, default='MSDSS_USERS_COOKIE_SECRET', help='env var name for cookie secret')
-    start_parser.add_argument('--reset_password_token_secret_key', type=str, default='MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET', help='env var name for reset password secret')
-    start_parser.add_argument('--verification_token_secret_key', type=str, default='MSDSS_USERS_VERIFICATION_TOKEN_SECRET', help='env var name for verify token secret')
-    start_parser.add_argument('--driver_key', type=str, default='MSDSS_DATABASE_DRIVER', help='env var name for db driver')
-    start_parser.add_argument('--user_key', type=str, default='MSDSS_DATABASE_USER', help='env var name for db user')
-    start_parser.add_argument('--password_key', type=str, default='MSDSS_DATABASE_PASSWORD', help='env var name for db user password')
-    start_parser.add_argument('--host_key', type=str, default='MSDSS_DATABASE_HOST', help='env var name for db host')
-    start_parser.add_argument('--port_key', type=str, default='MSDSS_DATABASE_PORT', help='env var name for db port')
-    start_parser.add_argument('--database_key', type=str, default='MSDSS_DATABASE_NAME', help='env var name for db name')
-    start_parser.set_defaults(
-        register_router_superuser=True,
-        enable_auth_router=True,
-        enable_register_router=True,
-        enable_verify_router=True,
-        enable_reset_password_router=True,
-        enable_users_router=True,
-        enable_jwt_auth=True,
-        enable_cookie_auth=True
-    )
+    start_parser_users_group = start_parser.add_argument_group('users_router')
+    start_parser_users_group.add_argument('--enable_jwt_route', type=bool, default=True, help='whether to include the jwt route')
+    start_parser_users_group.add_argument('--enable_jwt_refresh_route', type=bool, default=True, help='whether to include the cookie route')
+    start_parser_users_group.add_argument('--enable_cookie_route', type=bool, default=True, help='whether to include the jwt refresh route')
+    start_parser_users_group.add_argument('--enable_register_route', type=bool, default=True, help='whether to include the register route')
+    start_parser_users_group.add_argument('--enable_verify_route', type=bool, default=True, help='whether to include the verify route')
+    start_parser_users_group.add_argument('--enable_reset_route', type=bool, default=True, help='whether to include the reset route')
+    start_parser_users_group.add_argument('--enable_users_route', type=bool, default=True, help='whether to include the users route')
+    start_parser_auth_group = start_parser.add_argument_group('auth')
+    start_parser_auth_group.add_argument('--enable_jwt', type=bool, default=True, help='whether to enable JWT auth')
+    start_parser_auth_group.add_argument('--enable_cookie', type=bool, default=True, help='whether to enable cookie auth')
+    start_parser_auth_group.add_argument('--jwt_lifetime_seconds', type=int, default=15 * 60, help='expiry time in secs for JWTs')
+    start_parser_auth_group.add_argument('--cookie_lifetime_seconds', type=int, default=30 * 86400, help='expiry time in secs for cookies')
 
     # (_get_parser_file_key) Add file and key arguments to all commands
     for p in [parser, register_parser, delete_parser, update_parser, get_parser, reset_parser, start_parser]:
@@ -192,6 +175,13 @@ def run():
         env_file=kwargs.pop('env_file'),
         key_path=kwargs.pop('key_path')
     )
+    database_env = DatabaseDotEnv(**env_kwargs)
+    users_env = UsersDotEnv(**env_kwargs)
+
+    # (run_context) Create context args
+    database = Database(env=database_env)
+    user_db_context_kwargs = dict(database=database)
+    user_manager_context_kwargs = dict(env=users_env)
 
     # (run_command) Run commands
     if command == 'register':
@@ -200,8 +190,8 @@ def run():
         kwargs['email'] = kwargs['email'] if kwargs['email'] else input('Email: ')
         kwargs['password'] = kwargs['password'] if kwargs['password'] else _prompt_password()
         asyncio.run(register_user(
-            create_user_db_context_kwargs=env_kwargs,
-            create_user_manager_context_kwargs=env_kwargs,
+            user_db_context_kwargs=user_db_context_kwargs,
+            user_manager_context_kwargs=user_manager_context_kwargs,
             **kwargs
         ))
 
@@ -210,8 +200,8 @@ def run():
         # (run_command_get) Execute user get
         asyncio.run(get_user(
             show=True,
-            create_user_db_context_kwargs=env_kwargs,
-            create_user_manager_context_kwargs=env_kwargs,
+            user_db_context_kwargs=user_db_context_kwargs,
+            user_manager_context_kwargs=user_manager_context_kwargs,
             **kwargs
         ))
 
@@ -219,8 +209,8 @@ def run():
 
         # (run_command_delete) Execute user delete
         asyncio.run(delete_user(
-            create_user_db_context_kwargs=env_kwargs,
-            create_user_manager_context_kwargs=env_kwargs,
+            user_db_context_kwargs=user_db_context_kwargs,
+            user_manager_context_kwargs=user_manager_context_kwargs,
             **kwargs
         ))
 
@@ -229,8 +219,8 @@ def run():
         # (run_command_reset) Reset password for user
         kwargs['password'] = kwargs['password'] if kwargs['password'] else _prompt_password()
         asyncio.run(reset_user_password(
-            create_user_db_context_kwargs=env_kwargs,
-            create_user_manager_context_kwargs=env_kwargs,
+            user_db_context_kwargs=user_db_context_kwargs,
+            user_manager_context_kwargs=user_manager_context_kwargs,
             **kwargs
         ))
 
@@ -239,20 +229,39 @@ def run():
         # (run_command_update) Execute user update
         kwargs = {k:v for k, v in kwargs.items() if v}
         asyncio.run(update_user(
-            create_user_db_context_kwargs=env_kwargs,
-            create_user_manager_context_kwargs=env_kwargs,
+            user_db_context_kwargs=user_db_context_kwargs,
+            user_manager_context_kwargs=user_manager_context_kwargs,
             **kwargs
         ))
 
     elif command == 'start':
 
-        # (run_command_start_env) Merge env args into standard args
-        kwargs.update(env_kwargs)
-        
-        # (run_command_start_route) Extract route args
-        auth_prefix = kwargs.pop('auth_prefix')
-        users_prefix = kwargs.pop('users_prefix')
-        auth_lifetime = kwargs.pop('auth_lifetime')
+        # (run_command_start_env) Set env and database
+        kwargs['env'] = users_env
+        kwargs['database'] = database
+
+        # (run_command_start_router) Set router args
+        router_args = [
+            'enable_cookie_route',
+            'enable_jwt_route',
+            'enable_jwt_refresh_route',
+            'enable_register_route',
+            'enable_verify_route',
+            'enable_reset_route',
+            'enable_users_route'
+        ]
+        kwargs['users_router_settings'] = {}
+        for a in router_args:
+            kwargs['users_router_settings'][a] = kwargs.pop(a)
+
+        # (run_command_start_auth) Set auth args
+        kwargs['api_objects_settings'] = {}
+        kwargs['api_objects_settings']['cookie_settings'] = {}
+        kwargs['api_objects_settings']['jwt_settings'] = {}
+        kwargs['api_objects_settings']['enable_cookie'] = kwargs.pop('enable_cookie')
+        kwargs['api_objects_settings']['enable_jwt'] = kwargs.pop('enable_jwt')
+        kwargs['api_objects_settings']['cookie_settings']['lifetime_seconds'] = kwargs.pop('cookie_lifetime_seconds')
+        kwargs['api_objects_settings']['jwt_settings']['lifetime_seconds'] = kwargs.pop('jwt_lifetime_seconds')
 
         # (run_command_start_serve) Extract server args
         app_kwargs = dict(
@@ -260,26 +269,6 @@ def run():
             port=kwargs.pop('port'),
             log_level=kwargs.pop('log_level')
         )
-
-        # (run_command_start_defaults) Get default parameters
-        defaults = inspect.signature(UsersAPI).parameters
-        for k, v in defaults.items():
-            is_not_empty = v.default is not inspect.Parameter.empty 
-            if k not in kwargs and is_not_empty:
-                kwargs[k] = defaults[k].default
-
-        # (run_command_start_route_merge) Merge route args to standard args
-        kwargs['auth_router_jwt_include_kwargs']['prefix'] = auth_prefix + '/jwt'
-        kwargs['auth_router_cookie_include_kwargs']['prefix'] = auth_prefix
-        kwargs['register_router_include_kwargs']['prefix'] = auth_prefix
-        kwargs['verify_router_include_kwargs']['prefix'] = auth_prefix
-        kwargs['reset_password_router_include_kwargs']['prefix'] = auth_prefix
-        kwargs['users_router_include_kwargs']['prefix'] = users_prefix
-        kwargs['cookie_kwargs']['lifetime_seconds'] = auth_lifetime
-        kwargs['jwt_kwargs'].update(dict(
-            lifetime_seconds=auth_lifetime,
-            tokenUrl=auth_prefix[1:] + '/jwt/login'
-        ))
 
         # (run_command_start) Execute users api server
         app = UsersAPI(**kwargs)

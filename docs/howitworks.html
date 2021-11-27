@@ -47,7 +47,7 @@
   
   
   
-    <title>How it Works &#8212; 0.1.3</title>
+    <title>How it Works &#8212; 0.2.0</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/material.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -90,11 +90,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="index.html" title="0.1.3"
+        <a href="index.html" title="0.2.0"
            class="md-header-nav__button md-logo">
           
               <img src="_static/logo.svg" height="26"
-                   alt="0.1.3 logo">
+                   alt="0.2.0 logo">
           
         </a>
       </div>
@@ -177,7 +177,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">0.1.3</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">0.2.0</a></li>
       </ul>
     </div>
   </nav>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="index.html" title="0.1.3" class="md-nav__button md-logo">
+    <a href="index.html" title="0.2.0" class="md-nav__button md-logo">
       
         <img src="_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="index.html"
-       title="0.1.3">msdss-users-api</a>
+       title="0.2.0">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -292,8 +292,8 @@
             
   <section id="how-it-works">
 <h1 id="howitworks--page-root">How it Works<a class="headerlink" href="#howitworks--page-root" title="Permalink to this headline">¶</a></h1>
-<p>This package uses <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/">FastAPI Users</a> to create an extended <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.0.4)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a> application.</p>
-<p>Database connection variables and engine are handled by <a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/database.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.0.5)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a> while async database objects are provided by <a class="reference external" href="https://pypi.org/project/databases/">databases</a>.</p>
+<p>This package uses <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/">FastAPI Users</a> to create an extended <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.1.0)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a> application.</p>
+<p>Database connection variables and engine are handled by <a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/core.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.1.1)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a> while async database objects are provided by <a class="reference external" href="https://pypi.org/project/databases/">databases</a>.</p>
 <p>In order to create a <code class="docutils literal notranslate"><span class="pre">FastAPIUsers</span></code> object, this package follows the configuration instructions <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/overview/">here</a>, where user <a class="reference internal" href="reference/models.html#module-msdss_users_api.models" title="msdss_users_api.models"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">msdss_users_api.models</span></code></a>, <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/authentication/">authentication objects</a>, and database connections are passed as inputs.</p>
 <div class="graphviz"><img alt='digraph methods {
 compound=true;

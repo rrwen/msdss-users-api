@@ -1,3 +1,5 @@
+.. _quick-start:
+
 Quick Start
 ===========
 
@@ -9,13 +11,14 @@ After installing the package, set up environment variables using ``msdss-dotenv`
 .. code::
    
    msdss-dotenv init
-   msdss-dotenv set MSDSS_USERS_SECRET secret-phrase
-   msdss-dotenv set MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET secret-phrase-02
-   msdss-dotenv set MSDSS_USERS_VERIFICATION_TOKEN_SECRET secret-phrase-03
+   msdss-dotenv set MSDSS_USERS_COOKIE_SECRET cookie-secret
+   msdss-dotenv set MSDSS_USERS_JWT_SECRET jwt-secret
+   msdss-dotenv set MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET reset-phrase
+   msdss-dotenv set MSDSS_USERS_VERIFICATION_TOKEN_SECRET verification-phrase
 
 .. note::
 
-    You can generate a strong secret phrases with:
+    The variables above should be a strong passphrase. You can generate strong phrases with:
     
     .. code::
 

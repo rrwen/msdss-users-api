@@ -389,8 +389,8 @@
 <span class="sd">        UserDB model for FastAPI Users. See :class:`msdss_users_api.models.UserDB`.</span>
 <span class="sd">    UserTable : :class:`msdss_users_api.models.UserTable`</span>
 <span class="sd">        UserTable model for FastAPI Users. See :class:`msdss_users_api.models.UserTable`.</span>
-<span class="sd">    UserManager : :class:`msdss_users_api.models.UserManager`</span>
-<span class="sd">        UserManager model for FastAPI Users. See :class:`msdss_users_api.models.UserManager`.</span>
+<span class="sd">    UserManager : :class:`msdss_users_api.managers.UserManager`</span>
+<span class="sd">        UserManager model for FastAPI Users. See :class:`msdss_users_api.managers.UserManager`.</span>
 <span class="sd">    database_engine : :func:`sqlalchemy:sqlalchemy.create_engine` or  None</span>
 <span class="sd">        SQLAlchemy engine object. If ``None``, one will be created from the database connection params.</span>
 <span class="sd">    async_database : :class:`databases:databases.Database` or None</span>
@@ -479,7 +479,7 @@
 <span class="sd">        * ``UserUpdate`` (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``.</span>
 <span class="sd">        * ``UserDB`` (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``.</span>
 <span class="sd">        * ``UserTable`` (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``.</span>
-<span class="sd">        * ``UserManager`` (:class:`msdss_users_api.models.UserManager`): see parameter ``UserManager``.</span>
+<span class="sd">        * ``UserManager`` (:class:`msdss_users_api.managers.UserManager`): see parameter ``UserManager``.</span>
 
 <span class="sd">    Author</span>
 <span class="sd">    ------</span>
@@ -793,7 +793,7 @@
 <span class="sd">            current_active_user = app.get_current_user(active=True)</span>
 
 <span class="sd">            # Add a protected route</span>
-<span class="sd">            @app.add('GET', '/protected-route')</span>
+<span class="sd">            @app.route('GET', '/protected-route')</span>
 <span class="sd">            def protected_route(user: User = Depends(current_active_user)):</span>
 <span class="sd">                return f'Hello, {user.email}'</span>
 

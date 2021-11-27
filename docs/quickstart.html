@@ -47,7 +47,7 @@
   
   
   
-    <title>Quick Start &#8212; 0.1.3</title>
+    <title>Quick Start &#8212; 0.2.0</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/material.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -90,11 +90,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="index.html" title="0.1.3"
+        <a href="index.html" title="0.2.0"
            class="md-header-nav__button md-logo">
           
               <img src="_static/logo.svg" height="26"
-                   alt="0.1.3 logo">
+                   alt="0.2.0 logo">
           
         </a>
       </div>
@@ -177,7 +177,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">0.1.3</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">0.2.0</a></li>
       </ul>
     </div>
   </nav>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="index.html" title="0.1.3" class="md-nav__button md-logo">
+    <a href="index.html" title="0.2.0" class="md-nav__button md-logo">
       
         <img src="_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="index.html"
-       title="0.1.3">msdss-users-api</a>
+       title="0.2.0">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -317,19 +317,20 @@
           <article class="md-content__inner md-typeset" role="main">
             
   <section id="quick-start">
-<h1 id="quickstart--page-root">Quick Start<a class="headerlink" href="#quickstart--page-root" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1 id="quickstart--page-root">Quick Start<a class="headerlink" href="#quickstart--page-root" title="Permalink to this headline">¶</a></h1>
 <section id="setup-secrets">
 <h2 id="setup-secrets">Setup Secrets<a class="headerlink" href="#setup-secrets" title="Permalink to this headline">¶</a></h2>
 <p>After installing the package, set up environment variables using <code class="docutils literal notranslate"><span class="pre">msdss-dotenv</span></code> in a command line terminal:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="n">init</span>
-<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_SECRET</span> <span class="n">secret</span><span class="o">-</span><span class="n">phrase</span>
-<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET</span> <span class="n">secret</span><span class="o">-</span><span class="n">phrase</span><span class="o">-</span><span class="mi">02</span>
-<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_VERIFICATION_TOKEN_SECRET</span> <span class="n">secret</span><span class="o">-</span><span class="n">phrase</span><span class="o">-</span><span class="mi">03</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_COOKIE_SECRET</span> <span class="n">cookie</span><span class="o">-</span><span class="n">secret</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_JWT_SECRET</span> <span class="n">jwt</span><span class="o">-</span><span class="n">secret</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET</span> <span class="n">reset</span><span class="o">-</span><span class="n">phrase</span>
+<span class="n">msdss</span><span class="o">-</span><span class="n">dotenv</span> <span class="nb">set</span> <span class="n">MSDSS_USERS_VERIFICATION_TOKEN_SECRET</span> <span class="n">verification</span><span class="o">-</span><span class="n">phrase</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can generate a strong secret phrases with:</p>
+<p>The variables above should be a strong passphrase. You can generate strong phrases with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">openssl</span> <span class="n">rand</span> <span class="o">-</span><span class="nb">hex</span> <span class="mi">32</span>
 </pre></div>
 </div>
