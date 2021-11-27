@@ -30,7 +30,7 @@ class UsersAPI(API):
     verification_token_secret : str or None
         Secret used to secure verification tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``).
         If ``None``, the value will be taken from the environment variables. See parameter ``env``.
-    database : :class:`msdss_base_database.msdss_base_database.core.Database`
+    database : :class:`msdss_base_database:msdss_base_database.core.Database`
         Database to use for managing users.
     users_router_settings : dict
         Keyword arguments passed to :func:`msdss_users_api.routers.get_users_router`.

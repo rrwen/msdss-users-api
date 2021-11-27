@@ -83,7 +83,7 @@ def create_api_objects(
             for k, v in DEFAULT_JWT_SETTINGS.items():
                 print(f'{k} = {v}')
 
-    database : :class:`msdss_base_database.msdss_base_database.core.Database`
+    database : :class:`msdss_base_database:msdss_base_database.core.Database`
         Database to use for managing users.
     database_engine : :func:`sqlalchemy:sqlalchemy.create_engine` or  None
         SQLAlchemy engine object. If ``None``, one will be created from parameter ``database``.
@@ -239,7 +239,7 @@ def create_user_db_context(
 
     Parameters
     ----------
-    database : :class:`msdss_base_database.msdss_base_database.core.Database`
+    database : :class:`msdss_base_database:msdss_base_database.core.Database`
         Database to use for managing users.
     *args, **kwargs
         Additional arguments passed to :func:`msdss_users_api.tools.create_user_db_func`.

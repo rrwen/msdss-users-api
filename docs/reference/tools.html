@@ -354,7 +354,7 @@ tokenUrl = auth/jwt/login
 </div>
 </div>
 </p></li>
-<li><p><strong>database</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_base_database.msdss_base_database.core.Database</span></code>) – Database to use for managing users.</p></li>
+<li><p><strong>database</strong> (<a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/core.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.1.1)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a>) – Database to use for managing users.</p></li>
 <li><p><strong>database_engine</strong> (<a class="reference external" href="https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine" title="(in SQLAlchemy v1.4)"><code class="docutils literal notranslate"><span class="pre">sqlalchemy.create_engine()</span></code></a> or  None) – SQLAlchemy engine object. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, one will be created from parameter <code class="docutils literal notranslate"><span class="pre">database</span></code>.</p></li>
 <li><p><strong>async_database</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">databases:databases.Database</span></code> or None) – Async database object from <code class="docutils literal notranslate"><span class="pre">databases</span></code>. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, one will be created from parameter <code class="docutils literal notranslate"><span class="pre">database</span></code>.</p></li>
 <li><p><strong>enable_cookie</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to enable cookie based authentication or not.</p></li>
@@ -466,7 +466,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_base_database.msdss_base_database.core.Database</span></code>) – Database to use for managing users.</p></li>
+<li><p><strong>database</strong> (<a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/core.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.1.1)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a>) – Database to use for managing users.</p></li>
 <li><p><strong>*args</strong> – Additional arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_db_func" title="msdss_users_api.tools.create_user_db_func"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_func()</span></code></a>.</p></li>
 <li><p><strong>**kwargs</strong> – Additional arguments passed to <a class="reference internal" href="#msdss_users_api.tools.create_user_db_func" title="msdss_users_api.tools.create_user_db_func"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_user_db_func()</span></code></a>.</p></li>
 </ul>
@@ -741,7 +741,9 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com already exists
-User deleted test@example.com
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User deleted test@example.com
 </pre></div>
 </div>
 </div>
@@ -797,7 +799,7 @@ User deleted test@example.com
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User created test@example.com
-id: 496665d7-d029-4fb5-82be-d21000bfefb1
+id: 8147cba4-044b-4d9a-9226-520eb89582dc
 email: test@example.com
 is_active: True
 is_superuser: False
@@ -955,7 +957,7 @@ is_verified: False
 
 before_update:
 
-id: 496665d7-d029-4fb5-82be-d21000bfefb1
+id: 8147cba4-044b-4d9a-9226-520eb89582dc
 email: test@example.com
 is_active: True
 is_superuser: False
@@ -964,7 +966,7 @@ User updated test@example.com
 
 after_update:
 
-id: 496665d7-d029-4fb5-82be-d21000bfefb1
+id: 8147cba4-044b-4d9a-9226-520eb89582dc
 email: test@example.com
 is_active: True
 is_superuser: False

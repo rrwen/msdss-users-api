@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.core &#8212; 0.1.3</title>
+    <title>msdss_users_api.core &#8212; 0.2.0</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -87,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.1.3"
+        <a href="../../index.html" title="0.2.0"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.1.3 logo">
+                   alt="0.2.0 logo">
           
         </a>
       </div>
@@ -174,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.1.3</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.2.0</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -187,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.1.3" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.2.0" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.1.3">msdss-users-api</a>
+       title="0.2.0">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -277,19 +277,17 @@
             
   <h1 id="modules-msdss-users-api-core--page-root">Source code for msdss_users_api.core</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">databases</span>
-<span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">Depends</span><span class="p">,</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">Response</span>
-<span class="kn">from</span> <span class="nn">fastapi_users</span> <span class="kn">import</span> <span class="n">FastAPIUsers</span>
-<span class="kn">from</span> <span class="nn">fastapi_users.authentication</span> <span class="kn">import</span> <span class="n">CookieAuthentication</span><span class="p">,</span> <span class="n">JWTAuthentication</span>
+<span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span>
 <span class="kn">from</span> <span class="nn">msdss_base_api</span> <span class="kn">import</span> <span class="n">API</span>
 <span class="kn">from</span> <span class="nn">msdss_base_database</span> <span class="kn">import</span> <span class="n">Database</span>
-<span class="kn">from</span> <span class="nn">msdss_base_dotenv</span> <span class="kn">import</span> <span class="n">env_exists</span><span class="p">,</span> <span class="n">load_env_file</span>
 
+<span class="kn">from</span> <span class="nn">.env</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.routers</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="UsersAPI"><a class="viewcode-back" href="../../reference/usersapi.html#msdss_users_api.core.UsersAPI">[docs]</a><span class="k">class</span> <span class="nc">UsersAPI</span><span class="p">(</span><span class="n">API</span><span class="p">):</span>
+<div class="viewcode-block" id="UsersAPI"><a class="viewcode-back" href="../../reference/core.html#msdss_users_api.core.UsersAPI">[docs]</a><span class="k">class</span> <span class="nc">UsersAPI</span><span class="p">(</span><span class="n">API</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Users API class for managing users.</span>
 <span class="sd">    </span>
@@ -298,141 +296,51 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    secret : str</span>
-<span class="sd">        A secret for security encryption and protecting user data. Use a strong phrase (e.g. ``openssl rand -hex 32``).</span>
-<span class="sd">    driver : str</span>
-<span class="sd">        The driver name of the database connection, which are commonly ``postgresql``, ``sqlite``, ``mysql``, ``oracle`` or ``mssql``.  (see `SQLAlchemy supported databases &lt;https://docs.sqlalchemy.org/en/14/core/engines.html#supported-databases&gt;`_).</span>
-<span class="sd">    user : str</span>
-<span class="sd">        User name for the connection.</span>
-<span class="sd">    password : str</span>
-<span class="sd">        Password for the user.</span>
-<span class="sd">    host : str</span>
-<span class="sd">        Host address of the connection.</span>
-<span class="sd">    port : str</span>
-<span class="sd">        Port number of the connection.</span>
-<span class="sd">    database : str</span>
-<span class="sd">        Database name of the connection.</span>
-<span class="sd">    users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers` or None</span>
-<span class="sd">        FastAPI Users object. See `FastAPIUsers object &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/&gt;`_.</span>
-<span class="sd">        If ``None``, then one will be setup based on other parameters.</span>
-<span class="sd">    users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers` or None</span>
-<span class="sd">        A FastAPIUsers object to setup routes with. If ``None``, one will be setup using the params.</span>
-<span class="sd">    enable_auth_router : bool</span>
-<span class="sd">        Whether to include the Fast API Users api route.</span>
-<span class="sd">    enable_register_router : bool</span>
-<span class="sd">        Whether to include the Fast API Users register route.</span>
-<span class="sd">    enable_verify_router : bool</span>
-<span class="sd">        Whether to include the Fast API Users verify route.</span>
-<span class="sd">    enable_reset_password_router : bool</span>
-<span class="sd">        Whether to include the Fast API Users reset password route.</span>
-<span class="sd">    enable_users_router : bool</span>
-<span class="sd">        Whether to include the Fast API Users users route.</span>
-<span class="sd">    enable_jwt_auth : bool</span>
-<span class="sd">        Whether to use JWT auth or not.</span>
-<span class="sd">    enable_cookie_auth : bool</span>
-<span class="sd">        Whether to use cookie auth or not.</span>
-<span class="sd">    setup_startup : bool</span>
-<span class="sd">        Whether to setup a startup event to connect databases.</span>
-<span class="sd">    setup_shutdown : bool</span>
-<span class="sd">        Whether to setup a shutdown event to close databases.</span>
-<span class="sd">    auth_router_jwt_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_auth_router` using jwt auth. See `Auth router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/&gt;`_.</span>
-<span class="sd">    auth_router_jwt_include_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users auth router using jwt auth.</span>
-<span class="sd">    auth_router_jwt_refresh : bool</span>
-<span class="sd">        Whether to setup a token refresh route at ``auth_router_jwt_refresh_path``. This is setup according to the FastAPI Users `JWT authentication guide &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/&gt;`_.</span>
-<span class="sd">    auth_router_jwt_refresh_path : str</span>
-<span class="sd">        Path to setup refresh token if ``auth_router_jwt_refresh`` is ``True``.</span>
-<span class="sd">    auth_router_cookie_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_auth_router` using cookie auth. See `Auth router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/auth/&gt;`_.</span>
-<span class="sd">    auth_router_cookie_include_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users auth router using cookie auth.</span>
-<span class="sd">    register_router_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_register_router`. See `Register router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/register/&gt;`_.</span>
-<span class="sd">    register_router_include_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users register router.</span>
-<span class="sd">    register_router_superuser : bool</span>
-<span class="sd">        Whether to limit registration control to superusers only. If ``dependencies`` are set in parameter ``register_router_include_kwargs``, then a superuser dependency will be added to the list if ``True``.</span>
-<span class="sd">    verify_router_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_verify_router`. See `Verify router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/verify/&gt;`_.</span>
-<span class="sd">    verify_router_include_kwarg : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users verify router.</span>
-<span class="sd">    reset_password_router_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_reset_password_router`. See `Reset password router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/reset/&gt;`_.</span>
-<span class="sd">    reset_password_router_include_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users reset password router.</span>
-<span class="sd">    users_router_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi_users:fastapi_users.FastAPIUsers.get_users_router`. See `Users router &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/users/&gt;`_.</span>
-<span class="sd">    users_router_include_kwargs : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for the FastAPI Users users router.</span>
-<span class="sd">    reset_password_token_secret : str</span>
-<span class="sd">        Secret used to secure password reset tokens. If ``None``, it will default to param ``secret``.</span>
-<span class="sd">    verification_token_secret : str or None</span>
-<span class="sd">        Secret used to secure verification tokens. If ``None``, it will default to param ``secret``.</span>
 <span class="sd">    cookie_secret : str or None</span>
-<span class="sd">        Secret used to secure cookies. If ``None``, it will default to param ``secret``.</span>
-<span class="sd">    cookie_kwargs : dict</span>
-<span class="sd">        Dictionary of keyword arguments passed to :class:`fastapi_users:fastapi_users.authentication.CookieAuthentication`. See `CookieAuthentication &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/&gt;`_.</span>
+<span class="sd">        A secret for cookie encryption. Use a strong phrase (e.g. ``openssl rand -hex 32``).</span>
+<span class="sd">        If ``None``, the value will be taken from the environment variables. See parameter ``env``.</span>
 <span class="sd">    jwt_secret : str or None</span>
-<span class="sd">        Secret used to secure JWT tokens. If ``None``, it will default to param ``secret``.</span>
-<span class="sd">    jwt_kwargs : dict</span>
-<span class="sd">        Dictionary of keyword arguments passed to :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication`.  See `JWTAuthentication &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/&gt;`_.</span>
-<span class="sd">    Base : class</span>
-<span class="sd">        Class returned from :func:`sqlalchemy:sqlalchemy.orm.declarative_base`.</span>
-<span class="sd">    User : :class:`msdss_users_api.models.User`</span>
-<span class="sd">        User model for FastAPI Users. See :class:`msdss_users_api.models.User`.</span>
-<span class="sd">    UserCreate : :class:`msdss_users_api.models.UserCreate`</span>
-<span class="sd">        UserCreate model for FastAPI Users. See :class:`msdss_users_api.models.UserCreate`.</span>
-<span class="sd">    UserUpdate : :class:`msdss_users_api.models.UserUpdate`</span>
-<span class="sd">        UserUpdate model for FastAPI Users. See :class:`msdss_users_api.models.UserUpdate`.</span>
-<span class="sd">    UserDB : :class:`msdss_users_api.models.UserDB`</span>
-<span class="sd">        UserDB model for FastAPI Users. See :class:`msdss_users_api.models.UserDB`.</span>
-<span class="sd">    UserTable : :class:`msdss_users_api.models.UserTable`</span>
-<span class="sd">        UserTable model for FastAPI Users. See :class:`msdss_users_api.models.UserTable`.</span>
-<span class="sd">    UserManager : :class:`msdss_users_api.managers.UserManager`</span>
-<span class="sd">        UserManager model for FastAPI Users. See :class:`msdss_users_api.managers.UserManager`.</span>
-<span class="sd">    database_engine : :func:`sqlalchemy:sqlalchemy.create_engine` or  None</span>
-<span class="sd">        SQLAlchemy engine object. If ``None``, one will be created from the database connection params.</span>
-<span class="sd">    async_database : :class:`databases:databases.Database` or None</span>
-<span class="sd">        Async database object from ``databases``. If ``None``, one will be created from database connection params.</span>
-<span class="sd">    get_user_db : func or None</span>
-<span class="sd">        Function for getting the FastAPI Users DB object. If ``None``, one will be setup from params. See `FastAPI Users database config &lt;https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/&gt;`_.</span>
-<span class="sd">    get_user_manager : func or None</span>
-<span class="sd">        Function for getting the FastAPI UserManager object. If ``None``, one will be setup from params. See `FastAPI Users UserManager &lt;https://fastapi-users.github.io/fastapi-users/configuration/user-manager/&gt;`_.</span>
-<span class="sd">    cookie_auth : :class:`fastapi_users:fastapi_users.authentication.CookieAuthentication` or None</span>
-<span class="sd">        A cookie authentication object from FastAPI Users. See `CookieAuthentication &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/&gt;`_.</span>
-<span class="sd">    jwt_auth : :class:`fastapi_users:fastapi_users.authentication.JWTAuthentication` or None</span>
-<span class="sd">        A JSON Web Token (JWT) authentication object from FastAPI Users. See `JWTAuthentication &lt;https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/&gt;`_.</span>
+<span class="sd">        A secret for JWT encryption. Use a strong phrase (e.g. ``openssl rand -hex 32``).</span>
+<span class="sd">        If ``None``, the value will be taken from the environment variables. See parameter ``env``.</span>
+<span class="sd">    reset_password_token_secret : str or None</span>
+<span class="sd">        Secret used to secure password reset tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``).</span>
+<span class="sd">        If ``None``, the value will be taken from the environment variables. See parameter ``env``.</span>
+<span class="sd">    verification_token_secret : str or None</span>
+<span class="sd">        Secret used to secure verification tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``).</span>
+<span class="sd">        If ``None``, the value will be taken from the environment variables. See parameter ``env``.</span>
+<span class="sd">    database : :class:`msdss_base_database:msdss_base_database.core.Database`</span>
+<span class="sd">        Database to use for managing users.</span>
+<span class="sd">    users_router_settings : dict</span>
+<span class="sd">        Keyword arguments passed to :func:`msdss_users_api.routers.get_users_router`.</span>
+
+<span class="sd">        * The parameter ``api_objects`` will replace the related parameters in ``get_users_router`` </span>
+
+<span class="sd">    api_objects : dict or None</span>
+<span class="sd">        Dictionary returned from :func:`msdss_users_api.tools.create_api_objects`.</span>
+<span class="sd">        If ``None``, then one will be setup based on parameter ``api_objects_settings``.</span>
+<span class="sd">    api_objects_settings : dict</span>
+<span class="sd">        Keyword arguments to be passed to :func:`msdss_users_api.tools.create_api_objects`.</span>
+
+<span class="sd">        * The parameters ``cookie_secret`` and ``jwt_secret`` will overwrite the related keys inside ``cookie_settings`` and ``jwt_settings`` respectively</span>
+<span class="sd">        * The parameters ``reset_password_token_secret`` and ``verification_token_secret`` will overwrite the related keys inside ``user_manager_settings``</span>
+<span class="sd">    </span>
 <span class="sd">    load_env : bool</span>
 <span class="sd">        Whether to load variables from a file with environmental variables at ``env_file`` or not.</span>
-<span class="sd">    env_file : str</span>
-<span class="sd">        The path of the file with environmental variables.</span>
-<span class="sd">    key_path : str</span>
-<span class="sd">        The path of the key file for the ``env_file``.</span>
-<span class="sd">    secret_key : str</span>
-<span class="sd">        The environmental variable name for ``secret``.</span>
-<span class="sd">    jwt_secret_key : str</span>
-<span class="sd">        The environmental variable name for ``jwt_secret``.</span>
-<span class="sd">    cookie_secret_key : str</span>
-<span class="sd">        The environmental variable name for ``cookie_secret``.</span>
-<span class="sd">    reset_password_token_secret_key : str</span>
-<span class="sd">        The environmental variable name for ``reset_password_token_secret``.</span>
-<span class="sd">    verification_token_secret_key : str</span>
-<span class="sd">        The environmental variable name for ``verification_token_secret``.</span>
-<span class="sd">    driver_key : str</span>
-<span class="sd">        The environmental variable name for ``driver``.</span>
-<span class="sd">    user_key : str</span>
-<span class="sd">        The environmental variable name for ``user``.</span>
-<span class="sd">    password_key : str</span>
-<span class="sd">        The environmental variable name for ``password``.</span>
-<span class="sd">    host_key : str</span>
-<span class="sd">        The environmental variable name for ``key``.</span>
-<span class="sd">    port_key : str</span>
-<span class="sd">        The environmental variable name for ``port``.</span>
-<span class="sd">    database_key : str</span>
-<span class="sd">        The environmental variable name for ``database``.</span>
-<span class="sd">    log_warnings : bool</span>
-<span class="sd">        Whether to log warnings or not.</span>
+<span class="sd">    env : :class:`msdss_base_database.env.DatabaseDotEnv`</span>
+<span class="sd">        An object to set environment variables related to users configuration.</span>
+<span class="sd">        These environment variables will overwrite the parameters above if they exist.</span>
+
+<span class="sd">        By default, the related parameters above are assigned to each of the environment variables seen below if ``load_env`` is ``True``:</span>
+
+<span class="sd">        .. jupyter-execute::</span>
+<span class="sd">            :hide-code:</span>
+
+<span class="sd">            from msdss_users_api.defaults import DEFAULT_DOTENV_KWARGS</span>
+<span class="sd">            defaults = {k:v for k, v in DEFAULT_DOTENV_KWARGS.items() if k not in ['defaults', 'env_file', 'key_path']}</span>
+<span class="sd">            print('&lt;parameter&gt; = &lt;environment variable&gt;\\n')</span>
+<span class="sd">            for k, v in defaults.items():</span>
+<span class="sd">                print(k + ' = ' + v)</span>
+
 <span class="sd">    api : :class:`fastapi:fastapi.FastAPI`</span>
 <span class="sd">        API object for creating routes.</span>
 <span class="sd">    *args, **kwargs</span>
@@ -440,46 +348,12 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    users_api : :class:`fastapi_users:fastapi_users.FastAPIUsers`</span>
-<span class="sd">        Configured FastAPI Users object. See `FastAPIUsers object &lt;https://fastapi-users.github.io/fastapi-users/configuration/routers/&gt;`_.</span>
-<span class="sd">    users_database : :class:`msdss_base_database:msdss_base_database.core.Database`</span>
+<span class="sd">    database : :class:`msdss_base_database:msdss_base_database.core.Database`</span>
 <span class="sd">        Database object for users API.</span>
-<span class="sd">    users_routers : dict</span>
-<span class="sd">        Dictionary of user routers for the users API:</span>
+<span class="sd">    misc : dict</span>
+<span class="sd">        Dictionary of miscellaneous values:</span>
 
-<span class="sd">        * ``auth_jwt`` (:class:`fastapi:fastapi.APIRouter`): configured auth router with jwt authentication (See parameter ``auth_router_jwt_kwargs``)</span>
-<span class="sd">        * ``auth_cookie`` (:class:`fastapi:fastapi.APIRouter`): configured auth router with cookie authentication (See parameter ``auth_router_cookie_kwargs``)</span>
-<span class="sd">        * ``register`` (:class:`fastapi:fastapi.APIRouter`): configured register router (see parameter ``register_router_kwargs``)</span>
-<span class="sd">        * ``verify`` (:class:`fastapi:fastapi.APIRouter`): configured verify router (see parameter ``verify_router_kwargs``)</span>
-<span class="sd">        * ``reset_password`` (:class:`fastapi:fastapi.APIRouter`): configured reset password router (see parameter ``reset_password_kwargs``)</span>
-<span class="sd">        * ``users`` (:class:`fastapi:fastapi.APIRouter`): configured users router (see parameter ``users_router_kwargs``)</span>
-
-<span class="sd">    _users_databases : dict</span>
-<span class="sd">        Dictionary of user database related objects:</span>
-
-<span class="sd">        * ``engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): Engine from parameter ``database_engine``.</span>
-<span class="sd">        * ``asynchronous`` (:class:`databases:databases.Database`): Async database from parameter ``async_database``.</span>
-
-<span class="sd">    _users_events : dict(func)</span>
-<span class="sd">        Dictionary of event functions registered from auto-config:</span>
-
-<span class="sd">        * ``startup`` (func): startup function registered if ``setup_startup`` is ``True``</span>
-<span class="sd">        * ``shutdown`` (func): shutdown function registered if ``setup_shutdown`` is ``True``</span>
-<span class="sd">    _users_functions : dict(func)</span>
-<span class="sd">        Dictionary of user related functions from auto-config:</span>
-
-<span class="sd">        * ``get_user_db`` (func): get_user_db function auto-configured or from parameter ``get_user_db``. See :func:`msdss_users_api.tools.create_user_db_func`.</span>
-<span class="sd">        * ``get_user_manager`` (func): get_user_manager function auto-configured or from parameter ``get_user_manager``. See :func`msdss_users_api.tools.create_user_manager_func`.</span>
-<span class="sd">    </span>
-<span class="sd">    _users_models : dict</span>
-<span class="sd">        Dictionary of user models for the users API:</span>
-
-<span class="sd">        * ``User (:class:`msdss_users_api.models.User`): see parameter ``User``.</span>
-<span class="sd">        * ``UserCreate`` (:class:`msdss_users_api.models.UserCreate`): see parameter ``UserCreate``.</span>
-<span class="sd">        * ``UserUpdate`` (:class:`msdss_users_api.models.UserUpdate`): see parameter ``UserUpdate``.</span>
-<span class="sd">        * ``UserDB`` (:class:`msdss_users_api.models.UserDB`): see parameter ``UserDB``.</span>
-<span class="sd">        * ``UserTable`` (:class:`msdss_users_api.models.UserTable`): see parameter ``UserTable``.</span>
-<span class="sd">        * ``UserManager`` (:class:`msdss_users_api.managers.UserManager`): see parameter ``UserManager``.</span>
+<span class="sd">        * ``users_api_objects`` (dict): see parameter ``api_objects``</span>
 
 <span class="sd">    Author</span>
 <span class="sd">    ------</span>
@@ -491,15 +365,13 @@
 <span class="sd">        :hide-output:</span>
 
 <span class="sd">        from msdss_users_api import UsersAPI</span>
+
+<span class="sd">        # Create users api app</span>
 <span class="sd">        app = UsersAPI(</span>
-<span class="sd">            secret='secret-phrase',</span>
-<span class="sd">            jwt_secret='secret-phrase-02',</span>
-<span class="sd">            driver='postgresql',</span>
-<span class="sd">            user='msdss',</span>
-<span class="sd">            password='msdss123',</span>
-<span class="sd">            host='localhost',</span>
-<span class="sd">            port='5432',</span>
-<span class="sd">            database='msdss'</span>
+<span class="sd">            cookie_secret='cookie-secret', # CHANGE TO STRONG PHRASE</span>
+<span class="sd">            jwt_secret='jwt-secret', # CHANGE TO STRONG PHRASE</span>
+<span class="sd">            reset_password_token_secret='reset-secret', # CHANGE TO STRONG PHRASE</span>
+<span class="sd">            verification_token_secret='verification-secret' # CHANGE TO STRONG PHRASE</span>
 <span class="sd">        )</span>
 
 <span class="sd">        # Run the app with app.start()</span>
@@ -508,250 +380,72 @@
 <span class="sd">    """</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">secret</span><span class="o">=</span><span class="s1">'msdss-secret'</span><span class="p">,</span>
-        <span class="n">driver</span><span class="o">=</span><span class="s1">'postgresql'</span><span class="p">,</span>
-        <span class="n">user</span><span class="o">=</span><span class="s1">'msdss'</span><span class="p">,</span>
-        <span class="n">password</span><span class="o">=</span><span class="s1">'msdss123'</span><span class="p">,</span>
-        <span class="n">host</span><span class="o">=</span><span class="s1">'localhost'</span><span class="p">,</span>
-        <span class="n">port</span><span class="o">=</span><span class="s1">'5432'</span><span class="p">,</span>
-        <span class="n">database</span><span class="o">=</span><span class="s1">'msdss'</span><span class="p">,</span>
-        <span class="n">users_api</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">enable_auth_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">enable_register_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">enable_verify_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">enable_reset_password_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">enable_users_router</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">enable_jwt_auth</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">enable_cookie_auth</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">setup_startup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">setup_shutdown</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">auth_router_jwt_kwargs</span><span class="o">=</span><span class="p">{},</span>
-        <span class="n">auth_router_jwt_include_kwargs</span><span class="o">=</span><span class="p">{</span>
-            <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth/jwt'</span><span class="p">,</span>
-            <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
-        <span class="p">},</span>
-        <span class="n">auth_router_jwt_refresh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">auth_router_jwt_refresh_path</span><span class="o">=</span><span class="s1">'/refresh'</span><span class="p">,</span>
-        <span class="n">auth_router_cookie_kwargs</span><span class="o">=</span><span class="p">{},</span>
-        <span class="n">auth_router_cookie_include_kwargs</span><span class="o">=</span><span class="p">{</span>
-            <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
-            <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
-        <span class="p">},</span>
-        <span class="n">register_router_kwargs</span><span class="o">=</span><span class="p">{},</span>
-        <span class="n">register_router_include_kwargs</span><span class="o">=</span><span class="p">{</span>
-            <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
-            <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
-        <span class="p">},</span>
-        <span class="n">register_router_superuser</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">verify_router_kwargs</span><span class="o">=</span><span class="p">{},</span>
-        <span class="n">verify_router_include_kwargs</span><span class="o">=</span><span class="p">{</span>
-            <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
-            <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
-        <span class="p">},</span>
-        <span class="n">reset_password_router_kwargs</span><span class="o">=</span><span class="p">{},</span>
-        <span class="n">reset_password_router_include_kwargs</span><span class="o">=</span><span class="p">{</span>
-            <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
-            <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
-        <span class="p">},</span>
-        <span class="n">users_router_kwargs</span><span class="o">=</span><span class="p">{},</span>
-        <span class="n">users_router_include_kwargs</span><span class="o">=</span><span class="p">{</span>
-            <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/users'</span><span class="p">,</span>
-            <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'users'</span><span class="p">]</span>
-        <span class="p">},</span>
+        <span class="n">cookie_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">jwt_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verification_token_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">cookie_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">cookie_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">'lifetime_seconds'</span><span class="p">:</span> <span class="mi">3600</span><span class="p">},</span>
-        <span class="n">jwt_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">jwt_kwargs</span><span class="o">=</span> <span class="p">{</span>
-            <span class="s1">'lifetime_seconds'</span><span class="p">:</span> <span class="mi">3600</span><span class="p">,</span>
-            <span class="s1">'tokenUrl'</span><span class="p">:</span> <span class="s1">'auth/jwt/login'</span>
-        <span class="p">},</span>
-        <span class="n">Base</span><span class="o">=</span><span class="n">Base</span><span class="p">,</span>
-        <span class="n">User</span><span class="o">=</span><span class="n">User</span><span class="p">,</span>
-        <span class="n">UserCreate</span><span class="o">=</span><span class="n">UserCreate</span><span class="p">,</span>
-        <span class="n">UserUpdate</span><span class="o">=</span><span class="n">UserUpdate</span><span class="p">,</span>
-        <span class="n">UserDB</span><span class="o">=</span><span class="n">UserDB</span><span class="p">,</span>
-        <span class="n">UserTable</span><span class="o">=</span><span class="n">UserTable</span><span class="p">,</span>
-        <span class="n">UserManager</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">database_engine</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">async_database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">get_user_db</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">get_user_manager</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">cookie_auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">jwt_auth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">database</span><span class="o">=</span><span class="n">Database</span><span class="p">(),</span>
+        <span class="n">users_router_settings</span><span class="o">=</span><span class="p">{},</span>
+        <span class="n">api_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">api_objects_settings</span><span class="o">=</span><span class="p">{},</span>
         <span class="n">load_env</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">env_file</span><span class="o">=</span><span class="s1">'./.env'</span><span class="p">,</span>
-        <span class="n">key_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_SECRET'</span><span class="p">,</span>
-        <span class="n">jwt_secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_JWT_SECRET'</span><span class="p">,</span>
-        <span class="n">cookie_secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_COOKIE_SECRET'</span><span class="p">,</span>
-        <span class="n">reset_password_token_secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET'</span><span class="p">,</span>
-        <span class="n">verification_token_secret_key</span><span class="o">=</span><span class="s1">'MSDSS_USERS_VERIFICATION_TOKEN_SECRET'</span><span class="p">,</span>
-        <span class="n">driver_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_DRIVER'</span><span class="p">,</span>
-        <span class="n">user_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_USER'</span><span class="p">,</span>
-        <span class="n">password_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_PASSWORD'</span><span class="p">,</span>
-        <span class="n">host_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_HOST'</span><span class="p">,</span>
-        <span class="n">port_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_PORT'</span><span class="p">,</span>
-        <span class="n">database_key</span><span class="o">=</span><span class="s1">'MSDSS_DATABASE_NAME'</span><span class="p">,</span>
-        <span class="n">log_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">env</span><span class="o">=</span><span class="n">UsersDotEnv</span><span class="p">(),</span>
         <span class="n">api</span><span class="o">=</span><span class="n">FastAPI</span><span class="p">(</span>
             <span class="n">title</span><span class="o">=</span><span class="s1">'MSDSS Users API'</span><span class="p">,</span>
-            <span class="n">version</span><span class="o">=</span><span class="s1">'0.1.3'</span>
+            <span class="n">version</span><span class="o">=</span><span class="s1">'0.2.0'</span>
         <span class="p">),</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api</span><span class="o">=</span><span class="n">api</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-        <span class="c1"># (UserAPI_env) Load env vars</span>
-        <span class="n">has_env</span> <span class="o">=</span> <span class="n">env_exists</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">env_file</span><span class="p">,</span> <span class="n">key_path</span><span class="o">=</span><span class="n">key_path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">load_env</span> <span class="ow">and</span> <span class="n">has_env</span><span class="p">:</span>
-            <span class="n">load_env_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">env_file</span><span class="p">,</span> <span class="n">key_path</span><span class="o">=</span><span class="n">key_path</span><span class="p">)</span>
-            <span class="n">secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">secret_key</span><span class="p">,</span> <span class="n">secret</span><span class="p">)</span>
-            <span class="n">jwt_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">jwt_secret_key</span><span class="p">,</span> <span class="n">jwt_secret</span><span class="p">)</span>
-            <span class="n">cookie_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">cookie_secret_key</span><span class="p">,</span> <span class="n">cookie_secret</span><span class="p">)</span>
-            <span class="n">reset_password_token_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">reset_password_token_secret_key</span><span class="p">,</span> <span class="n">reset_password_token_secret_key</span><span class="p">)</span>
-            <span class="n">verification_token_secret</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">verification_token_secret_key</span><span class="p">,</span> <span class="n">verification_token_secret</span><span class="p">)</span>
-            <span class="n">driver</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">driver_key</span><span class="p">,</span> <span class="n">driver</span><span class="p">)</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">user_key</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-            <span class="n">password</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">password_key</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
-            <span class="n">host</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">host_key</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
-            <span class="n">port</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">port_key</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
-            <span class="n">database</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">database_key</span><span class="p">,</span> <span class="n">database</span><span class="p">)</span>
         
-        <span class="c1"># (UserAPI_warn) Warn if default secret is used</span>
-        <span class="k">if</span> <span class="n">secret</span> <span class="o">==</span> <span class="s1">'msdss-secret'</span> <span class="ow">and</span> <span class="n">log_warnings</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'Default secret was used - please change secret phrase!'</span><span class="p">)</span>
+        <span class="c1"># (UsersAPI_env) Set env vars</span>
+        <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">load_env</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="n">cookie_secret</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cookie_secret'</span><span class="p">,</span> <span class="n">cookie_secret</span><span class="p">)</span>
+            <span class="n">jwt_secret</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jwt_secret'</span><span class="p">,</span> <span class="n">jwt_secret</span><span class="p">)</span>
+            <span class="n">reset_password_token_secret</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'reset_password_token_secret'</span><span class="p">,</span> <span class="n">reset_password_token_secret</span><span class="p">)</span>
+            <span class="n">verification_token_secret</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'verification_token_secret'</span><span class="p">,</span> <span class="n">verification_token_secret</span><span class="p">)</span>
 
-        <span class="c1"># (UserAPI_vars) Setup vars</span>
-        <span class="n">jwt_secret</span> <span class="o">=</span> <span class="n">secret</span> <span class="k">if</span> <span class="n">jwt_secret</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">jwt_secret</span>
-        <span class="n">cookie_secret</span> <span class="o">=</span> <span class="n">secret</span> <span class="k">if</span> <span class="n">cookie_secret</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cookie_secret</span>
+        <span class="c1"># (UsersAPI_manager) Setup manager settings</span>
+        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'user_manager_settings'</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_objects_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'user_manager_settings'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'user_manager_settings'</span><span class="p">][</span><span class="s1">'reset_password_token_secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">reset_password_token_secret</span>
+        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'user_manager_settings'</span><span class="p">][</span><span class="s1">'verification_token_secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">verification_token_secret</span>
 
-        <span class="c1"># (UserAPI_db) Setup database connections</span>
-        <span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="n">driver</span><span class="o">=</span><span class="n">driver</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">)</span>
-        <span class="n">database_engine</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">_connection</span> <span class="k">if</span> <span class="n">database_engine</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">database_engine</span>
-        <span class="n">async_database</span> <span class="o">=</span> <span class="n">databases</span><span class="o">.</span><span class="n">Database</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">database_engine</span><span class="o">.</span><span class="n">url</span><span class="p">))</span> <span class="k">if</span> <span class="n">async_database</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">async_database</span>
+        <span class="c1"># (UsersAPI_cookie) Setup cookie settings</span>
+        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'cookie_settings'</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_objects_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cookie_settings'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cookie_secret'</span><span class="p">))</span>
+        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'cookie_settings'</span><span class="p">][</span><span class="s1">'secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">cookie_secret</span>
 
-        <span class="c1"># (UserAPI_auth) Setup auth for users</span>
-        <span class="n">jwt_auth</span> <span class="o">=</span> <span class="n">JWTAuthentication</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="n">jwt_secret</span><span class="p">,</span> <span class="o">**</span><span class="n">jwt_kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">jwt_secret</span> <span class="ow">and</span> <span class="n">jwt_auth</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">jwt_auth</span>
-        <span class="n">cookie_auth</span> <span class="o">=</span> <span class="n">CookieAuthentication</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="n">cookie_secret</span><span class="p">,</span> <span class="o">**</span><span class="n">cookie_kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">cookie_secret</span> <span class="ow">and</span> <span class="n">cookie_auth</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cookie_auth</span>
-        
-        <span class="c1"># (UserAPI_auth_combine) Combine cookie and jwt auths if needed</span>
-        <span class="n">auth</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">enable_cookie_auth</span><span class="p">:</span>
-            <span class="n">auth</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cookie_auth</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">enable_jwt_auth</span><span class="p">:</span>
-            <span class="n">auth</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jwt_auth</span><span class="p">)</span>
-        <span class="n">auth</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">auth</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
-        
-        <span class="c1"># (UserAPI_func) Setup required functions</span>
-        <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">create_user_db_func</span><span class="p">(</span><span class="n">database_engine</span><span class="p">,</span> <span class="n">async_database</span><span class="p">,</span> <span class="n">sqlalchemy_base</span><span class="o">=</span><span class="n">Base</span><span class="p">,</span> <span class="n">user_table_model</span><span class="o">=</span><span class="n">UserTable</span><span class="p">,</span> <span class="n">user_db_model</span><span class="o">=</span><span class="n">UserDB</span><span class="p">)</span> <span class="k">if</span> <span class="n">get_user_db</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">get_user_db</span>
-        <span class="n">UserManager</span> <span class="o">=</span> <span class="n">create_user_manager</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="n">reset_password_token_secret</span><span class="p">,</span> <span class="n">verification_token_secret</span><span class="o">=</span><span class="n">verification_token_secret</span><span class="p">)</span> <span class="k">if</span> <span class="n">UserManager</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">UserManager</span>
-        <span class="n">get_user_manager</span> <span class="o">=</span> <span class="n">create_user_manager_func</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span> <span class="k">if</span> <span class="n">get_user_manager</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">get_user_manager</span>
+        <span class="c1"># (UsersAPI_jwt) Setup jwt settings</span>
+        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'jwt_settings'</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_objects_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jwt_settings'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'jwt_settings'</span><span class="p">][</span><span class="s1">'secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">jwt_secret</span>
 
-        <span class="c1"># (UserAPI_api) Setup users api obj</span>
-        <span class="n">users_api</span> <span class="o">=</span> <span class="n">FastAPIUsers</span><span class="p">(</span>
-            <span class="n">get_user_manager</span><span class="p">,</span>
-            <span class="n">auth</span><span class="p">,</span>
-            <span class="n">User</span><span class="p">,</span>
-            <span class="n">UserCreate</span><span class="p">,</span>
-            <span class="n">UserUpdate</span><span class="p">,</span>
-            <span class="n">UserDB</span>
-        <span class="p">)</span> <span class="k">if</span> <span class="n">users_api</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">users_api</span>
+        <span class="c1"># (UsersAPI_database) Setup database</span>
+        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'database'</span><span class="p">]</span> <span class="o">=</span> <span class="n">database</span>
 
-        <span class="c1"># (UsersAPI_router_auth) Add auth router</span>
-        <span class="k">if</span> <span class="n">enable_auth_router</span><span class="p">:</span>
+        <span class="c1"># (UsersAPI_objects) Create FastAPI Users objects</span>
+        <span class="n">api_objects</span> <span class="o">=</span> <span class="n">api_objects</span> <span class="k">if</span> <span class="n">api_objects</span> <span class="k">else</span> <span class="n">create_api_objects</span><span class="p">(</span><span class="o">**</span><span class="n">api_objects_settings</span><span class="p">)</span>
 
-            <span class="c1"># (UsersAPI_router_auth_jwt) Add jwt auth route</span>
-            <span class="k">if</span> <span class="n">enable_jwt_auth</span><span class="p">:</span>
+        <span class="c1"># (UsersAPI_attr) Add attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">misc</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">users_api_objects</span><span class="o">=</span><span class="n">api_objects</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
 
-                <span class="c1"># (UsersAPI_router_auth_jwt_method) Set method of auth for route</span>
-                <span class="n">auth_jwt_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_auth_router</span><span class="p">(</span><span class="n">jwt_auth</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_jwt_kwargs</span><span class="p">)</span>
-                
-                <span class="c1"># (UsersAPI_router_auth_jwt_refresh) Create jwt auth refresh route</span>
-                <span class="k">if</span> <span class="n">auth_router_jwt_refresh</span><span class="p">:</span>
-                    <span class="nd">@auth_jwt_router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">auth_router_jwt_refresh_path</span><span class="p">)</span>
-                    <span class="k">async</span> <span class="k">def</span> <span class="nf">refresh_jwt</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">))):</span>
-                        <span class="k">return</span> <span class="k">await</span> <span class="n">jwt_auth</span><span class="o">.</span><span class="n">get_login_response</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
+        <span class="c1"># (UsersAPI_router) Add users router</span>
+        <span class="n">users_router_settings</span><span class="p">[</span><span class="s1">'api_objects'</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_objects</span>
+        <span class="n">users_router</span> <span class="o">=</span> <span class="n">get_users_router</span><span class="p">(</span><span class="o">**</span><span class="n">users_router_settings</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">users_router</span><span class="p">)</span>
 
-                <span class="c1"># (UsersAPI_router_auth_jwt_add) Add jwt auth route</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">auth_jwt_router</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_jwt_include_kwargs</span><span class="p">)</span>
+        <span class="c1"># (UserAPI_startup) Setup app startup</span>
+        <span class="n">async_database</span> <span class="o">=</span> <span class="n">api_objects</span><span class="p">[</span><span class="s1">'databases'</span><span class="p">][</span><span class="s1">'async_database'</span><span class="p">]</span>
+        <span class="nd">@self</span><span class="o">.</span><span class="n">event</span><span class="p">(</span><span class="s1">'startup'</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">startup</span><span class="p">():</span>
+            <span class="k">await</span> <span class="n">async_database</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
 
-            <span class="c1"># (UsersAPI_router_auth_cookie) Add cookie auth route</span>
-            <span class="k">if</span> <span class="n">enable_cookie_auth</span><span class="p">:</span>
+        <span class="c1"># (UserAPI_shutdown) Setup app shutdown</span>
+        <span class="nd">@self</span><span class="o">.</span><span class="n">event</span><span class="p">(</span><span class="s1">'shutdown'</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">shutdown</span><span class="p">():</span>
+            <span class="k">await</span> <span class="n">async_database</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 
-                    <span class="c1"># (UsersAPI_router_auth_cookie_method) Set method of auth for route</span>
-                <span class="n">auth_cookie_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_auth_router</span><span class="p">(</span><span class="n">cookie_auth</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_cookie_kwargs</span><span class="p">)</span>
-
-                <span class="c1"># (UsersAPI_router_auth_cookie_add) Add auth route</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">auth_cookie_router</span><span class="p">,</span> <span class="o">**</span><span class="n">auth_router_cookie_include_kwargs</span><span class="p">)</span>
-
-        <span class="c1"># (UsersAPI_router_register) Add register router</span>
-        <span class="k">if</span> <span class="n">enable_register_router</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">register_router_superuser</span><span class="p">:</span>
-                <span class="n">register_router_include_kwargs</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">register_router_include_kwargs</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="k">if</span> <span class="s1">'dependencies'</span> <span class="ow">in</span> <span class="n">register_router_include_kwargs</span> <span class="k">else</span> <span class="p">[]</span>
-                <span class="n">register_router_include_kwargs</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Depends</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="n">superuser</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
-            <span class="n">register_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_register_router</span><span class="p">(</span><span class="o">**</span><span class="n">register_router_kwargs</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">register_router</span><span class="p">,</span> <span class="o">**</span><span class="n">register_router_include_kwargs</span><span class="p">)</span>
-
-        <span class="c1"># (UsersAPI_router_verify) Add verify router</span>
-        <span class="k">if</span> <span class="n">enable_verify_router</span><span class="p">:</span>
-            <span class="n">verify_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_verify_router</span><span class="p">(</span><span class="o">**</span><span class="n">verify_router_kwargs</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">verify_router</span><span class="p">,</span> <span class="o">**</span><span class="n">verify_router_include_kwargs</span><span class="p">)</span>
-        
-        <span class="c1"># (UsersAPI_router_reset) Add reset password router</span>
-        <span class="k">if</span> <span class="n">enable_reset_password_router</span><span class="p">:</span>
-            <span class="n">reset_password_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_reset_password_router</span><span class="p">(</span><span class="o">**</span><span class="n">reset_password_router_kwargs</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">reset_password_router</span><span class="p">,</span> <span class="o">**</span><span class="n">reset_password_router_include_kwargs</span><span class="p">)</span>
-
-        <span class="c1"># (UsersAPI_router_users) Add users router</span>
-        <span class="k">if</span> <span class="n">enable_users_router</span><span class="p">:</span>
-            <span class="n">users_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_users_router</span><span class="p">(</span><span class="o">**</span><span class="n">users_router_kwargs</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">users_router</span><span class="p">,</span> <span class="o">**</span><span class="n">users_router_include_kwargs</span><span class="p">)</span>
-
-        <span class="c1"># (UserAPI_attr) Add attributes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">users_api</span> <span class="o">=</span> <span class="n">users_api</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">users_database</span> <span class="o">=</span> <span class="n">db</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">users_routers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">auth_jwt</span><span class="o">=</span><span class="n">auth_jwt_router</span><span class="p">,</span>
-            <span class="n">auth_cookie</span><span class="o">=</span><span class="n">auth_cookie_router</span><span class="p">,</span>
-            <span class="n">register</span><span class="o">=</span><span class="n">register_router</span><span class="p">,</span>
-            <span class="n">verify</span><span class="o">=</span><span class="n">verify_router</span><span class="p">,</span>
-            <span class="n">reset_password</span><span class="o">=</span><span class="n">reset_password_router</span><span class="p">,</span>
-            <span class="n">users</span><span class="o">=</span><span class="n">users_router</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">engine</span> <span class="o">=</span> <span class="n">database_engine</span><span class="p">,</span>
-            <span class="n">asynchronous</span> <span class="o">=</span> <span class="n">async_database</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_users_functions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">get_user_db</span> <span class="o">=</span> <span class="n">get_user_db</span><span class="p">,</span>
-            <span class="n">get_user_manager</span> <span class="o">=</span> <span class="n">get_user_manager</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_users_models</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-            <span class="n">User</span> <span class="o">=</span> <span class="n">User</span><span class="p">,</span>
-            <span class="n">UserCreate</span> <span class="o">=</span> <span class="n">UserCreate</span><span class="p">,</span>
-            <span class="n">UserUpdate</span> <span class="o">=</span> <span class="n">UserUpdate</span><span class="p">,</span>
-            <span class="n">UserDB</span> <span class="o">=</span> <span class="n">UserDB</span><span class="p">,</span>
-            <span class="n">UserTable</span> <span class="o">=</span> <span class="n">UserTable</span><span class="p">,</span>
-            <span class="n">UserManager</span> <span class="o">=</span> <span class="n">UserManager</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_users_events</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="c1"># (UserAPI_events_startup) Setup app startup</span>
-        <span class="k">if</span> <span class="n">setup_startup</span><span class="p">:</span>
-            <span class="nd">@self</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">'startup'</span><span class="p">)</span>
-            <span class="k">async</span> <span class="k">def</span> <span class="nf">startup</span><span class="p">():</span>
-                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span><span class="p">[</span><span class="s1">'asynchronous'</span><span class="p">]</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_users_events</span><span class="p">[</span><span class="s1">'startup'</span><span class="p">]</span> <span class="o">=</span> <span class="n">startup</span>
-
-        <span class="c1"># (UserAPI_events_shutdown) Setup app shutdown</span>
-        <span class="k">if</span> <span class="n">setup_shutdown</span><span class="p">:</span>
-            <span class="nd">@self</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="s1">'shutdown'</span><span class="p">)</span>
-            <span class="k">async</span> <span class="k">def</span> <span class="nf">shutdown</span><span class="p">():</span>
-                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users_databases</span><span class="p">[</span><span class="s1">'asynchronous'</span><span class="p">]</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_users_events</span><span class="p">[</span><span class="s1">'shutdown'</span><span class="p">]</span> <span class="o">=</span> <span class="n">shutdown</span>
-
-<div class="viewcode-block" id="UsersAPI.get_current_user"><a class="viewcode-back" href="../../reference/usersapi.html#msdss_users_api.core.UsersAPI.get_current_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="UsersAPI.get_current_user"><a class="viewcode-back" href="../../reference/core.html#msdss_users_api.core.UsersAPI.get_current_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_current_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        Get a dependency function to retrieve the current authenticated user.</span>
 
@@ -778,15 +472,12 @@
 <span class="sd">            from msdss_users_api import UsersAPI</span>
 <span class="sd">            from msdss_users_api.models import User</span>
 
+<span class="sd">            # Create users api app</span>
 <span class="sd">            app = UsersAPI(</span>
-<span class="sd">                secret='secret-phrase',</span>
-<span class="sd">                jwt_secret='secret-phrase-02',</span>
-<span class="sd">                driver='postgresql',</span>
-<span class="sd">                user='msdss',</span>
-<span class="sd">                password='msdss123',</span>
-<span class="sd">                host='localhost',</span>
-<span class="sd">                port='5432',</span>
-<span class="sd">                database='msdss'</span>
+<span class="sd">                cookie_secret='cookie-secret', # CHANGE TO STRONG PHRASE</span>
+<span class="sd">                jwt_secret='jwt-secret', # CHANGE TO STRONG PHRASE</span>
+<span class="sd">                reset_password_token_secret='reset-secret', # CHANGE TO STRONG PHRASE</span>
+<span class="sd">                verification_token_secret='verification-secret' # CHANGE TO STRONG PHRASE</span>
 <span class="sd">            )</span>
 
 <span class="sd">            # Get a function dependency for the current active user</span>
@@ -801,7 +492,7 @@
 <span class="sd">            # Try API at http://localhost:8000/docs</span>
 <span class="sd">            # app.start()</span>
 <span class="sd">        """</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">users_api</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">misc</span><span class="p">[</span><span class="s1">'users_api_objects'</span><span class="p">][</span><span class="s1">'users_api'</span><span class="p">]</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></div></div>
 </pre></div>
 
