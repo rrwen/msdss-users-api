@@ -30,22 +30,14 @@ class UsersAPI(API):
     verification_token_secret : str or None
         Secret used to secure verification tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``).
         If ``None``, the value will be taken from the environment variables. See parameter ``env``.
+    jwt_lifetime : int
+        Expiry time of JSON Web Tokens (JWTs) in seconds.
+    cookie_lifetime : int
+        Expiry time of cookies in seconds.
     database : :class:`msdss_base_database:msdss_base_database.core.Database`
         Database to use for managing users.
     users_router_settings : dict
-        Keyword arguments passed to :func:`msdss_users_api.routers.get_users_router`.
-
-        * The parameter ``api_objects`` will replace the related parameters in ``get_users_router`` 
-
-    api_objects : dict or None
-        Dictionary returned from :func:`msdss_users_api.tools.create_api_objects`.
-        If ``None``, then one will be setup based on parameter ``api_objects_settings``.
-    api_objects_settings : dict
-        Keyword arguments to be passed to :func:`msdss_users_api.tools.create_api_objects`.
-
-        * The parameters ``cookie_secret`` and ``jwt_secret`` will overwrite the related keys inside ``cookie_settings`` and ``jwt_settings`` respectively
-        * The parameters ``reset_password_token_secret`` and ``verification_token_secret`` will overwrite the related keys inside ``user_manager_settings``
-    
+        Keyword arguments passed to :func:`msdss_users_api.routers.get_users_router` except ``fastapi_users_objects``.
     load_env : bool
         Whether to load variables from a file with environmental variables at ``env_file`` or not.
     env : :class:`msdss_users_api.env.UsersDotEnv`
@@ -70,12 +62,12 @@ class UsersAPI(API):
 
     Attributes
     ----------
-    database : :class:`msdss_base_database:msdss_base_database.core.Database`
+    users_api_database : :class:`msdss_base_database:msdss_base_database.core.Database`
         Database object for users API.
     misc : dict
         Dictionary of miscellaneous values:
 
-        * ``users_api_objects`` (dict): see parameter ``api_objects``
+        * ``fastapi_users_objects`` (dict): dict of values returned from :func:`msdss_users_api.tools.create_fastapi_users_objects`
 
     Author
     ------
@@ -106,15 +98,15 @@ class UsersAPI(API):
         jwt_secret=None,
         reset_password_token_secret=None,
         verification_token_secret=None,
+        cookie_lifetime=DEFAULT_COOKIE_SETTINGS['lifetime_seconds'],
+        jwt_lifetime=DEFAULT_JWT_SETTINGS['lifetime_seconds'],
         database=Database(),
         users_router_settings={},
-        api_objects=None,
-        api_objects_settings={},
         load_env=True,
         env=UsersDotEnv(),
         api=FastAPI(
             title='MSDSS Users API',
-            version='0.2.0'
+            version='0.2.1'
         ),
         *args, **kwargs):
         super().__init__(api=api, *args, **kwargs)
@@ -128,36 +120,38 @@ class UsersAPI(API):
             verification_token_secret = env.get('verification_token_secret', verification_token_secret)
 
         # (UsersAPI_manager) Setup manager settings
-        api_objects_settings['user_manager_settings'] = api_objects_settings.get('user_manager_settings', {})
-        api_objects_settings['user_manager_settings']['reset_password_token_secret'] = reset_password_token_secret
-        api_objects_settings['user_manager_settings']['verification_token_secret'] = verification_token_secret
+        fastapi_users_objects_settings = {}
+        fastapi_users_objects_settings['user_manager_settings'] = fastapi_users_objects_settings.get('user_manager_settings', {})
+        fastapi_users_objects_settings['user_manager_settings']['reset_password_token_secret'] = reset_password_token_secret
+        fastapi_users_objects_settings['user_manager_settings']['verification_token_secret'] = verification_token_secret
 
         # (UsersAPI_cookie) Setup cookie settings
-        api_objects_settings['cookie_settings'] = api_objects_settings.get('cookie_settings', {})
-        print(env.get('cookie_secret'))
-        api_objects_settings['cookie_settings']['secret'] = cookie_secret
+        fastapi_users_objects_settings['cookie_settings'] = fastapi_users_objects_settings.get('cookie_settings', {})
+        fastapi_users_objects_settings['cookie_settings']['secret'] = cookie_secret
+        fastapi_users_objects_settings['cookie_settings']['lifetime_seconds'] = cookie_lifetime
 
         # (UsersAPI_jwt) Setup jwt settings
-        api_objects_settings['jwt_settings'] = api_objects_settings.get('jwt_settings', {})
-        api_objects_settings['jwt_settings']['secret'] = jwt_secret
+        fastapi_users_objects_settings['jwt_settings'] = fastapi_users_objects_settings.get('jwt_settings', {})
+        fastapi_users_objects_settings['jwt_settings']['secret'] = jwt_secret
+        fastapi_users_objects_settings['jwt_settings']['lifetime_seconds'] = jwt_lifetime
 
         # (UsersAPI_database) Setup database
-        api_objects_settings['database'] = database
+        fastapi_users_objects_settings['database'] = database
 
-        # (UsersAPI_objects) Create FastAPI Users objects
-        api_objects = api_objects if api_objects else create_api_objects(**api_objects_settings)
+        # (Usersfastapi_users_objects) Create FastAPI Users objects
+        fastapi_users_objects = create_fastapi_users_objects(**fastapi_users_objects_settings)
 
         # (UsersAPI_attr) Add attributes
-        self.misc = dict(users_api_objects=api_objects)
-        self.database = database
+        self.misc = dict(fastapi_users_objects=fastapi_users_objects)
+        self.users_api_database = database
 
         # (UsersAPI_router) Add users router
-        users_router_settings['api_objects'] = api_objects
+        users_router_settings['fastapi_users_objects'] = fastapi_users_objects
         users_router = get_users_router(**users_router_settings)
         self.add_router(users_router)
 
         # (UserAPI_startup) Setup app startup
-        async_database = api_objects['databases']['async_database']
+        async_database = fastapi_users_objects['databases']['async_database']
         @self.event('startup')
         async def startup():
             await async_database.connect()
@@ -214,5 +208,5 @@ class UsersAPI(API):
             # Try API at http://localhost:8000/docs
             # app.start()
         """
-        out = self.misc['users_api_objects']['users_api'].current_user(*args, **kwargs)
+        out = self.misc['fastapi_users_objects']['FastAPIUsers'].current_user(*args, **kwargs)
         return out

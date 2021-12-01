@@ -47,7 +47,7 @@
   
   
   
-    <title>routers &#8212; 0.2.0</title>
+    <title>routers &#8212; 0.2.1</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -90,11 +90,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="0.2.0"
+        <a href="../index.html" title="0.2.1"
            class="md-header-nav__button md-logo">
           
               <img src="../_static/logo.svg" height="26"
-                   alt="0.2.0 logo">
+                   alt="0.2.1 logo">
           
         </a>
       </div>
@@ -177,7 +177,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">0.2.0</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">0.2.1</a></li>
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">API Reference</a></li>
       </ul>
     </div>
@@ -190,13 +190,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="0.2.0" class="md-nav__button md-logo">
+    <a href="../index.html" title="0.2.1" class="md-nav__button md-logo">
       
         <img src="../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../index.html"
-       title="0.2.0">msdss-users-api</a>
+       title="0.2.1">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -292,41 +292,61 @@
 <h2 id="get-users-router">get_users_router<a class="headerlink" href="#get-users-router" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="msdss_users_api.routers.get_users_router">
-<span class="sig-prename descclassname"><span class="pre">msdss_users_api.routers.</span></span><span class="sig-name descname"><span class="pre">get_users_router</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_objects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_objects_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_cookie_route</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_jwt_route</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_jwt_refresh_route</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_register_route</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_verify_route</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_reset_route</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_users_route</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt_route_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'prefix':</span> <span class="pre">'/auth/jwt',</span> <span class="pre">'tags':</span> <span class="pre">['auth']}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookie_route_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'prefix':</span> <span class="pre">'/auth',</span> <span class="pre">'tags':</span> <span class="pre">['auth']}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">register_route_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'prefix':</span> <span class="pre">'/auth',</span> <span class="pre">'tags':</span> <span class="pre">['auth']}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">register_get_user_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'superuser':</span> <span class="pre">True}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify_route_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'prefix':</span> <span class="pre">'/auth',</span> <span class="pre">'tags':</span> <span class="pre">['auth']}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verify_get_user_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_route_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'prefix':</span> <span class="pre">'/auth',</span> <span class="pre">'tags':</span> <span class="pre">['auth']}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_get_user_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users_route_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'prefix':</span> <span class="pre">'/users',</span> <span class="pre">'tags':</span> <span class="pre">['users']}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users_get_user_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/routers.html#get_users_router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.routers.get_users_router" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">msdss_users_api.routers.</span></span><span class="sig-name descname"><span class="pre">get_users_router</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fastapi_users_objects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">route_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'cookie':</span> <span class="pre">{'_enable':</span> <span class="pre">True,</span> <span class="pre">'_get_user':</span> <span class="pre">None,</span> <span class="pre">'prefix':</span> <span class="pre">'/auth',</span> <span class="pre">'tags':</span> <span class="pre">['auth']},</span> <span class="pre">'jwt':</span> <span class="pre">{'_enable':</span> <span class="pre">True,</span> <span class="pre">'_enable_refresh':</span> <span class="pre">True,</span> <span class="pre">'_get_user':</span> <span class="pre">None,</span> <span class="pre">'prefix':</span> <span class="pre">'/auth/jwt',</span> <span class="pre">'tags':</span> <span class="pre">['auth']},</span> <span class="pre">'register':</span> <span class="pre">{'_enable':</span> <span class="pre">True,</span> <span class="pre">'_get_user':</span> <span class="pre">{'superuser':</span> <span class="pre">True},</span> <span class="pre">'prefix':</span> <span class="pre">'/auth',</span> <span class="pre">'tags':</span> <span class="pre">['auth']},</span> <span class="pre">'reset':</span> <span class="pre">{'_enable':</span> <span class="pre">True,</span> <span class="pre">'_get_user':</span> <span class="pre">None,</span> <span class="pre">'prefix':</span> <span class="pre">'/auth',</span> <span class="pre">'tags':</span> <span class="pre">['auth']},</span> <span class="pre">'users':</span> <span class="pre">{'_enable':</span> <span class="pre">True,</span> <span class="pre">'_get_user':</span> <span class="pre">None,</span> <span class="pre">'prefix':</span> <span class="pre">'/users',</span> <span class="pre">'tags':</span> <span class="pre">['users']},</span> <span class="pre">'verify':</span> <span class="pre">{'_enable':</span> <span class="pre">True,</span> <span class="pre">'_get_user':</span> <span class="pre">None,</span> <span class="pre">'prefix':</span> <span class="pre">'/auth',</span> <span class="pre">'tags':</span> <span class="pre">['auth']}}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/routers.html#get_users_router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.routers.get_users_router" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a users router.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>api_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Dictionary returned from <a class="reference internal" href="tools.html#msdss_users_api.tools.create_api_objects" title="msdss_users_api.tools.create_api_objects"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_api_objects()</span></code></a>.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code>, one will be created from <code class="docutils literal notranslate"><span class="pre">api_objects_settings</span></code>.</p></li>
-<li><p><strong>api_objects_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <a class="reference internal" href="tools.html#msdss_users_api.tools.create_api_objects" title="msdss_users_api.tools.create_api_objects"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_api_objects()</span></code></a></p></li>
-<li><p><strong>enable_jwt_route</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to use JWT auth or not.</p></li>
-<li><p><strong>enable_jwt_refresh_route</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to include a jwt refresh route or not.</p></li>
-<li><p><strong>enable_cookie_route</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to use cookie auth or not.</p></li>
-<li><p><strong>enable_register_route</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to include the Fast API Users register route.</p></li>
-<li><p><strong>enable_verify_route</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to include the Fast API Users verify route.</p></li>
-<li><p><strong>enable_reset_route</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to include the Fast API Users reset password route.</p></li>
-<li><p><strong>enable_users_route</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to include the Fast API Users users route.</p></li>
-<li><p><strong>jwt_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">fastapi:fastapi.FastAPI.include_router()</span></code> for this router.</p></li>
-<li><p><strong>cookie_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">fastapi:fastapi.FastAPI.include_router()</span></code> for this router.</p></li>
-<li><p><strong>register_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">fastapi:fastapi.FastAPI.include_router()</span></code> for this router.</p></li>
-<li><p><strong>register_get_user_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Additional arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user()</span></code> for this route.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a dependency will not be added. The default is to only allow superusers to access this route.</p></li>
-<li><p><strong>verify_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">fastapi:fastapi.FastAPI.include_router()</span></code> for this router.</p></li>
-<li><p><strong>verify_get_user_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Additional arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user()</span></code> for this route.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a dependency will not be added.</p></li>
-<li><p><strong>reset_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">fastapi:fastapi.FastAPI.include_router()</span></code> for this router.</p></li>
-<li><p><strong>reset_get_user_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Additional arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user()</span></code> for this route.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a dependency will not be added.</p></li>
-<li><p><strong>users_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">fastapi:fastapi.FastAPI.include_router()</span></code> for this router.</p></li>
-<li><p><strong>users_get_user_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Additional arguments passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user()</span></code> for this route.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code>, a dependency will not be added.</p></li>
+<li><p><strong>fastapi_users_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary returned from <a class="reference internal" href="tools.html#msdss_users_api.tools.create_fastapi_users_objects" title="msdss_users_api.tools.create_fastapi_users_objects"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_fastapi_users_objects()</span></code></a>.</p></li>
+<li><p><strong>route_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – <p>Dictionary of settings for the users routes. Each route consists of the following keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: resource path for the route</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tags</span></code>: tags for open api spec</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_enable</span></code> (bool): Whether this route should be included or not</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_get_user</span></code> (dict or None): Additional arguments passed to the <code class="xref py py-meth docutils literal notranslate"><span class="pre">msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user()</span></code> function for the route - if <code class="docutils literal notranslate"><span class="pre">None</span></code>, a dependency will not be added</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_enable_refresh</span> <span class="pre">(bool):</span> <span class="pre">Only</span> <span class="pre">applies</span> <span class="pre">to</span> <span class="pre">``jwt</span></code> route - whether to include a jwt refresh route or not</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">**kwargs</span></code>: Additional arguments passed to the <code class="xref py py-meth docutils literal notranslate"><span class="pre">fastapi:fastapi.FastAPI.include_router()</span></code> method for this route</p></li>
+</ul>
+<p>The default settings are:</p>
+<div class="jupyter_cell docutils container">
+<div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>{'cookie': {'_enable': True,
+            '_get_user': None,
+            'prefix': '/auth',
+            'tags': ['auth']},
+ 'jwt': {'_enable': True,
+         '_enable_refresh': True,
+         '_get_user': None,
+         'prefix': '/auth/jwt',
+         'tags': ['auth']},
+ 'register': {'_enable': True,
+              '_get_user': {'superuser': True},
+              'prefix': '/auth',
+              'tags': ['auth']},
+ 'reset': {'_enable': True,
+           '_get_user': None,
+           'prefix': '/auth',
+           'tags': ['auth']},
+ 'users': {'_enable': True,
+           '_get_user': None,
+           'prefix': '/users',
+           'tags': ['users']},
+ 'verify': {'_enable': True,
+            '_get_user': None,
+            'prefix': '/auth',
+            'tags': ['auth']}}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Any unspecified settings will be replaced by their defaults.</p>
+</p></li>
 <li><p><strong>*args</strong> – Additional arguments passed to <code class="xref py py-class docutils literal notranslate"><span class="pre">fastapi:fastapi.routing.APIRouter</span></code>.</p></li>
 <li><p><strong>**kwargs</strong> – Additional arguments passed to <code class="xref py py-class docutils literal notranslate"><span class="pre">fastapi:fastapi.routing.APIRouter</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A router object used for organizing larger applications and for modularity. See <a class="reference external" href="https://fastapi.tiangolo.com/tutorial/bigger-applications/">FastAPI bigger apps</a></p>
+<dd class="field-even"><p>A router object used users routes. See <a class="reference external" href="https://fastapi.tiangolo.com/tutorial/bigger-applications/">FastAPI bigger apps</a>.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">fastapi:fastapi.routing.APIRouter</span></code></p>
@@ -338,7 +358,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <div class="jupyter_cell jupyter_container docutils container">
 <div class="cell_input code_cell docutils container">
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_base_api</span> <span class="kn">import</span> <span class="n">API</span>
-<span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="n">create_api_objects</span>
+<span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="n">create_fastapi_users_objects</span>
 <span class="kn">from</span> <span class="nn">msdss_users_api.routers</span> <span class="kn">import</span> <span class="n">get_users_router</span>
 
 <span class="c1"># Create an app</span>
@@ -355,18 +375,18 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <span class="n">cookie_settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="s1">'cookie-secret'</span><span class="p">)</span> <span class="c1"># CHANGE TO STRONG PHRASE</span>
 
 <span class="c1"># Create FastAPI Users objects</span>
-<span class="n">api_objects</span> <span class="o">=</span> <span class="n">create_api_objects</span><span class="p">(</span>
+<span class="n">fastapi_users_objects</span> <span class="o">=</span> <span class="n">create_fastapi_users_objects</span><span class="p">(</span>
     <span class="n">user_manager_settings</span><span class="o">=</span><span class="n">user_manager_settings</span><span class="p">,</span>
     <span class="n">jwt_settings</span><span class="o">=</span><span class="n">jwt_settings</span><span class="p">,</span>
     <span class="n">cookie_settings</span><span class="o">=</span><span class="n">cookie_settings</span>
 <span class="p">)</span>
 
 <span class="c1"># Add the users router</span>
-<span class="n">router</span> <span class="o">=</span> <span class="n">get_users_router</span><span class="p">(</span><span class="n">api_objects</span><span class="p">)</span>
+<span class="n">router</span> <span class="o">=</span> <span class="n">get_users_router</span><span class="p">(</span><span class="n">fastapi_users_objects</span><span class="p">)</span>
 <span class="n">app</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">router</span><span class="p">)</span>
 
 <span class="c1"># Setup startup and shutdown</span>
-<span class="n">async_database</span> <span class="o">=</span> <span class="n">api_objects</span><span class="p">[</span><span class="s1">'databases'</span><span class="p">][</span><span class="s1">'async_database'</span><span class="p">]</span>
+<span class="n">async_database</span> <span class="o">=</span> <span class="n">fastapi_users_objects</span><span class="p">[</span><span class="s1">'databases'</span><span class="p">][</span><span class="s1">'async_database'</span><span class="p">]</span>
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">event</span><span class="p">(</span><span class="s1">'startup'</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">startup</span><span class="p">():</span>

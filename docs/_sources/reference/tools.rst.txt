@@ -3,10 +3,10 @@ tools
 
 .. automodule:: msdss_users_api.tools
 
-create_api_objects
-------------------
+create_fastapi_users_objects
+----------------------------
 
-.. autofunction:: msdss_users_api.tools.create_api_objects
+.. autofunction:: msdss_users_api.tools.create_fastapi_users_objects
 
 create_user_db_context
 ----------------------

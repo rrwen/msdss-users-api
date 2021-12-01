@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.tools &#8212; 0.2.0</title>
+    <title>msdss_users_api.tools &#8212; 0.2.1</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -87,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.2.0"
+        <a href="../../index.html" title="0.2.1"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.2.0 logo">
+                   alt="0.2.1 logo">
           
         </a>
       </div>
@@ -174,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.2.0</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.2.1</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -187,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.2.0" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.2.1" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.2.0">msdss-users-api</a>
+       title="0.2.1">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -294,7 +294,7 @@
 <span class="kn">from</span> <span class="nn">.managers</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="o">*</span>
 
-<div class="viewcode-block" id="create_api_objects"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_api_objects">[docs]</a><span class="k">def</span> <span class="nf">create_api_objects</span><span class="p">(</span>
+<div class="viewcode-block" id="create_fastapi_users_objects"><a class="viewcode-back" href="../../reference/tools.html#msdss_users_api.tools.create_fastapi_users_objects">[docs]</a><span class="k">def</span> <span class="nf">create_fastapi_users_objects</span><span class="p">(</span>
     <span class="n">user_manager_settings</span><span class="o">=</span><span class="p">{},</span>
     <span class="n">jwt_settings</span><span class="o">=</span><span class="n">DEFAULT_JWT_SETTINGS</span><span class="p">,</span>
     <span class="n">cookie_settings</span><span class="o">=</span><span class="n">DEFAULT_COOKIE_SETTINGS</span><span class="p">,</span>
@@ -392,7 +392,7 @@
 <span class="sd">    dict</span>
 <span class="sd">        A dictionary containing the following:</span>
 
-<span class="sd">        * ``users_api`` (:class:`fastapi_users:fastapi_users.FastAPIUsers`): configured FastAPI Users object</span>
+<span class="sd">        * ``FastAPIUsers`` (:class:`fastapi_users:fastapi_users.FastAPIUsers`): configured FastAPI Users object</span>
 <span class="sd">        * ``databases`` (dict): dictionary of database related objects</span>
 <span class="sd">            * ``database`` (:class:`msdss_base_database:msdss_base_database.core.Database`): database object from parameter ``database``</span>
 <span class="sd">            * ``database_engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): SQLAlchemy engine object</span>
@@ -432,14 +432,14 @@
 <span class="sd">        cookie_settings = dict(secret='cookie-secret') # CHANGE TO STRONG PHRASE</span>
 
 <span class="sd">        # Create FastAPI Users object</span>
-<span class="sd">        api_objects = create_api_objects(</span>
+<span class="sd">        fastapi_users_objects = create_fastapi_users_objects(</span>
 <span class="sd">            user_manager_settings=user_manager_settings,</span>
 <span class="sd">            jwt_settings=jwt_settings,</span>
 <span class="sd">            cookie_settings=cookie_settings</span>
 <span class="sd">        )</span>
 
 <span class="sd">        # Get FastAPI Users Object</span>
-<span class="sd">        users_api = api_objects['users_api']</span>
+<span class="sd">        fastapi_users = fastapi_users_objects['FastAPIUsers']</span>
 <span class="sd">    """</span>
 
     <span class="c1"># (setup_fastapi_users_vars) Setup vars</span>
@@ -467,7 +467,7 @@
     <span class="n">get_user_manager</span> <span class="o">=</span> <span class="n">create_user_manager_func</span><span class="p">(</span><span class="n">get_user_db</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
 
     <span class="c1"># (setup_fastapi_user_create) Create users api func</span>
-    <span class="n">users_api</span> <span class="o">=</span> <span class="n">FastAPIUsers</span><span class="p">(</span>
+    <span class="n">fastapi_users</span> <span class="o">=</span> <span class="n">FastAPIUsers</span><span class="p">(</span>
         <span class="n">get_user_manager</span><span class="p">,</span>
         <span class="n">auth</span><span class="p">,</span>
         <span class="n">User</span><span class="p">,</span>
@@ -478,7 +478,7 @@
 
     <span class="c1"># (setup_fastapi_users_return) Return users api and constructed objects</span>
     <span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-        <span class="n">users_api</span><span class="o">=</span><span class="n">users_api</span><span class="p">,</span>
+        <span class="n">FastAPIUsers</span><span class="o">=</span><span class="n">fastapi_users</span><span class="p">,</span>
         <span class="n">databases</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">,</span>
             <span class="n">database_engine</span><span class="o">=</span><span class="n">database_engine</span><span class="p">,</span>
@@ -812,15 +812,15 @@
 <span class="sd">        from msdss_users_api.tools import *</span>
 
 <span class="sd">        # Create user manager secrets</span>
-<span class="sd">        user_manager_settings = dict(</span>
-<span class="sd">            reset_password_token_secret='reset-secret',</span>
-<span class="sd">            verification_token_secret='verification-secret'</span>
-<span class="sd">        )</span>
 <span class="sd">        kwargs = dict(</span>
-<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">            user_manager_settings=dict(</span>
+<span class="sd">                reset_password_token_secret='reset-secret',</span>
+<span class="sd">                verification_token_secret='verification-secret'</span>
+<span class="sd">            )</span>
 <span class="sd">        )</span>
 
 <span class="sd">        # Del users</span>
+<span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">    """</span>
@@ -879,18 +879,20 @@
 <span class="sd">        from msdss_users_api.tools import register_user, get_user</span>
 
 <span class="sd">        # Create user manager secrets</span>
-<span class="sd">        user_manager_settings = dict(</span>
-<span class="sd">            reset_password_token_secret='reset-secret',</span>
-<span class="sd">            verification_token_secret='verification-secret'</span>
-<span class="sd">        )</span>
 <span class="sd">        kwargs = dict(</span>
-<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">            user_manager_settings=dict(</span>
+<span class="sd">                reset_password_token_secret='reset-secret',</span>
+<span class="sd">                verification_token_secret='verification-secret'</span>
+<span class="sd">            )</span>
 <span class="sd">        )</span>
+
+<span class="sd">        # Try to delete user</span>
+<span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 
 <span class="sd">        # Get user</span>
 <span class="sd">        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">        user = await get_user('test@example.com', show=True, user_manager_context_kwargs=kwargs)</span>
-
+<span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">    """</span>
 
     <span class="c1"># (get_user_context) Get db and manager context functions</span>
@@ -960,16 +962,19 @@
 <span class="sd">        from msdss_users_api.tools import *</span>
 
 <span class="sd">        # Create user manager secrets</span>
-<span class="sd">        user_manager_settings = dict(</span>
-<span class="sd">            reset_password_token_secret='reset-secret',</span>
-<span class="sd">            verification_token_secret='verification-secret'</span>
-<span class="sd">        )</span>
 <span class="sd">        kwargs = dict(</span>
-<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">            user_manager_settings=dict(</span>
+<span class="sd">                reset_password_token_secret='reset-secret',</span>
+<span class="sd">                verification_token_secret='verification-secret'</span>
+<span class="sd">            )</span>
 <span class="sd">        )</span>
+
+<span class="sd">        # Try to delete user</span>
+<span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">        </span>
 <span class="sd">        # Register user</span>
 <span class="sd">        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)</span>
+<span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">    """</span>
     
     <span class="c1"># (register_user_context) Get db and manager context functions</span>
@@ -1023,17 +1028,20 @@
 <span class="sd">        from msdss_users_api.tools import *</span>
 
 <span class="sd">        # Create user manager secrets</span>
-<span class="sd">        user_manager_settings = dict(</span>
-<span class="sd">            reset_password_token_secret='reset-secret',</span>
-<span class="sd">            verification_token_secret='verification-secret'</span>
-<span class="sd">        )</span>
 <span class="sd">        kwargs = dict(</span>
-<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">            user_manager_settings=dict(</span>
+<span class="sd">                reset_password_token_secret='reset-secret',</span>
+<span class="sd">                verification_token_secret='verification-secret'</span>
+<span class="sd">            )</span>
 <span class="sd">        )</span>
+
+<span class="sd">        # Try to delete user</span>
+<span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 
 <span class="sd">        # Reset user</span>
 <span class="sd">        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">        await reset_user_password('test@example.com', 'msdss321', user_manager_context_kwargs=kwargs)</span>
+<span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">    """</span>
 
     <span class="c1"># (reset_user_password_context) Get db and manager context functions</span>
@@ -1102,13 +1110,15 @@
 <span class="sd">        from msdss_users_api.tools import *</span>
 
 <span class="sd">        # Create user manager secrets</span>
-<span class="sd">        user_manager_settings = dict(</span>
-<span class="sd">            reset_password_token_secret='reset-secret',</span>
-<span class="sd">            verification_token_secret='verification-secret'</span>
-<span class="sd">        )</span>
 <span class="sd">        kwargs = dict(</span>
-<span class="sd">            user_manager_settings=user_manager_settings</span>
+<span class="sd">            user_manager_settings=dict(</span>
+<span class="sd">                reset_password_token_secret='reset-secret',</span>
+<span class="sd">                verification_token_secret='verification-secret'</span>
+<span class="sd">            )</span>
 <span class="sd">        )</span>
+
+<span class="sd">        # Try to delete user</span>
+<span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">        </span>
 <span class="sd">        # Create a test user</span>
 <span class="sd">        await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)</span>
@@ -1119,6 +1129,7 @@
 <span class="sd">        await update_user('test@example.com', is_verified=True, user_manager_context_kwargs=kwargs)</span>
 <span class="sd">        print('\\nafter_update:\\n')</span>
 <span class="sd">        user = await get_user('test@example.com', show=True, user_manager_context_kwargs=kwargs)</span>
+<span class="sd">        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)</span>
 <span class="sd">    """</span>
     
     <span class="c1"># (register_user_context) Get db and manager context functions</span>

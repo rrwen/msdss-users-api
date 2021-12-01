@@ -10,11 +10,15 @@ After installing the package, set up environment variables using ``msdss-dotenv`
 
 .. code::
    
-   msdss-dotenv init
-   msdss-dotenv set MSDSS_USERS_COOKIE_SECRET cookie-secret
-   msdss-dotenv set MSDSS_USERS_JWT_SECRET jwt-secret
-   msdss-dotenv set MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET reset-phrase
-   msdss-dotenv set MSDSS_USERS_VERIFICATION_TOKEN_SECRET verification-phrase
+   msdss-dotenv init --key_path <KEY_PATH>
+   msdss-dotenv set MSDSS_USERS_COOKIE_SECRET cookie-secret --key_path <KEY_PATH>
+   msdss-dotenv set MSDSS_USERS_JWT_SECRET jwt-secret --key_path <KEY_PATH>
+   msdss-dotenv set MSDSS_USERS_RESET_PASSWORD_TOKEN_SECRET reset-phrase --key_path <KEY_PATH>
+   msdss-dotenv set MSDSS_USERS_VERIFICATION_TOKEN_SECRET verification-phrase --key_path <KEY_PATH>
+
+.. note::
+
+    Set the ``<KEY_PATH>`` to a secure location (preferable outside of the project directory) as you will need this to unlock your created ``.env`` file
 
 .. note::
 
@@ -26,7 +30,7 @@ After installing the package, set up environment variables using ``msdss-dotenv`
 
 .. warning::
 
-    Copy and save these secret phrases as they will be needed to authenticate your users.
+    Copy and save these secret phrases as they will be needed to authenticate your users or recreate the environment variables if you lose the files.
 
 Setup Database
 --------------
@@ -59,6 +63,8 @@ Run a ``msdss-users-api`` server with the following command:
 .. code::
 
     msdss-users start
+
+Go to http://localhost:8000/docs to try out the API with your created superuser.
 
 .. note::
 

@@ -30,7 +30,7 @@ Delete a user:
 
 .. warning::
 
-    Do not forget to setup your environmental variables (see :ref:`quick-start`)
+    Do not forget to setup your environment variables (see :ref:`quick-start`)
 
 .. note::
 
@@ -74,7 +74,7 @@ In Python, use the package via :class:`msdss_users_api.core.UsersAPI`:
 
 .. warning::
 
-    Do not forget to setup your environmental variables (see :ref:`quick-start`)
+    Do not forget to setup your environment variables (see :ref:`quick-start`)
 
 .. note::
 

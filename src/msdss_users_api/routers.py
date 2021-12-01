@@ -1,104 +1,48 @@
+from copy import deepcopy
 from fastapi import APIRouter, Depends, Response
 
 from .defaults import *
 from .tools import *
 
 def get_users_router(
-    api_objects=None,
-    api_objects_settings={},
-    enable_cookie_route=True,
-    enable_jwt_route=True,
-    enable_jwt_refresh_route=True,
-    enable_register_route=True,
-    enable_verify_route=True,
-    enable_reset_route=True,
-    enable_users_route=True,
-    jwt_route_settings={
-        'prefix': '/auth/jwt',
-        'tags': ['auth']
-    },
-    cookie_route_settings={
-        'prefix': '/auth',
-        'tags': ['auth']
-    },
-    register_route_settings={
-        'prefix': '/auth',
-        'tags': ['auth']
-    },
-    register_get_user_settings={
-        'superuser': True
-    },
-    verify_route_settings={
-        'prefix': '/auth',
-        'tags': ['auth']
-    },
-    verify_get_user_settings=None,
-    reset_route_settings={
-        'prefix': '/auth',
-        'tags': ['auth']
-    },
-    reset_get_user_settings=None,
-    users_route_settings={
-        'prefix': '/users',
-        'tags': ['users']
-    },
-    users_get_user_settings=None,
+    fastapi_users_objects=None,
+    route_settings=DEFAULT_USERS_ROUTE_SETTINGS,
     *args, **kwargs):
     """
     Get a users router.
 
     Parameters
     ----------
-    api_objects : dict or None
-        Dictionary returned from :func:`msdss_users_api.tools.create_api_objects`.
-        If ``None``, one will be created from ``api_objects_settings``.
-    api_objects_settings : dict
-        Keyword arguments passed to :func:`msdss_users_api.tools.create_api_objects`
-    enable_jwt_route : bool
-        Whether to use JWT auth or not.
-    enable_jwt_refresh_route : bool
-        Whether to include a jwt refresh route or not.
-    enable_cookie_route : bool
-        Whether to use cookie auth or not.
-    enable_register_route : bool
-        Whether to include the Fast API Users register route.
-    enable_verify_route : bool
-        Whether to include the Fast API Users verify route.
-    enable_reset_route : bool
-        Whether to include the Fast API Users reset password route.
-    enable_users_route : bool
-        Whether to include the Fast API Users users route.
-    jwt_settings : dict
-        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.
-    cookie_settings : dict
-        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.
-    register_settings : dict
-        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.
-    register_get_user_settings : dict or None
-        Additional arguments passed to :meth:`msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user` for this route.
-        If ``None``, a dependency will not be added. The default is to only allow superusers to access this route.
-    verify_settings : dict
-        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.
-    verify_get_user_settings : dict or None
-        Additional arguments passed to :meth:`msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user` for this route.
-        If ``None``, a dependency will not be added.
-    reset_settings : dict
-        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.
-    reset_get_user_settings : dict or None
-        Additional arguments passed to :meth:`msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user` for this route.
-        If ``None``, a dependency will not be added.
-    users_settings : dict
-        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.
-    users_get_user_settings : dict or None
-        Additional arguments passed to :meth:`msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user` for this route.
-        If ``None``, a dependency will not be added.
+    fastapi_users_objects : dict
+        Dictionary returned from :func:`msdss_users_api.tools.create_fastapi_users_objects`.
+    route_settings : dict
+        Dictionary of settings for the users routes. Each route consists of the following keys:
+
+        * ``path``: resource path for the route
+        * ``tags``: tags for open api spec
+        * ``_enable`` (bool): Whether this route should be included or not
+        * ``_get_user`` (dict or None): Additional arguments passed to the :meth:`msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user` function for the route - if ``None``, a dependency will not be added
+        * ``_enable_refresh (bool): Only applies to ``jwt`` route - whether to include a jwt refresh route or not
+        * ``**kwargs``: Additional arguments passed to the :meth:`fastapi:fastapi.FastAPI.include_router` method for this route
+        
+        The default settings are:
+        
+        .. jupyter-execute::
+            :hide-code:
+
+            from msdss_users_api.defaults import DEFAULT_USERS_ROUTE_SETTINGS
+            from pprint import pprint
+            pprint(DEFAULT_USERS_ROUTE_SETTINGS)
+        
+        Any unspecified settings will be replaced by their defaults.
+
     *args, **kwargs
         Additional arguments passed to :class:`fastapi:fastapi.routing.APIRouter`.
     
     Returns
     -------
     :class:`fastapi:fastapi.routing.APIRouter`
-        A router object used for organizing larger applications and for modularity. See `FastAPI bigger apps <https://fastapi.tiangolo.com/tutorial/bigger-applications/>`_
+        A router object used users routes. See `FastAPI bigger apps <https://fastapi.tiangolo.com/tutorial/bigger-applications/>`_.
 
     Author
     ------
@@ -109,7 +53,7 @@ def get_users_router(
     .. jupyter-execute::
 
         from msdss_base_api import API
-        from msdss_users_api.tools import create_api_objects
+        from msdss_users_api.tools import create_fastapi_users_objects
         from msdss_users_api.routers import get_users_router
 
         # Create an app
@@ -126,18 +70,18 @@ def get_users_router(
         cookie_settings = dict(secret='cookie-secret') # CHANGE TO STRONG PHRASE
 
         # Create FastAPI Users objects
-        api_objects = create_api_objects(
+        fastapi_users_objects = create_fastapi_users_objects(
             user_manager_settings=user_manager_settings,
             jwt_settings=jwt_settings,
             cookie_settings=cookie_settings
         )
 
         # Add the users router
-        router = get_users_router(api_objects)
+        router = get_users_router(fastapi_users_objects)
         app.add_router(router)
 
         # Setup startup and shutdown
-        async_database = api_objects['databases']['async_database']
+        async_database = fastapi_users_objects['databases']['async_database']
 
         @app.event('startup')
         async def startup():
@@ -156,75 +100,76 @@ def get_users_router(
     out = APIRouter(*args, **kwargs)
 
     # (get_users_router_api) Create users api objs
-    api_objects = api_objects if api_objects else create_api_objects(**api_objects_settings)
-    users_api = api_objects['users_api']
-    jwt = api_objects['auth']['jwt']
-    cookie = api_objects['auth']['cookie']
-    UserManager = api_objects['models']['UserManager']
+    users_api = fastapi_users_objects['FastAPIUsers']
+    jwt = fastapi_users_objects['auth']['jwt']
+    cookie = fastapi_users_objects['auth']['cookie']
+    UserManager = fastapi_users_objects['models']['UserManager']
 
-    # (get_users_router_depends) Add current user dependencies if not set
-    mappings = {
-        'register_get_user': register_get_user_settings,
-        'verify_get_user:': verify_get_user_settings,
-        'reset_get_user': reset_get_user_settings,
-        'users_get_user': users_get_user_settings
-    }
-    mappings = {k:users_api.current_user(**v) for k, v in mappings.items() if v}
-    register_get_user = mappings.get('register_get_user', None)
-    verify_get_user = mappings.get('verify_get_user', None)
-    reset_get_user = mappings.get('reset_get_user', None)
-    users_get_user = mappings.get('users_get_user', None)
+    # (get_users_router_defaults) Merge defaults and user params 
+    settings = deepcopy(DEFAULT_USERS_ROUTE_SETTINGS)
+    for k in settings:
+        if k in route_settings:
+            settings[k].update(route_settings[k])
+
+    # (get_users_router_apply) Apply settings to obtain dependencies
+    get_user = {}
+    enable = {}
+    for k, v in settings.items():
+        get_user[k] = users_api.current_user(**v['_get_user']) if users_api and v['_get_user'] else None
+        del v['_get_user']
+        enable[k] = v.pop('_enable')
+    enable_jwt_refresh = settings['jwt'].pop('_enable_refresh', True)
 
     # (get_users_route_jwt) Add jwt auth route
-    if enable_jwt_route:
+    if enable['jwt']:
 
         # (get_users_route_jwt_create) Create jwt route
         jwt_router = users_api.get_auth_router(jwt)
         
         # (get_users_route_jwt_refresh) Create jwt refresh route
-        if enable_jwt_refresh_route:
+        if enable_jwt_refresh:
             @jwt_router.post('/refresh')
             async def refresh_jwt(response: Response, user=Depends(users_api.current_user(active=True))):
                 return await jwt.get_login_response(user, response, UserManager)
 
         # (get_users_route_jwt_include) Include jwt route
-        out.include_router(jwt_router, **jwt_route_settings)
+        out.include_router(jwt_router, **settings['jwt'])
 
     # (get_users_route_auth_cookie) Add cookie auth route
-    if enable_cookie_route:
+    if enable['cookie']:
         auth_cookie_router = users_api.get_auth_router(cookie)
-        out.include_router(auth_cookie_router, **cookie_route_settings)
+        out.include_router(auth_cookie_router, **settings['cookie'])
 
     # (get_users_route_register) Add register router
-    if enable_register_route:
-        if register_get_user:
-            register_route_settings['dependencies'] = register_route_settings.get('dependencies', [])
-            register_route_settings['dependencies'].append(Depends(register_get_user))
+    if enable['register']:
+        if get_user['register']:
+            settings['register']['dependencies'] = settings['register'].get('dependencies', [])
+            settings['register']['dependencies'].append(Depends(get_user['register']))
         register_router = users_api.get_register_router()
-        out.include_router(register_router, **register_route_settings)
+        out.include_router(register_router, **settings['register'])
 
     # (get_users_route_verify) Add verify router
-    if enable_verify_route:
-        if verify_get_user:
-            verify_route_settings['dependencies'] = verify_route_settings.get('dependencies', [])
-            verify_route_settings['dependencies'].append(Depends(verify_get_user))
+    if enable['verify']:
+        if get_user['verify']:
+            settings['verify']['dependencies'] = settings['verify'].get('dependencies', [])
+            settings['verify']['dependencies'].append(Depends(get_user['verify']))
         verify_router = users_api.get_verify_router()
-        out.include_router(verify_router, **verify_route_settings)
+        out.include_router(verify_router, **settings['verify'])
     
     # (get_users_route_reset) Add reset password router
-    if enable_reset_route:
-        if reset_get_user:
-            reset_route_settings['dependencies'] = reset_route_settings.get('dependencies', [])
-            reset_route_settings['dependencies'].append(Depends(reset_get_user))
+    if enable['reset']:
+        if get_user['reset']:
+            settings['reset']['dependencies'] = settings['reset'].get('dependencies', [])
+            settings['reset']['dependencies'].append(Depends(get_user['reset']))
         reset_router = users_api.get_reset_password_router()
-        out.include_router(reset_router, **reset_route_settings)
+        out.include_router(reset_router, **settings['reset'])
 
     # (get_users_route_users) Add users router
-    if enable_users_route:
-        if users_get_user:
-            users_route_settings['dependencies'] = users_route_settings.get('dependencies', [])
-            users_route_settings['dependencies'].append(Depends(users_get_user))
+    if enable['users']:
+        if get_user['users']:
+            settings['users']['dependencies'] = settings['users'].get('dependencies', [])
+            settings['users']['dependencies'].append(Depends(get_user['users']))
         users_router = users_api.get_users_router()
-        out.include_router(users_router, **users_route_settings)
+        out.include_router(users_router, **settings['users'])
 
     return out

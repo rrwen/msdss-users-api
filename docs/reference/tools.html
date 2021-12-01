@@ -47,7 +47,7 @@
   
   
   
-    <title>tools &#8212; 0.2.0</title>
+    <title>tools &#8212; 0.2.1</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -89,11 +89,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="0.2.0"
+        <a href="../index.html" title="0.2.1"
            class="md-header-nav__button md-logo">
           
               <img src="../_static/logo.svg" height="26"
-                   alt="0.2.0 logo">
+                   alt="0.2.1 logo">
           
         </a>
       </div>
@@ -176,7 +176,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">0.2.0</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">0.2.1</a></li>
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">API Reference</a></li>
       </ul>
     </div>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="0.2.0" class="md-nav__button md-logo">
+    <a href="../index.html" title="0.2.1" class="md-nav__button md-logo">
       
         <img src="../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../index.html"
-       title="0.2.0">msdss-users-api</a>
+       title="0.2.1">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -267,7 +267,7 @@
   <ul class="md-nav__list" data-md-scrollfix="">
         <li class="md-nav__item"><a href="#reference-tools--page-root" class="md-nav__link">tools</a><nav class="md-nav">
               <ul class="md-nav__list">
-        <li class="md-nav__item"><a href="#create-api-objects" class="md-nav__link">create_api_objects</a>
+        <li class="md-nav__item"><a href="#create-fastapi-users-objects" class="md-nav__link">create_fastapi_users_objects</a>
         </li>
         <li class="md-nav__item"><a href="#create-user-db-context" class="md-nav__link">create_user_db_context</a>
         </li>
@@ -307,11 +307,11 @@
             
   <section id="module-msdss_users_api.tools">
 <span id="tools"></span><h1 id="reference-tools--page-root">tools<a class="headerlink" href="#reference-tools--page-root" title="Permalink to this headline">¶</a></h1>
-<section id="create-api-objects">
-<h2 id="create-api-objects">create_api_objects<a class="headerlink" href="#create-api-objects" title="Permalink to this headline">¶</a></h2>
+<section id="create-fastapi-users-objects">
+<h2 id="create-fastapi-users-objects">create_fastapi_users_objects<a class="headerlink" href="#create-fastapi-users-objects" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="msdss_users_api.tools.create_api_objects">
-<span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_api_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_manager_settings={}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt_settings={'lifetime_seconds':</span> <span class="pre">900</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tokenUrl':</span> <span class="pre">'auth/jwt/login'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookie_settings={'lifetime_seconds':</span> <span class="pre">2592000}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database=&lt;msdss_base_database.core.Database</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_cookie=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_jwt=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookie=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Base=&lt;class</span> <span class="pre">'sqlalchemy.orm.decl_api.Base'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">User=&lt;class</span> <span class="pre">'msdss_users_api.models.User'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserCreate=&lt;class</span> <span class="pre">'msdss_users_api.models.UserCreate'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserUpdate=&lt;class</span> <span class="pre">'msdss_users_api.models.UserUpdate'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserDB=&lt;class</span> <span class="pre">'msdss_users_api.models.UserDB'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserTable=&lt;class</span> <span class="pre">'msdss_users_api.models.UserTable'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserManager=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_api_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_api_objects" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="msdss_users_api.tools.create_fastapi_users_objects">
+<span class="sig-prename descclassname"><span class="pre">msdss_users_api.tools.</span></span><span class="sig-name descname"><span class="pre">create_fastapi_users_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_manager_settings={}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt_settings={'lifetime_seconds':</span> <span class="pre">900</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tokenUrl':</span> <span class="pre">'auth/jwt/login'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookie_settings={'lifetime_seconds':</span> <span class="pre">2592000}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database=&lt;msdss_base_database.core.Database</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_cookie=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_jwt=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookie=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Base=&lt;class</span> <span class="pre">'sqlalchemy.orm.decl_api.Base'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">User=&lt;class</span> <span class="pre">'msdss_users_api.models.User'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserCreate=&lt;class</span> <span class="pre">'msdss_users_api.models.UserCreate'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserUpdate=&lt;class</span> <span class="pre">'msdss_users_api.models.UserUpdate'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserDB=&lt;class</span> <span class="pre">'msdss_users_api.models.UserDB'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserTable=&lt;class</span> <span class="pre">'msdss_users_api.models.UserTable'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UserManager=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/tools.html#create_fastapi_users_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.tools.create_fastapi_users_objects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates all the needed dependencies and models to build a <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/routers/">FastAPIUsers object</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -376,7 +376,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>A dictionary containing the following:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">users_api</span></code> (<code class="xref py py-class docutils literal notranslate"><span class="pre">fastapi_users:fastapi_users.FastAPIUsers</span></code>): configured FastAPI Users object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FastAPIUsers</span></code> (<code class="xref py py-class docutils literal notranslate"><span class="pre">fastapi_users:fastapi_users.FastAPIUsers</span></code>): configured FastAPI Users object</p></li>
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">databases</span></code> (dict): dictionary of database related objects</dt><dd><ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">database</span></code> (<a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/core.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.1.1)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a>): database object from parameter <code class="docutils literal notranslate"><span class="pre">database</span></code></p></li>
@@ -439,14 +439,14 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <span class="n">cookie_settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">secret</span><span class="o">=</span><span class="s1">'cookie-secret'</span><span class="p">)</span> <span class="c1"># CHANGE TO STRONG PHRASE</span>
 
 <span class="c1"># Create FastAPI Users object</span>
-<span class="n">api_objects</span> <span class="o">=</span> <span class="n">create_api_objects</span><span class="p">(</span>
+<span class="n">fastapi_users_objects</span> <span class="o">=</span> <span class="n">create_fastapi_users_objects</span><span class="p">(</span>
     <span class="n">user_manager_settings</span><span class="o">=</span><span class="n">user_manager_settings</span><span class="p">,</span>
     <span class="n">jwt_settings</span><span class="o">=</span><span class="n">jwt_settings</span><span class="p">,</span>
     <span class="n">cookie_settings</span><span class="o">=</span><span class="n">cookie_settings</span>
 <span class="p">)</span>
 
 <span class="c1"># Get FastAPI Users Object</span>
-<span class="n">users_api</span> <span class="o">=</span> <span class="n">api_objects</span><span class="p">[</span><span class="s1">'users_api'</span><span class="p">]</span>
+<span class="n">fastapi_users</span> <span class="o">=</span> <span class="n">fastapi_users_objects</span><span class="p">[</span><span class="s1">'FastAPIUsers'</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -723,22 +723,25 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Create user manager secrets</span>
-<span class="n">user_manager_settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="s1">'reset-secret'</span><span class="p">,</span>
-    <span class="n">verification_token_secret</span><span class="o">=</span><span class="s1">'verification-secret'</span>
-<span class="p">)</span>
 <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">user_manager_settings</span><span class="o">=</span><span class="n">user_manager_settings</span>
+    <span class="n">user_manager_settings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="s1">'reset-secret'</span><span class="p">,</span>
+        <span class="n">verification_token_secret</span><span class="o">=</span><span class="s1">'verification-secret'</span>
+    <span class="p">)</span>
 <span class="p">)</span>
 
 <span class="c1"># Del users</span>
+<span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="k">await</span> <span class="n">register_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com already exists
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com does not exist
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User created test@example.com
 User deleted test@example.com
 </pre></div>
 </div>
@@ -779,27 +782,34 @@ User deleted test@example.com
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="n">register_user</span><span class="p">,</span> <span class="n">get_user</span>
 
 <span class="c1"># Create user manager secrets</span>
-<span class="n">user_manager_settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="s1">'reset-secret'</span><span class="p">,</span>
-    <span class="n">verification_token_secret</span><span class="o">=</span><span class="s1">'verification-secret'</span>
-<span class="p">)</span>
 <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">user_manager_settings</span><span class="o">=</span><span class="n">user_manager_settings</span>
+    <span class="n">user_manager_settings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="s1">'reset-secret'</span><span class="p">,</span>
+        <span class="n">verification_token_secret</span><span class="o">=</span><span class="s1">'verification-secret'</span>
+    <span class="p">)</span>
 <span class="p">)</span>
+
+<span class="c1"># Try to delete user</span>
+<span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 
 <span class="c1"># Get user</span>
 <span class="k">await</span> <span class="n">register_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com does not exist
+</pre></div>
+</div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User created test@example.com
-id: bf96d377-c840-4a6d-bd91-2c3e2bee9dc6
+id: a07f41b3-ca23-425f-a848-1219e439d9b3
 email: test@example.com
 is_active: True
 is_superuser: False
 is_verified: False
+User deleted test@example.com
 </pre></div>
 </div>
 </div>
@@ -833,21 +843,28 @@ is_verified: False
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Create user manager secrets</span>
-<span class="n">user_manager_settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="s1">'reset-secret'</span><span class="p">,</span>
-    <span class="n">verification_token_secret</span><span class="o">=</span><span class="s1">'verification-secret'</span>
-<span class="p">)</span>
 <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">user_manager_settings</span><span class="o">=</span><span class="n">user_manager_settings</span>
+    <span class="n">user_manager_settings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="s1">'reset-secret'</span><span class="p">,</span>
+        <span class="n">verification_token_secret</span><span class="o">=</span><span class="s1">'verification-secret'</span>
+    <span class="p">)</span>
 <span class="p">)</span>
+
+<span class="c1"># Try to delete user</span>
+<span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 
 <span class="c1"># Register user</span>
 <span class="k">await</span> <span class="n">register_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com already exists
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com does not exist
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User created test@example.com
+User deleted test@example.com
 </pre></div>
 </div>
 </div>
@@ -878,25 +895,32 @@ is_verified: False
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Create user manager secrets</span>
-<span class="n">user_manager_settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="s1">'reset-secret'</span><span class="p">,</span>
-    <span class="n">verification_token_secret</span><span class="o">=</span><span class="s1">'verification-secret'</span>
-<span class="p">)</span>
 <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">user_manager_settings</span><span class="o">=</span><span class="n">user_manager_settings</span>
+    <span class="n">user_manager_settings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="s1">'reset-secret'</span><span class="p">,</span>
+        <span class="n">verification_token_secret</span><span class="o">=</span><span class="s1">'verification-secret'</span>
+    <span class="p">)</span>
 <span class="p">)</span>
+
+<span class="c1"># Try to delete user</span>
+<span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 
 <span class="c1"># Reset user</span>
 <span class="k">await</span> <span class="n">register_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="k">await</span> <span class="n">reset_user_password</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss321'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com already exists
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com does not exist
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User created test@example.com
 </pre></div>
 </div>
 <div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User password reset test@example.com
+User deleted test@example.com
 </pre></div>
 </div>
 </div>
@@ -928,13 +952,15 @@ is_verified: False
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">msdss_users_api.tools</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1"># Create user manager secrets</span>
-<span class="n">user_manager_settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="s1">'reset-secret'</span><span class="p">,</span>
-    <span class="n">verification_token_secret</span><span class="o">=</span><span class="s1">'verification-secret'</span>
-<span class="p">)</span>
 <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-    <span class="n">user_manager_settings</span><span class="o">=</span><span class="n">user_manager_settings</span>
+    <span class="n">user_manager_settings</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="s1">'reset-secret'</span><span class="p">,</span>
+        <span class="n">verification_token_secret</span><span class="o">=</span><span class="s1">'verification-secret'</span>
+    <span class="p">)</span>
 <span class="p">)</span>
+
+<span class="c1"># Try to delete user</span>
+<span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 
 <span class="c1"># Create a test user</span>
 <span class="k">await</span> <span class="n">register_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="s1">'msdss123'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
@@ -945,15 +971,19 @@ is_verified: False
 <span class="k">await</span> <span class="n">update_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">is_verified</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">after_update:</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">delete_user</span><span class="p">(</span><span class="s1">'test@example.com'</span><span class="p">,</span> <span class="n">user_manager_context_kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com already exists
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User test@example.com does not exist
+</pre></div>
+</div>
+<div class="output stream highlight-none notranslate"><div class="highlight"><pre><span></span>User created test@example.com
 
 before_update:
 
-id: bf96d377-c840-4a6d-bd91-2c3e2bee9dc6
+id: 3c7d0dac-bebe-4115-a889-ae824419e69b
 email: test@example.com
 is_active: True
 is_superuser: False
@@ -962,11 +992,12 @@ User updated test@example.com
 
 after_update:
 
-id: bf96d377-c840-4a6d-bd91-2c3e2bee9dc6
+id: 3c7d0dac-bebe-4115-a889-ae824419e69b
 email: test@example.com
 is_active: True
 is_superuser: False
 is_verified: True
+User deleted test@example.com
 </pre></div>
 </div>
 </div>

@@ -15,3 +15,43 @@ DEFAULT_JWT_SETTINGS = dict(
     lifetime_seconds=15 * 60, # 15 minutes
     tokenUrl='auth/jwt/login'
 )
+
+DEFAULT_USERS_ROUTE_SETTINGS = dict(
+    cookie=dict(
+        prefix='/auth',
+        tags=['auth'],
+        _enable=True,
+        _get_user=None
+    ),
+    jwt=dict(
+        prefix='/auth/jwt',
+        tags=['auth'],
+        _enable=True,
+        _get_user=None,
+        _enable_refresh=True
+    ),
+    register=dict(
+        prefix='/auth',
+        tags=['auth'],
+        _enable=True,
+        _get_user={'superuser': True}
+    ),
+    verify=dict(
+        prefix='/auth',
+        tags=['auth'],
+        _enable=True,
+        _get_user=None
+    ),
+    reset=dict(
+        prefix='/auth',
+        tags=['auth'],
+        _enable=True,
+        _get_user=None
+    ),
+    users=dict(
+        prefix='/users',
+        tags=['users'],
+        _enable=True,
+        _get_user=None
+    )
+)

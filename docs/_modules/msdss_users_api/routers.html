@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.routers &#8212; 0.2.0</title>
+    <title>msdss_users_api.routers &#8212; 0.2.1</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -87,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.2.0"
+        <a href="../../index.html" title="0.2.1"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.2.0 logo">
+                   alt="0.2.1 logo">
           
         </a>
       </div>
@@ -174,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.2.0</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.2.1</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -187,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.2.0" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.2.1" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.2.0">msdss-users-api</a>
+       title="0.2.1">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -276,107 +276,51 @@
           <article class="md-content__inner md-typeset" role="main">
             
   <h1 id="modules-msdss-users-api-routers--page-root">Source code for msdss_users_api.routers</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">APIRouter</span><span class="p">,</span> <span class="n">Depends</span><span class="p">,</span> <span class="n">Response</span>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">APIRouter</span><span class="p">,</span> <span class="n">Depends</span><span class="p">,</span> <span class="n">Response</span>
 
 <span class="kn">from</span> <span class="nn">.defaults</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">.tools</span> <span class="kn">import</span> <span class="o">*</span>
 
 <div class="viewcode-block" id="get_users_router"><a class="viewcode-back" href="../../reference/routers.html#msdss_users_api.routers.get_users_router">[docs]</a><span class="k">def</span> <span class="nf">get_users_router</span><span class="p">(</span>
-    <span class="n">api_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">api_objects_settings</span><span class="o">=</span><span class="p">{},</span>
-    <span class="n">enable_cookie_route</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">enable_jwt_route</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">enable_jwt_refresh_route</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">enable_register_route</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">enable_verify_route</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">enable_reset_route</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">enable_users_route</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">jwt_route_settings</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth/jwt'</span><span class="p">,</span>
-        <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
-    <span class="p">},</span>
-    <span class="n">cookie_route_settings</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
-        <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
-    <span class="p">},</span>
-    <span class="n">register_route_settings</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
-        <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
-    <span class="p">},</span>
-    <span class="n">register_get_user_settings</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">'superuser'</span><span class="p">:</span> <span class="kc">True</span>
-    <span class="p">},</span>
-    <span class="n">verify_route_settings</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
-        <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
-    <span class="p">},</span>
-    <span class="n">verify_get_user_settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">reset_route_settings</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/auth'</span><span class="p">,</span>
-        <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'auth'</span><span class="p">]</span>
-    <span class="p">},</span>
-    <span class="n">reset_get_user_settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">users_route_settings</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'/users'</span><span class="p">,</span>
-        <span class="s1">'tags'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'users'</span><span class="p">]</span>
-    <span class="p">},</span>
-    <span class="n">users_get_user_settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fastapi_users_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">route_settings</span><span class="o">=</span><span class="n">DEFAULT_USERS_ROUTE_SETTINGS</span><span class="p">,</span>
     <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    Get a users router.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    api_objects : dict or None</span>
-<span class="sd">        Dictionary returned from :func:`msdss_users_api.tools.create_api_objects`.</span>
-<span class="sd">        If ``None``, one will be created from ``api_objects_settings``.</span>
-<span class="sd">    api_objects_settings : dict</span>
-<span class="sd">        Keyword arguments passed to :func:`msdss_users_api.tools.create_api_objects`</span>
-<span class="sd">    enable_jwt_route : bool</span>
-<span class="sd">        Whether to use JWT auth or not.</span>
-<span class="sd">    enable_jwt_refresh_route : bool</span>
-<span class="sd">        Whether to include a jwt refresh route or not.</span>
-<span class="sd">    enable_cookie_route : bool</span>
-<span class="sd">        Whether to use cookie auth or not.</span>
-<span class="sd">    enable_register_route : bool</span>
-<span class="sd">        Whether to include the Fast API Users register route.</span>
-<span class="sd">    enable_verify_route : bool</span>
-<span class="sd">        Whether to include the Fast API Users verify route.</span>
-<span class="sd">    enable_reset_route : bool</span>
-<span class="sd">        Whether to include the Fast API Users reset password route.</span>
-<span class="sd">    enable_users_route : bool</span>
-<span class="sd">        Whether to include the Fast API Users users route.</span>
-<span class="sd">    jwt_settings : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.</span>
-<span class="sd">    cookie_settings : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.</span>
-<span class="sd">    register_settings : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.</span>
-<span class="sd">    register_get_user_settings : dict or None</span>
-<span class="sd">        Additional arguments passed to :meth:`msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user` for this route.</span>
-<span class="sd">        If ``None``, a dependency will not be added. The default is to only allow superusers to access this route.</span>
-<span class="sd">    verify_settings : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.</span>
-<span class="sd">    verify_get_user_settings : dict or None</span>
-<span class="sd">        Additional arguments passed to :meth:`msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user` for this route.</span>
-<span class="sd">        If ``None``, a dependency will not be added.</span>
-<span class="sd">    reset_settings : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.</span>
-<span class="sd">    reset_get_user_settings : dict or None</span>
-<span class="sd">        Additional arguments passed to :meth:`msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user` for this route.</span>
-<span class="sd">        If ``None``, a dependency will not be added.</span>
-<span class="sd">    users_settings : dict</span>
-<span class="sd">        Keyword arguments passed to :meth:`fastapi:fastapi.FastAPI.include_router` for this router.</span>
-<span class="sd">    users_get_user_settings : dict or None</span>
-<span class="sd">        Additional arguments passed to :meth:`msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user` for this route.</span>
-<span class="sd">        If ``None``, a dependency will not be added.</span>
+<span class="sd">    fastapi_users_objects : dict</span>
+<span class="sd">        Dictionary returned from :func:`msdss_users_api.tools.create_fastapi_users_objects`.</span>
+<span class="sd">    route_settings : dict</span>
+<span class="sd">        Dictionary of settings for the users routes. Each route consists of the following keys:</span>
+
+<span class="sd">        * ``path``: resource path for the route</span>
+<span class="sd">        * ``tags``: tags for open api spec</span>
+<span class="sd">        * ``_enable`` (bool): Whether this route should be included or not</span>
+<span class="sd">        * ``_get_user`` (dict or None): Additional arguments passed to the :meth:`msdss_users_api.msdss_users_api.core.UsersAPI.get_current_user` function for the route - if ``None``, a dependency will not be added</span>
+<span class="sd">        * ``_enable_refresh (bool): Only applies to ``jwt`` route - whether to include a jwt refresh route or not</span>
+<span class="sd">        * ``**kwargs``: Additional arguments passed to the :meth:`fastapi:fastapi.FastAPI.include_router` method for this route</span>
+<span class="sd">        </span>
+<span class="sd">        The default settings are:</span>
+<span class="sd">        </span>
+<span class="sd">        .. jupyter-execute::</span>
+<span class="sd">            :hide-code:</span>
+
+<span class="sd">            from msdss_users_api.defaults import DEFAULT_USERS_ROUTE_SETTINGS</span>
+<span class="sd">            from pprint import pprint</span>
+<span class="sd">            pprint(DEFAULT_USERS_ROUTE_SETTINGS)</span>
+<span class="sd">        </span>
+<span class="sd">        Any unspecified settings will be replaced by their defaults.</span>
+
 <span class="sd">    *args, **kwargs</span>
 <span class="sd">        Additional arguments passed to :class:`fastapi:fastapi.routing.APIRouter`.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    :class:`fastapi:fastapi.routing.APIRouter`</span>
-<span class="sd">        A router object used for organizing larger applications and for modularity. See `FastAPI bigger apps &lt;https://fastapi.tiangolo.com/tutorial/bigger-applications/&gt;`_</span>
+<span class="sd">        A router object used users routes. See `FastAPI bigger apps &lt;https://fastapi.tiangolo.com/tutorial/bigger-applications/&gt;`_.</span>
 
 <span class="sd">    Author</span>
 <span class="sd">    ------</span>
@@ -387,7 +331,7 @@
 <span class="sd">    .. jupyter-execute::</span>
 
 <span class="sd">        from msdss_base_api import API</span>
-<span class="sd">        from msdss_users_api.tools import create_api_objects</span>
+<span class="sd">        from msdss_users_api.tools import create_fastapi_users_objects</span>
 <span class="sd">        from msdss_users_api.routers import get_users_router</span>
 
 <span class="sd">        # Create an app</span>
@@ -404,18 +348,18 @@
 <span class="sd">        cookie_settings = dict(secret='cookie-secret') # CHANGE TO STRONG PHRASE</span>
 
 <span class="sd">        # Create FastAPI Users objects</span>
-<span class="sd">        api_objects = create_api_objects(</span>
+<span class="sd">        fastapi_users_objects = create_fastapi_users_objects(</span>
 <span class="sd">            user_manager_settings=user_manager_settings,</span>
 <span class="sd">            jwt_settings=jwt_settings,</span>
 <span class="sd">            cookie_settings=cookie_settings</span>
 <span class="sd">        )</span>
 
 <span class="sd">        # Add the users router</span>
-<span class="sd">        router = get_users_router(api_objects)</span>
+<span class="sd">        router = get_users_router(fastapi_users_objects)</span>
 <span class="sd">        app.add_router(router)</span>
 
 <span class="sd">        # Setup startup and shutdown</span>
-<span class="sd">        async_database = api_objects['databases']['async_database']</span>
+<span class="sd">        async_database = fastapi_users_objects['databases']['async_database']</span>
 
 <span class="sd">        @app.event('startup')</span>
 <span class="sd">        async def startup():</span>
@@ -434,76 +378,77 @@
     <span class="n">out</span> <span class="o">=</span> <span class="n">APIRouter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="c1"># (get_users_router_api) Create users api objs</span>
-    <span class="n">api_objects</span> <span class="o">=</span> <span class="n">api_objects</span> <span class="k">if</span> <span class="n">api_objects</span> <span class="k">else</span> <span class="n">create_api_objects</span><span class="p">(</span><span class="o">**</span><span class="n">api_objects_settings</span><span class="p">)</span>
-    <span class="n">users_api</span> <span class="o">=</span> <span class="n">api_objects</span><span class="p">[</span><span class="s1">'users_api'</span><span class="p">]</span>
-    <span class="n">jwt</span> <span class="o">=</span> <span class="n">api_objects</span><span class="p">[</span><span class="s1">'auth'</span><span class="p">][</span><span class="s1">'jwt'</span><span class="p">]</span>
-    <span class="n">cookie</span> <span class="o">=</span> <span class="n">api_objects</span><span class="p">[</span><span class="s1">'auth'</span><span class="p">][</span><span class="s1">'cookie'</span><span class="p">]</span>
-    <span class="n">UserManager</span> <span class="o">=</span> <span class="n">api_objects</span><span class="p">[</span><span class="s1">'models'</span><span class="p">][</span><span class="s1">'UserManager'</span><span class="p">]</span>
+    <span class="n">users_api</span> <span class="o">=</span> <span class="n">fastapi_users_objects</span><span class="p">[</span><span class="s1">'FastAPIUsers'</span><span class="p">]</span>
+    <span class="n">jwt</span> <span class="o">=</span> <span class="n">fastapi_users_objects</span><span class="p">[</span><span class="s1">'auth'</span><span class="p">][</span><span class="s1">'jwt'</span><span class="p">]</span>
+    <span class="n">cookie</span> <span class="o">=</span> <span class="n">fastapi_users_objects</span><span class="p">[</span><span class="s1">'auth'</span><span class="p">][</span><span class="s1">'cookie'</span><span class="p">]</span>
+    <span class="n">UserManager</span> <span class="o">=</span> <span class="n">fastapi_users_objects</span><span class="p">[</span><span class="s1">'models'</span><span class="p">][</span><span class="s1">'UserManager'</span><span class="p">]</span>
 
-    <span class="c1"># (get_users_router_depends) Add current user dependencies if not set</span>
-    <span class="n">mappings</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">'register_get_user'</span><span class="p">:</span> <span class="n">register_get_user_settings</span><span class="p">,</span>
-        <span class="s1">'verify_get_user:'</span><span class="p">:</span> <span class="n">verify_get_user_settings</span><span class="p">,</span>
-        <span class="s1">'reset_get_user'</span><span class="p">:</span> <span class="n">reset_get_user_settings</span><span class="p">,</span>
-        <span class="s1">'users_get_user'</span><span class="p">:</span> <span class="n">users_get_user_settings</span>
-    <span class="p">}</span>
-    <span class="n">mappings</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">users_api</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="o">**</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mappings</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">}</span>
-    <span class="n">register_get_user</span> <span class="o">=</span> <span class="n">mappings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'register_get_user'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="n">verify_get_user</span> <span class="o">=</span> <span class="n">mappings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'verify_get_user'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="n">reset_get_user</span> <span class="o">=</span> <span class="n">mappings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'reset_get_user'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="n">users_get_user</span> <span class="o">=</span> <span class="n">mappings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'users_get_user'</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="c1"># (get_users_router_defaults) Merge defaults and user params </span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">DEFAULT_USERS_ROUTE_SETTINGS</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">route_settings</span><span class="p">:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">route_settings</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+    <span class="c1"># (get_users_router_apply) Apply settings to obtain dependencies</span>
+    <span class="n">get_user</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">enable</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">get_user</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="o">**</span><span class="n">v</span><span class="p">[</span><span class="s1">'_get_user'</span><span class="p">])</span> <span class="k">if</span> <span class="n">users_api</span> <span class="ow">and</span> <span class="n">v</span><span class="p">[</span><span class="s1">'_get_user'</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">del</span> <span class="n">v</span><span class="p">[</span><span class="s1">'_get_user'</span><span class="p">]</span>
+        <span class="n">enable</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'_enable'</span><span class="p">)</span>
+    <span class="n">enable_jwt_refresh</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s1">'jwt'</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'_enable_refresh'</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># (get_users_route_jwt) Add jwt auth route</span>
-    <span class="k">if</span> <span class="n">enable_jwt_route</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">enable</span><span class="p">[</span><span class="s1">'jwt'</span><span class="p">]:</span>
 
         <span class="c1"># (get_users_route_jwt_create) Create jwt route</span>
         <span class="n">jwt_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_auth_router</span><span class="p">(</span><span class="n">jwt</span><span class="p">)</span>
         
         <span class="c1"># (get_users_route_jwt_refresh) Create jwt refresh route</span>
-        <span class="k">if</span> <span class="n">enable_jwt_refresh_route</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">enable_jwt_refresh</span><span class="p">:</span>
             <span class="nd">@jwt_router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">'/refresh'</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">def</span> <span class="nf">refresh_jwt</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">Depends</span><span class="p">(</span><span class="n">users_api</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">))):</span>
                 <span class="k">return</span> <span class="k">await</span> <span class="n">jwt</span><span class="o">.</span><span class="n">get_login_response</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">)</span>
 
         <span class="c1"># (get_users_route_jwt_include) Include jwt route</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">jwt_router</span><span class="p">,</span> <span class="o">**</span><span class="n">jwt_route_settings</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">jwt_router</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">[</span><span class="s1">'jwt'</span><span class="p">])</span>
 
     <span class="c1"># (get_users_route_auth_cookie) Add cookie auth route</span>
-    <span class="k">if</span> <span class="n">enable_cookie_route</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">enable</span><span class="p">[</span><span class="s1">'cookie'</span><span class="p">]:</span>
         <span class="n">auth_cookie_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_auth_router</span><span class="p">(</span><span class="n">cookie</span><span class="p">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">auth_cookie_router</span><span class="p">,</span> <span class="o">**</span><span class="n">cookie_route_settings</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">auth_cookie_router</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">[</span><span class="s1">'cookie'</span><span class="p">])</span>
 
     <span class="c1"># (get_users_route_register) Add register router</span>
-    <span class="k">if</span> <span class="n">enable_register_route</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">register_get_user</span><span class="p">:</span>
-            <span class="n">register_route_settings</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">register_route_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dependencies'</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="n">register_route_settings</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Depends</span><span class="p">(</span><span class="n">register_get_user</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">enable</span><span class="p">[</span><span class="s1">'register'</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">get_user</span><span class="p">[</span><span class="s1">'register'</span><span class="p">]:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s1">'register'</span><span class="p">][</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s1">'register'</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dependencies'</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s1">'register'</span><span class="p">][</span><span class="s1">'dependencies'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Depends</span><span class="p">(</span><span class="n">get_user</span><span class="p">[</span><span class="s1">'register'</span><span class="p">]))</span>
         <span class="n">register_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_register_router</span><span class="p">()</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">register_router</span><span class="p">,</span> <span class="o">**</span><span class="n">register_route_settings</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">register_router</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">[</span><span class="s1">'register'</span><span class="p">])</span>
 
     <span class="c1"># (get_users_route_verify) Add verify router</span>
-    <span class="k">if</span> <span class="n">enable_verify_route</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">verify_get_user</span><span class="p">:</span>
-            <span class="n">verify_route_settings</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">verify_route_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dependencies'</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="n">verify_route_settings</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Depends</span><span class="p">(</span><span class="n">verify_get_user</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">enable</span><span class="p">[</span><span class="s1">'verify'</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">get_user</span><span class="p">[</span><span class="s1">'verify'</span><span class="p">]:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s1">'verify'</span><span class="p">][</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s1">'verify'</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dependencies'</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s1">'verify'</span><span class="p">][</span><span class="s1">'dependencies'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Depends</span><span class="p">(</span><span class="n">get_user</span><span class="p">[</span><span class="s1">'verify'</span><span class="p">]))</span>
         <span class="n">verify_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_verify_router</span><span class="p">()</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">verify_router</span><span class="p">,</span> <span class="o">**</span><span class="n">verify_route_settings</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">verify_router</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">[</span><span class="s1">'verify'</span><span class="p">])</span>
     
     <span class="c1"># (get_users_route_reset) Add reset password router</span>
-    <span class="k">if</span> <span class="n">enable_reset_route</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">reset_get_user</span><span class="p">:</span>
-            <span class="n">reset_route_settings</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">reset_route_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dependencies'</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="n">reset_route_settings</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Depends</span><span class="p">(</span><span class="n">reset_get_user</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">enable</span><span class="p">[</span><span class="s1">'reset'</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">get_user</span><span class="p">[</span><span class="s1">'reset'</span><span class="p">]:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s1">'reset'</span><span class="p">][</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s1">'reset'</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dependencies'</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s1">'reset'</span><span class="p">][</span><span class="s1">'dependencies'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Depends</span><span class="p">(</span><span class="n">get_user</span><span class="p">[</span><span class="s1">'reset'</span><span class="p">]))</span>
         <span class="n">reset_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_reset_password_router</span><span class="p">()</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">reset_router</span><span class="p">,</span> <span class="o">**</span><span class="n">reset_route_settings</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">reset_router</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">[</span><span class="s1">'reset'</span><span class="p">])</span>
 
     <span class="c1"># (get_users_route_users) Add users router</span>
-    <span class="k">if</span> <span class="n">enable_users_route</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">users_get_user</span><span class="p">:</span>
-            <span class="n">users_route_settings</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">users_route_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dependencies'</span><span class="p">,</span> <span class="p">[])</span>
-            <span class="n">users_route_settings</span><span class="p">[</span><span class="s1">'dependencies'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Depends</span><span class="p">(</span><span class="n">users_get_user</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">enable</span><span class="p">[</span><span class="s1">'users'</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">get_user</span><span class="p">[</span><span class="s1">'users'</span><span class="p">]:</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s1">'users'</span><span class="p">][</span><span class="s1">'dependencies'</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s1">'users'</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'dependencies'</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">settings</span><span class="p">[</span><span class="s1">'users'</span><span class="p">][</span><span class="s1">'dependencies'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Depends</span><span class="p">(</span><span class="n">get_user</span><span class="p">[</span><span class="s1">'users'</span><span class="p">]))</span>
         <span class="n">users_router</span> <span class="o">=</span> <span class="n">users_api</span><span class="o">.</span><span class="n">get_users_router</span><span class="p">()</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users_router</span><span class="p">,</span> <span class="o">**</span><span class="n">users_route_settings</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">users_router</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">[</span><span class="s1">'users'</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">out</span></div>
 </pre></div>

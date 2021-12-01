@@ -47,7 +47,7 @@
   
   
   
-    <title>core &#8212; 0.2.0</title>
+    <title>core &#8212; 0.2.1</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -90,11 +90,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../index.html" title="0.2.0"
+        <a href="../index.html" title="0.2.1"
            class="md-header-nav__button md-logo">
           
               <img src="../_static/logo.svg" height="26"
-                   alt="0.2.0 logo">
+                   alt="0.2.1 logo">
           
         </a>
       </div>
@@ -177,7 +177,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">0.2.0</a></li>
+          <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">0.2.1</a></li>
           <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">API Reference</a></li>
       </ul>
     </div>
@@ -190,13 +190,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../index.html" title="0.2.0" class="md-nav__button md-logo">
+    <a href="../index.html" title="0.2.1" class="md-nav__button md-logo">
       
         <img src="../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../index.html"
-       title="0.2.0">msdss-users-api</a>
+       title="0.2.1">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -296,10 +296,10 @@
 <h2 id="usersapi">UsersAPI<a class="headerlink" href="#usersapi" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="msdss_users_api.core.UsersAPI">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.core.</span></span><span class="sig-name descname"><span class="pre">UsersAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cookie_secret=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt_secret=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_password_token_secret=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verification_token_secret=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database=&lt;msdss_base_database.core.Database</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users_router_settings={}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_objects=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_objects_settings={}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_env=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env=&lt;msdss_users_api.env.UsersDotEnv</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api=&lt;fastapi.applications.FastAPI</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/core.html#UsersAPI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.core.UsersAPI" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">msdss_users_api.core.</span></span><span class="sig-name descname"><span class="pre">UsersAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cookie_secret=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt_secret=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_password_token_secret=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verification_token_secret=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cookie_lifetime=2592000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jwt_lifetime=900</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database=&lt;msdss_base_database.core.Database</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users_router_settings={}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_env=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env=&lt;msdss_users_api.env.UsersDotEnv</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api=&lt;fastapi.applications.FastAPI</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/msdss_users_api/core.html#UsersAPI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#msdss_users_api.core.UsersAPI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Users API class for managing users.</p>
 <ul class="simple">
-<li><p>Extends the <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.1.0)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a> class</p></li>
+<li><p>Extends the <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.1.2)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a> class</p></li>
 <li><p>Users will be stored in a table named <code class="docutils literal notranslate"><span class="pre">user</span></code></p></li>
 </ul>
 <dl class="field-list simple">
@@ -313,20 +313,10 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the value will be taken from the environment variables. See parameter <code class="docutils literal notranslate"><span class="pre">env</span></code>.</p></li>
 <li><p><strong>verification_token_secret</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Secret used to secure verification tokens. Use a strong phrase (e.g. <code class="docutils literal notranslate"><span class="pre">openssl</span> <span class="pre">rand</span> <span class="pre">-hex</span> <span class="pre">32</span></code>).
 If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the value will be taken from the environment variables. See parameter <code class="docutils literal notranslate"><span class="pre">env</span></code>.</p></li>
+<li><p><strong>jwt_lifetime</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Expiry time of JSON Web Tokens (JWTs) in seconds.</p></li>
+<li><p><strong>cookie_lifetime</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Expiry time of cookies in seconds.</p></li>
 <li><p><strong>database</strong> (<a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/core.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.1.1)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a>) – Database to use for managing users.</p></li>
-<li><p><strong>users_router_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – <p>Keyword arguments passed to <a class="reference internal" href="routers.html#msdss_users_api.routers.get_users_router" title="msdss_users_api.routers.get_users_router"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.routers.get_users_router()</span></code></a>.</p>
-<ul>
-<li><p>The parameter <code class="docutils literal notranslate"><span class="pre">api_objects</span></code> will replace the related parameters in <code class="docutils literal notranslate"><span class="pre">get_users_router</span></code></p></li>
-</ul>
-</p></li>
-<li><p><strong>api_objects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><em>None</em></a>) – Dictionary returned from <a class="reference internal" href="tools.html#msdss_users_api.tools.create_api_objects" title="msdss_users_api.tools.create_api_objects"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_api_objects()</span></code></a>.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code>, then one will be setup based on parameter <code class="docutils literal notranslate"><span class="pre">api_objects_settings</span></code>.</p></li>
-<li><p><strong>api_objects_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – <p>Keyword arguments to be passed to <a class="reference internal" href="tools.html#msdss_users_api.tools.create_api_objects" title="msdss_users_api.tools.create_api_objects"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_api_objects()</span></code></a>.</p>
-<ul>
-<li><p>The parameters <code class="docutils literal notranslate"><span class="pre">cookie_secret</span></code> and <code class="docutils literal notranslate"><span class="pre">jwt_secret</span></code> will overwrite the related keys inside <code class="docutils literal notranslate"><span class="pre">cookie_settings</span></code> and <code class="docutils literal notranslate"><span class="pre">jwt_settings</span></code> respectively</p></li>
-<li><p>The parameters <code class="docutils literal notranslate"><span class="pre">reset_password_token_secret</span></code> and <code class="docutils literal notranslate"><span class="pre">verification_token_secret</span></code> will overwrite the related keys inside <code class="docutils literal notranslate"><span class="pre">user_manager_settings</span></code></p></li>
-</ul>
-</p></li>
+<li><p><strong>users_router_settings</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <a class="reference internal" href="routers.html#msdss_users_api.routers.get_users_router" title="msdss_users_api.routers.get_users_router"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.routers.get_users_router()</span></code></a> except <code class="docutils literal notranslate"><span class="pre">fastapi_users_objects</span></code>.</p></li>
 <li><p><strong>load_env</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to load variables from a file with environmental variables at <code class="docutils literal notranslate"><span class="pre">env_file</span></code> or not.</p></li>
 <li><p><strong>env</strong> (<a class="reference internal" href="env.html#msdss_users_api.env.UsersDotEnv" title="msdss_users_api.env.UsersDotEnv"><code class="xref py py-class docutils literal notranslate"><span class="pre">msdss_users_api.env.UsersDotEnv</span></code></a>) – <p>An object to set environment variables related to users configuration.
 These environment variables will overwrite the parameters above if they exist.</p>
@@ -345,14 +335,14 @@ verification_token_secret = MSDSS_USERS_VERIFICATION_TOKEN_SECRET
 </div>
 </p></li>
 <li><p><strong>api</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">fastapi:fastapi.FastAPI</span></code>) – API object for creating routes.</p></li>
-<li><p><strong>*args</strong> – Additional arguments passed to <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.1.0)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a>.</p></li>
-<li><p><strong>**kwargs</strong> – Additional arguments passed to <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.1.0)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a>.</p></li>
+<li><p><strong>*args</strong> – Additional arguments passed to <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.1.2)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a>.</p></li>
+<li><p><strong>**kwargs</strong> – Additional arguments passed to <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.1.2)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a>.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="msdss_users_api.core.UsersAPI.database">
-<span class="sig-name descname"><span class="pre">database</span></span><a class="headerlink" href="#msdss_users_api.core.UsersAPI.database" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="msdss_users_api.core.UsersAPI.users_api_database">
+<span class="sig-name descname"><span class="pre">users_api_database</span></span><a class="headerlink" href="#msdss_users_api.core.UsersAPI.users_api_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Database object for users API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -365,7 +355,7 @@ verification_token_secret = MSDSS_USERS_VERIFICATION_TOKEN_SECRET
 <span class="sig-name descname"><span class="pre">misc</span></span><a class="headerlink" href="#msdss_users_api.core.UsersAPI.misc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dictionary of miscellaneous values:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">users_api_objects</span></code> (dict): see parameter <code class="docutils literal notranslate"><span class="pre">api_objects</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fastapi_users_objects</span></code> (dict): dict of values returned from <a class="reference internal" href="tools.html#msdss_users_api.tools.create_fastapi_users_objects" title="msdss_users_api.tools.create_fastapi_users_objects"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.tools.create_fastapi_users_objects()</span></code></a></p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>

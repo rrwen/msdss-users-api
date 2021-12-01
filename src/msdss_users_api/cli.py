@@ -1,6 +1,6 @@
 import argparse
+import ast
 import asyncio
-import inspect
 
 from getpass import getpass
 from msdss_base_database import Database, DatabaseDotEnv
@@ -70,19 +70,9 @@ def _get_parser():
     start_parser.add_argument('--host', type=str, default='127.0.0.1', help='address to host server')
     start_parser.add_argument('--port', type=int, default=8000, help='port to host server')
     start_parser.add_argument('--log_level', type=str, default='info', help='level of verbose messages to display')
-    start_parser_users_group = start_parser.add_argument_group('users_router')
-    start_parser_users_group.add_argument('--enable_jwt_route', type=bool, default=True, help='whether to include the jwt route')
-    start_parser_users_group.add_argument('--enable_jwt_refresh_route', type=bool, default=True, help='whether to include the cookie route')
-    start_parser_users_group.add_argument('--enable_cookie_route', type=bool, default=True, help='whether to include the jwt refresh route')
-    start_parser_users_group.add_argument('--enable_register_route', type=bool, default=True, help='whether to include the register route')
-    start_parser_users_group.add_argument('--enable_verify_route', type=bool, default=True, help='whether to include the verify route')
-    start_parser_users_group.add_argument('--enable_reset_route', type=bool, default=True, help='whether to include the reset route')
-    start_parser_users_group.add_argument('--enable_users_route', type=bool, default=True, help='whether to include the users route')
-    start_parser_auth_group = start_parser.add_argument_group('auth')
-    start_parser_auth_group.add_argument('--enable_jwt', type=bool, default=True, help='whether to enable JWT auth')
-    start_parser_auth_group.add_argument('--enable_cookie', type=bool, default=True, help='whether to enable cookie auth')
-    start_parser_auth_group.add_argument('--jwt_lifetime_seconds', type=int, default=15 * 60, help='expiry time in secs for JWTs')
-    start_parser_auth_group.add_argument('--cookie_lifetime_seconds', type=int, default=30 * 86400, help='expiry time in secs for cookies')
+    start_parser.add_argument('--set', metavar=('ROUTE', 'KEY', 'VALUE'), nargs=3, action='append', help='set route settings, where ROUTE is the route name (jwt, cookie, register etc), KEY is the setting name (e.g. path, _enable, etc), and VALUE is value for the setting')
+    start_parser.add_argument('--jwt_lifetime', type=int, default=15 * 60, help='expiry time in secs for JWTs')
+    start_parser.add_argument('--cookie_lifetime', type=int, default=30 * 86400, help='expiry time in secs for cookies')
 
     # (_get_parser_file_key) Add file and key arguments to all commands
     for p in [parser, register_parser, delete_parser, update_parser, get_parser, reset_parser, start_parser]:
@@ -91,6 +81,51 @@ def _get_parser():
     
     # (_get_parser_out) Return the parser
     out = parser
+    return out
+
+def _parse_route_settings(cli_route_settings):
+    """
+    Parses ``--set`` route settings for the ``msdss-users`` command line tool.
+    
+    Parameters
+    ----------
+    cli_route_settings : list(tuple)
+        List of tuples of length 3, representing the route, key setting and value setting in order.
+    
+    Returns
+    -------
+    dict
+        A dictionary that can be passed to parameter ``route_settings`` in :func:`msdss_users_api.routers.get_users_router`
+    
+    Author
+    ------
+    Richard Wen <rrwen.dev@gmail.com>
+    
+    Example
+    -------
+    .. jupyter-execute::
+        :hide-output:
+        
+        from msdss_data_api.cli import _parse_route_settings
+        from pprint import pprint
+
+        cli_route_settings = [
+            ('jwt', '_enable', 'True'),
+            ('jwt', '_enable_refresh', 'True'),
+            ('register', '_get_user', '{"superuser": True}'),
+            ('auth', 'prefix', '/auth'),
+            ('users', 'tags', '["user"]')
+        ]
+
+        route_settings = _parse_route_settings(cli_route_settings)
+        pprint(route_settings)
+    """
+    out = {route: {} for route, k, v in cli_route_settings}
+    for route, key, value in cli_route_settings:
+        if key in ('tags', '_restricted_tables', '_get_user', '_enable'):
+            out[route][key] = ast.literal_eval(value)
+        else:
+            out[route][key] = value
     return out
 
 def _prompt_password():
@@ -175,11 +210,12 @@ def run():
         env_file=kwargs.pop('env_file'),
         key_path=kwargs.pop('key_path')
     )
-    database_env = DatabaseDotEnv(**env_kwargs)
+
+    # (run_env_create) Create env objects
     users_env = UsersDotEnv(**env_kwargs)
+    database = Database(env=DatabaseDotEnv(**env_kwargs))
 
     # (run_context) Create context args
-    database = Database(env=database_env)
     user_db_context_kwargs = dict(database=database)
     user_manager_context_kwargs = dict(env=users_env)
 
@@ -240,31 +276,14 @@ def run():
         kwargs['env'] = users_env
         kwargs['database'] = database
 
-        # (run_command_start_router) Set router args
-        router_args = [
-            'enable_cookie_route',
-            'enable_jwt_route',
-            'enable_jwt_refresh_route',
-            'enable_register_route',
-            'enable_verify_route',
-            'enable_reset_route',
-            'enable_users_route'
-        ]
-        kwargs['users_router_settings'] = {}
-        for a in router_args:
-            kwargs['users_router_settings'][a] = kwargs.pop(a)
-
-        # (run_command_start_auth) Set auth args
-        kwargs['api_objects_settings'] = {}
-        kwargs['api_objects_settings']['cookie_settings'] = {}
-        kwargs['api_objects_settings']['jwt_settings'] = {}
-        kwargs['api_objects_settings']['enable_cookie'] = kwargs.pop('enable_cookie')
-        kwargs['api_objects_settings']['enable_jwt'] = kwargs.pop('enable_jwt')
-        kwargs['api_objects_settings']['cookie_settings']['lifetime_seconds'] = kwargs.pop('cookie_lifetime_seconds')
-        kwargs['api_objects_settings']['jwt_settings']['lifetime_seconds'] = kwargs.pop('jwt_lifetime_seconds')
+        # (run_command_start_settings) Convert route settings
+        cli_route_settings = kwargs.pop('set', None)
+        kwargs['users_router_settings'] = dict(
+            route_settings=_parse_route_settings(cli_route_settings) if cli_route_settings else {}
+        )
 
         # (run_command_start_serve) Extract server args
-        app_kwargs = dict(
+        start_kwargs = dict(
             host=kwargs.pop('host'),
             port=kwargs.pop('port'),
             log_level=kwargs.pop('log_level')
@@ -272,4 +291,4 @@ def run():
 
         # (run_command_start) Execute users api server
         app = UsersAPI(**kwargs)
-        app.start(**app_kwargs)
+        app.start(**start_kwargs)

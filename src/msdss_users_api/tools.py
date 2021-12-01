@@ -16,7 +16,7 @@ from .env import *
 from .managers import *
 from .models import *
 
-def create_api_objects(
+def create_fastapi_users_objects(
     user_manager_settings={},
     jwt_settings=DEFAULT_JWT_SETTINGS,
     cookie_settings=DEFAULT_COOKIE_SETTINGS,
@@ -114,7 +114,7 @@ def create_api_objects(
     dict
         A dictionary containing the following:
 
-        * ``users_api`` (:class:`fastapi_users:fastapi_users.FastAPIUsers`): configured FastAPI Users object
+        * ``FastAPIUsers`` (:class:`fastapi_users:fastapi_users.FastAPIUsers`): configured FastAPI Users object
         * ``databases`` (dict): dictionary of database related objects
             * ``database`` (:class:`msdss_base_database:msdss_base_database.core.Database`): database object from parameter ``database``
             * ``database_engine`` (:func:`sqlalchemy:sqlalchemy.create_engine`): SQLAlchemy engine object
@@ -154,14 +154,14 @@ def create_api_objects(
         cookie_settings = dict(secret='cookie-secret') # CHANGE TO STRONG PHRASE
 
         # Create FastAPI Users object
-        api_objects = create_api_objects(
+        fastapi_users_objects = create_fastapi_users_objects(
             user_manager_settings=user_manager_settings,
             jwt_settings=jwt_settings,
             cookie_settings=cookie_settings
         )
 
         # Get FastAPI Users Object
-        users_api = api_objects['users_api']
+        fastapi_users = fastapi_users_objects['FastAPIUsers']
     """
 
     # (setup_fastapi_users_vars) Setup vars
@@ -189,7 +189,7 @@ def create_api_objects(
     get_user_manager = create_user_manager_func(get_user_db, UserManager)
 
     # (setup_fastapi_user_create) Create users api func
-    users_api = FastAPIUsers(
+    fastapi_users = FastAPIUsers(
         get_user_manager,
         auth,
         User,
@@ -200,7 +200,7 @@ def create_api_objects(
 
     # (setup_fastapi_users_return) Return users api and constructed objects
     out = dict(
-        users_api=users_api,
+        FastAPIUsers=fastapi_users,
         databases=dict(
             database=database,
             database_engine=database_engine,
@@ -534,15 +534,15 @@ async def delete_user(email, user_db_context_kwargs={}, user_manager_context_kwa
         from msdss_users_api.tools import *
 
         # Create user manager secrets
-        user_manager_settings = dict(
-            reset_password_token_secret='reset-secret',
-            verification_token_secret='verification-secret'
-        )
         kwargs = dict(
-            user_manager_settings=user_manager_settings
+            user_manager_settings=dict(
+                reset_password_token_secret='reset-secret',
+                verification_token_secret='verification-secret'
+            )
         )
 
         # Del users
+        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
         await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)
         await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
     """
@@ -601,18 +601,20 @@ async def get_user(email, show=False, include_hashed_password=False, user_db_con
         from msdss_users_api.tools import register_user, get_user
 
         # Create user manager secrets
-        user_manager_settings = dict(
-            reset_password_token_secret='reset-secret',
-            verification_token_secret='verification-secret'
-        )
         kwargs = dict(
-            user_manager_settings=user_manager_settings
+            user_manager_settings=dict(
+                reset_password_token_secret='reset-secret',
+                verification_token_secret='verification-secret'
+            )
         )
+
+        # Try to delete user
+        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
 
         # Get user
         await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)
         user = await get_user('test@example.com', show=True, user_manager_context_kwargs=kwargs)
-
+        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
     """
 
     # (get_user_context) Get db and manager context functions
@@ -682,16 +684,19 @@ async def register_user(
         from msdss_users_api.tools import *
 
         # Create user manager secrets
-        user_manager_settings = dict(
-            reset_password_token_secret='reset-secret',
-            verification_token_secret='verification-secret'
-        )
         kwargs = dict(
-            user_manager_settings=user_manager_settings
+            user_manager_settings=dict(
+                reset_password_token_secret='reset-secret',
+                verification_token_secret='verification-secret'
+            )
         )
+
+        # Try to delete user
+        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
         
         # Register user
         await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)
+        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
     """
     
     # (register_user_context) Get db and manager context functions
@@ -745,17 +750,20 @@ async def reset_user_password(email, password, user_db_context_kwargs={}, user_m
         from msdss_users_api.tools import *
 
         # Create user manager secrets
-        user_manager_settings = dict(
-            reset_password_token_secret='reset-secret',
-            verification_token_secret='verification-secret'
-        )
         kwargs = dict(
-            user_manager_settings=user_manager_settings
+            user_manager_settings=dict(
+                reset_password_token_secret='reset-secret',
+                verification_token_secret='verification-secret'
+            )
         )
+
+        # Try to delete user
+        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
 
         # Reset user
         await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)
         await reset_user_password('test@example.com', 'msdss321', user_manager_context_kwargs=kwargs)
+        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
     """
 
     # (reset_user_password_context) Get db and manager context functions
@@ -824,13 +832,15 @@ async def update_user(
         from msdss_users_api.tools import *
 
         # Create user manager secrets
-        user_manager_settings = dict(
-            reset_password_token_secret='reset-secret',
-            verification_token_secret='verification-secret'
-        )
         kwargs = dict(
-            user_manager_settings=user_manager_settings
+            user_manager_settings=dict(
+                reset_password_token_secret='reset-secret',
+                verification_token_secret='verification-secret'
+            )
         )
+
+        # Try to delete user
+        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
         
         # Create a test user
         await register_user('test@example.com', 'msdss123', user_manager_context_kwargs=kwargs)
@@ -841,6 +851,7 @@ async def update_user(
         await update_user('test@example.com', is_verified=True, user_manager_context_kwargs=kwargs)
         print('\\nafter_update:\\n')
         user = await get_user('test@example.com', show=True, user_manager_context_kwargs=kwargs)
+        await delete_user('test@example.com', user_manager_context_kwargs=kwargs)
     """
     
     # (register_user_context) Get db and manager context functions

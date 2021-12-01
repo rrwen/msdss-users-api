@@ -11,25 +11,27 @@ In order to create a ``FastAPIUsers`` object, this package follows the configura
 
    compound=true;
    rankdir=TB;
-   graph [pad="0.75", nodesep="0.25", ranksep="1"];
+   graph [pad="0.75", nodesep="0.25", ranksep="1.15"];
 
-   usermodel[label="User" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-   usercreatemodel[label="UserCreate" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-   userupdatemodel[label="UserUpdate" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-   userdbmodel[label="UserDB" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-   usertablemodel[label="UserTable" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/"];
-   usermanagermodel[label="UserManager" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/user-manager/"];
+   usermodel[label="User" shape=rect];
+   usercreatemodel[label="UserCreate" shape=rect];
+   userupdatemodel[label="UserUpdate" shape=rect];
+   userdbmodel[label="UserDB" shape=rect];
+   usertablemodel[label="UserTable" shape=rect];
+   usermanagermodel[label="UserManager" shape=rect];
 
-   userdbfunc[label="create_user_db_func" shape=rect style=rounded URL=""];
-   usermanagerfunc[label="create_user_manager_func" shape=rect style=rounded URL=""];
+   fastapifunc[label="create_fastapi_users_objects" shape=rect style=rounded];
+   userdbfunc[label="create_user_db_func" shape=rect style=rounded];
+   usermanagerfunc[label="create_user_manager_func" shape=rect style=rounded];
+   getusersrouter[label="get_users_router" shape=rect style=rounded];
 
-   jwtauth[label="JWTAuthentication" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/"];
-   cookieauth[label="CookieAuthentication" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/"];
+   jwtauth[label="JWTAuthentication" shape=rect];
+   cookieauth[label="CookieAuthentication" shape=rect];
 
-   baseapi[label="msdss-base-api" URL="https://rrwen.github.io/msdss-base-api/" style=filled];
-   basedb[label="msdss-base-database" URL="https://rrwen.github.io/msdss-base-database/" style=filled];
-   databases[label="databases" URL="https://pypi.org/project/databases/" style=filled];
-   fastapiusers[label="FastAPI Users" URL="https://fastapi-users.github.io/fastapi-users/" style=filled];
+   baseapi[label="msdss-base-api" style=filled];
+   basedb[label="msdss-base-database" style=filled];
+   databases[label="databases" style=filled];
+   fastapiusers[label="FastAPI Users" style=filled];
 
    subgraph cluster0 {
       label=< <B>msdss_users_api.core.UsersAPI</B> >;
@@ -38,7 +40,7 @@ In order to create a ``FastAPIUsers`` object, this package follows the configura
 
       subgraph cluster1 {
          label=< <B>msdss_users_api.tools</B> >;
-         userdbfunc -> usermanagerfunc;
+         userdbfunc -> usermanagerfunc -> fastapifunc;
       }
       {basedb;databases} -> userdbfunc[lhead=cluster1 ltail=cluster1];
       usermanagerfunc -> fastapiusers[lhead=cluster1 ltail=cluster1];
@@ -53,16 +55,15 @@ In order to create a ``FastAPIUsers`` object, this package follows the configura
          usermanagermodel;
       };
       usermanagermodel -> usermanagerfunc[lhead=cluster1 ltail=cluster2];
-      userdbmodel -> fastapiusers[lhead=cluster2 ltail=cluster2];
       
       subgraph cluster3 {
           label=< <B>fastapi_users.authentication</B> >;
          jwtauth;
          cookieauth;
       }
-      cookieauth -> fastapiusers[lhead=cluster3 ltail=cluster3];
+      cookieauth -> usermanagerfunc[lhead=cluster1 ltail=cluster3];
 
-      fastapiusers -> baseapi;
+      fastapiusers -> getusersrouter -> baseapi;
    }
 
 The command line uses methods from the `FastAPI UsersManager <https://github.com/fastapi-users/fastapi-users/blob/master/fastapi_users/manager.py>`_ to `programmatically manage users <https://fastapi-users.github.io/fastapi-users/cookbook/create-user-programmatically/>`_.

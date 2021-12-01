@@ -46,7 +46,7 @@
   
   
   
-    <title>msdss_users_api.core &#8212; 0.2.0</title>
+    <title>msdss_users_api.core &#8212; 0.2.1</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/material.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -87,11 +87,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="../../index.html" title="0.2.0"
+        <a href="../../index.html" title="0.2.1"
            class="md-header-nav__button md-logo">
           
               <img src="../../_static/logo.svg" height="26"
-                   alt="0.2.0 logo">
+                   alt="0.2.1 logo">
           
         </a>
       </div>
@@ -174,7 +174,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.2.0</a></li>
+          <li class="md-tabs__item"><a href="../../index.html" class="md-tabs__link">0.2.1</a></li>
           <li class="md-tabs__item"><a href="../index.html" class="md-tabs__link">Module code</a></li>
       </ul>
     </div>
@@ -187,13 +187,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="../../index.html" title="0.2.0" class="md-nav__button md-logo">
+    <a href="../../index.html" title="0.2.1" class="md-nav__button md-logo">
       
         <img src="../../_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="../../index.html"
-       title="0.2.0">msdss-users-api</a>
+       title="0.2.1">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -308,22 +308,14 @@
 <span class="sd">    verification_token_secret : str or None</span>
 <span class="sd">        Secret used to secure verification tokens. Use a strong phrase (e.g. ``openssl rand -hex 32``).</span>
 <span class="sd">        If ``None``, the value will be taken from the environment variables. See parameter ``env``.</span>
+<span class="sd">    jwt_lifetime : int</span>
+<span class="sd">        Expiry time of JSON Web Tokens (JWTs) in seconds.</span>
+<span class="sd">    cookie_lifetime : int</span>
+<span class="sd">        Expiry time of cookies in seconds.</span>
 <span class="sd">    database : :class:`msdss_base_database:msdss_base_database.core.Database`</span>
 <span class="sd">        Database to use for managing users.</span>
 <span class="sd">    users_router_settings : dict</span>
-<span class="sd">        Keyword arguments passed to :func:`msdss_users_api.routers.get_users_router`.</span>
-
-<span class="sd">        * The parameter ``api_objects`` will replace the related parameters in ``get_users_router`` </span>
-
-<span class="sd">    api_objects : dict or None</span>
-<span class="sd">        Dictionary returned from :func:`msdss_users_api.tools.create_api_objects`.</span>
-<span class="sd">        If ``None``, then one will be setup based on parameter ``api_objects_settings``.</span>
-<span class="sd">    api_objects_settings : dict</span>
-<span class="sd">        Keyword arguments to be passed to :func:`msdss_users_api.tools.create_api_objects`.</span>
-
-<span class="sd">        * The parameters ``cookie_secret`` and ``jwt_secret`` will overwrite the related keys inside ``cookie_settings`` and ``jwt_settings`` respectively</span>
-<span class="sd">        * The parameters ``reset_password_token_secret`` and ``verification_token_secret`` will overwrite the related keys inside ``user_manager_settings``</span>
-<span class="sd">    </span>
+<span class="sd">        Keyword arguments passed to :func:`msdss_users_api.routers.get_users_router` except ``fastapi_users_objects``.</span>
 <span class="sd">    load_env : bool</span>
 <span class="sd">        Whether to load variables from a file with environmental variables at ``env_file`` or not.</span>
 <span class="sd">    env : :class:`msdss_users_api.env.UsersDotEnv`</span>
@@ -348,12 +340,12 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    database : :class:`msdss_base_database:msdss_base_database.core.Database`</span>
+<span class="sd">    users_api_database : :class:`msdss_base_database:msdss_base_database.core.Database`</span>
 <span class="sd">        Database object for users API.</span>
 <span class="sd">    misc : dict</span>
 <span class="sd">        Dictionary of miscellaneous values:</span>
 
-<span class="sd">        * ``users_api_objects`` (dict): see parameter ``api_objects``</span>
+<span class="sd">        * ``fastapi_users_objects`` (dict): dict of values returned from :func:`msdss_users_api.tools.create_fastapi_users_objects`</span>
 
 <span class="sd">    Author</span>
 <span class="sd">    ------</span>
@@ -384,15 +376,15 @@
         <span class="n">jwt_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">reset_password_token_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verification_token_secret</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">cookie_lifetime</span><span class="o">=</span><span class="n">DEFAULT_COOKIE_SETTINGS</span><span class="p">[</span><span class="s1">'lifetime_seconds'</span><span class="p">],</span>
+        <span class="n">jwt_lifetime</span><span class="o">=</span><span class="n">DEFAULT_JWT_SETTINGS</span><span class="p">[</span><span class="s1">'lifetime_seconds'</span><span class="p">],</span>
         <span class="n">database</span><span class="o">=</span><span class="n">Database</span><span class="p">(),</span>
         <span class="n">users_router_settings</span><span class="o">=</span><span class="p">{},</span>
-        <span class="n">api_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">api_objects_settings</span><span class="o">=</span><span class="p">{},</span>
         <span class="n">load_env</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">env</span><span class="o">=</span><span class="n">UsersDotEnv</span><span class="p">(),</span>
         <span class="n">api</span><span class="o">=</span><span class="n">FastAPI</span><span class="p">(</span>
             <span class="n">title</span><span class="o">=</span><span class="s1">'MSDSS Users API'</span><span class="p">,</span>
-            <span class="n">version</span><span class="o">=</span><span class="s1">'0.2.0'</span>
+            <span class="n">version</span><span class="o">=</span><span class="s1">'0.2.1'</span>
         <span class="p">),</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">api</span><span class="o">=</span><span class="n">api</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -406,36 +398,38 @@
             <span class="n">verification_token_secret</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'verification_token_secret'</span><span class="p">,</span> <span class="n">verification_token_secret</span><span class="p">)</span>
 
         <span class="c1"># (UsersAPI_manager) Setup manager settings</span>
-        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'user_manager_settings'</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_objects_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'user_manager_settings'</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'user_manager_settings'</span><span class="p">][</span><span class="s1">'reset_password_token_secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">reset_password_token_secret</span>
-        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'user_manager_settings'</span><span class="p">][</span><span class="s1">'verification_token_secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">verification_token_secret</span>
+        <span class="n">fastapi_users_objects_settings</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">fastapi_users_objects_settings</span><span class="p">[</span><span class="s1">'user_manager_settings'</span><span class="p">]</span> <span class="o">=</span> <span class="n">fastapi_users_objects_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'user_manager_settings'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">fastapi_users_objects_settings</span><span class="p">[</span><span class="s1">'user_manager_settings'</span><span class="p">][</span><span class="s1">'reset_password_token_secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">reset_password_token_secret</span>
+        <span class="n">fastapi_users_objects_settings</span><span class="p">[</span><span class="s1">'user_manager_settings'</span><span class="p">][</span><span class="s1">'verification_token_secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">verification_token_secret</span>
 
         <span class="c1"># (UsersAPI_cookie) Setup cookie settings</span>
-        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'cookie_settings'</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_objects_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cookie_settings'</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cookie_secret'</span><span class="p">))</span>
-        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'cookie_settings'</span><span class="p">][</span><span class="s1">'secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">cookie_secret</span>
+        <span class="n">fastapi_users_objects_settings</span><span class="p">[</span><span class="s1">'cookie_settings'</span><span class="p">]</span> <span class="o">=</span> <span class="n">fastapi_users_objects_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'cookie_settings'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">fastapi_users_objects_settings</span><span class="p">[</span><span class="s1">'cookie_settings'</span><span class="p">][</span><span class="s1">'secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">cookie_secret</span>
+        <span class="n">fastapi_users_objects_settings</span><span class="p">[</span><span class="s1">'cookie_settings'</span><span class="p">][</span><span class="s1">'lifetime_seconds'</span><span class="p">]</span> <span class="o">=</span> <span class="n">cookie_lifetime</span>
 
         <span class="c1"># (UsersAPI_jwt) Setup jwt settings</span>
-        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'jwt_settings'</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_objects_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jwt_settings'</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'jwt_settings'</span><span class="p">][</span><span class="s1">'secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">jwt_secret</span>
+        <span class="n">fastapi_users_objects_settings</span><span class="p">[</span><span class="s1">'jwt_settings'</span><span class="p">]</span> <span class="o">=</span> <span class="n">fastapi_users_objects_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'jwt_settings'</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">fastapi_users_objects_settings</span><span class="p">[</span><span class="s1">'jwt_settings'</span><span class="p">][</span><span class="s1">'secret'</span><span class="p">]</span> <span class="o">=</span> <span class="n">jwt_secret</span>
+        <span class="n">fastapi_users_objects_settings</span><span class="p">[</span><span class="s1">'jwt_settings'</span><span class="p">][</span><span class="s1">'lifetime_seconds'</span><span class="p">]</span> <span class="o">=</span> <span class="n">jwt_lifetime</span>
 
         <span class="c1"># (UsersAPI_database) Setup database</span>
-        <span class="n">api_objects_settings</span><span class="p">[</span><span class="s1">'database'</span><span class="p">]</span> <span class="o">=</span> <span class="n">database</span>
+        <span class="n">fastapi_users_objects_settings</span><span class="p">[</span><span class="s1">'database'</span><span class="p">]</span> <span class="o">=</span> <span class="n">database</span>
 
-        <span class="c1"># (UsersAPI_objects) Create FastAPI Users objects</span>
-        <span class="n">api_objects</span> <span class="o">=</span> <span class="n">api_objects</span> <span class="k">if</span> <span class="n">api_objects</span> <span class="k">else</span> <span class="n">create_api_objects</span><span class="p">(</span><span class="o">**</span><span class="n">api_objects_settings</span><span class="p">)</span>
+        <span class="c1"># (Usersfastapi_users_objects) Create FastAPI Users objects</span>
+        <span class="n">fastapi_users_objects</span> <span class="o">=</span> <span class="n">create_fastapi_users_objects</span><span class="p">(</span><span class="o">**</span><span class="n">fastapi_users_objects_settings</span><span class="p">)</span>
 
         <span class="c1"># (UsersAPI_attr) Add attributes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">misc</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">users_api_objects</span><span class="o">=</span><span class="n">api_objects</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">misc</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">fastapi_users_objects</span><span class="o">=</span><span class="n">fastapi_users_objects</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">users_api_database</span> <span class="o">=</span> <span class="n">database</span>
 
         <span class="c1"># (UsersAPI_router) Add users router</span>
-        <span class="n">users_router_settings</span><span class="p">[</span><span class="s1">'api_objects'</span><span class="p">]</span> <span class="o">=</span> <span class="n">api_objects</span>
+        <span class="n">users_router_settings</span><span class="p">[</span><span class="s1">'fastapi_users_objects'</span><span class="p">]</span> <span class="o">=</span> <span class="n">fastapi_users_objects</span>
         <span class="n">users_router</span> <span class="o">=</span> <span class="n">get_users_router</span><span class="p">(</span><span class="o">**</span><span class="n">users_router_settings</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_router</span><span class="p">(</span><span class="n">users_router</span><span class="p">)</span>
 
         <span class="c1"># (UserAPI_startup) Setup app startup</span>
-        <span class="n">async_database</span> <span class="o">=</span> <span class="n">api_objects</span><span class="p">[</span><span class="s1">'databases'</span><span class="p">][</span><span class="s1">'async_database'</span><span class="p">]</span>
+        <span class="n">async_database</span> <span class="o">=</span> <span class="n">fastapi_users_objects</span><span class="p">[</span><span class="s1">'databases'</span><span class="p">][</span><span class="s1">'async_database'</span><span class="p">]</span>
         <span class="nd">@self</span><span class="o">.</span><span class="n">event</span><span class="p">(</span><span class="s1">'startup'</span><span class="p">)</span>
         <span class="k">async</span> <span class="k">def</span> <span class="nf">startup</span><span class="p">():</span>
             <span class="k">await</span> <span class="n">async_database</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
@@ -492,7 +486,7 @@
 <span class="sd">            # Try API at http://localhost:8000/docs</span>
 <span class="sd">            # app.start()</span>
 <span class="sd">        """</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">misc</span><span class="p">[</span><span class="s1">'users_api_objects'</span><span class="p">][</span><span class="s1">'users_api'</span><span class="p">]</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">misc</span><span class="p">[</span><span class="s1">'fastapi_users_objects'</span><span class="p">][</span><span class="s1">'FastAPIUsers'</span><span class="p">]</span><span class="o">.</span><span class="n">current_user</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></div></div>
 </pre></div>
 

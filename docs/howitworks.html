@@ -47,7 +47,7 @@
   
   
   
-    <title>How it Works &#8212; 0.2.0</title>
+    <title>How it Works &#8212; 0.2.1</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/material.css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -90,11 +90,11 @@
   <nav class="md-header-nav md-grid">
     <div class="md-flex navheader">
       <div class="md-flex__cell md-flex__cell--shrink">
-        <a href="index.html" title="0.2.0"
+        <a href="index.html" title="0.2.1"
            class="md-header-nav__button md-logo">
           
               <img src="_static/logo.svg" height="26"
-                   alt="0.2.0 logo">
+                   alt="0.2.1 logo">
           
         </a>
       </div>
@@ -177,7 +177,7 @@
   <nav class="md-tabs" data-md-component="tabs">
     <div class="md-tabs__inner md-grid">
       <ul class="md-tabs__list">
-          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">0.2.0</a></li>
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">0.2.1</a></li>
       </ul>
     </div>
   </nav>
@@ -189,13 +189,13 @@
               <div class="md-sidebar__inner">
                 <nav class="md-nav md-nav--primary" data-md-level="0">
   <label class="md-nav__title md-nav__title--site" for="__drawer">
-    <a href="index.html" title="0.2.0" class="md-nav__button md-logo">
+    <a href="index.html" title="0.2.1" class="md-nav__button md-logo">
       
         <img src="_static/logo.svg" alt=" logo" width="48" height="48">
       
     </a>
     <a href="index.html"
-       title="0.2.0">msdss-users-api</a>
+       title="0.2.1">msdss-users-api</a>
   </label>
     <div class="md-nav__source">
       <a href="https://github.com/rrwen/msdss-users-api/" title="Go to repository" class="md-source" data-md-source="github">
@@ -292,31 +292,33 @@
             
   <section id="how-it-works">
 <h1 id="howitworks--page-root">How it Works<a class="headerlink" href="#howitworks--page-root" title="Permalink to this headline">¶</a></h1>
-<p>This package uses <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/">FastAPI Users</a> to create an extended <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.1.0)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a> application.</p>
+<p>This package uses <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/">FastAPI Users</a> to create an extended <a class="reference external" href="https://rrwen.github.io/msdss-base-api/reference/api.html#msdss_base_api.core.API" title="(in msdss_base_api v0.1.2)"><code class="docutils literal notranslate"><span class="pre">msdss_base_api.core.API</span></code></a> application.</p>
 <p>Database connection variables and engine are handled by <a class="reference external" href="https://rrwen.github.io/msdss-base-database/reference/core.html#msdss_base_database.core.Database" title="(in msdss_base_database v0.1.1)"><code class="docutils literal notranslate"><span class="pre">msdss_base_database.core.Database</span></code></a> while async database objects are provided by <a class="reference external" href="https://pypi.org/project/databases/">databases</a>.</p>
 <p>In order to create a <code class="docutils literal notranslate"><span class="pre">FastAPIUsers</span></code> object, this package follows the configuration instructions <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/overview/">here</a>, where user <a class="reference internal" href="reference/models.html#module-msdss_users_api.models" title="msdss_users_api.models"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">msdss_users_api.models</span></code></a>, <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/configuration/authentication/">authentication objects</a>, and database connections are passed as inputs.</p>
 <div class="graphviz"><img alt='digraph methods {
 compound=true;
 rankdir=TB;
-graph [pad="0.75", nodesep="0.25", ranksep="1"];
+graph [pad="0.75", nodesep="0.25", ranksep="1.15"];
 
-usermodel[label="User" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-usercreatemodel[label="UserCreate" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-userupdatemodel[label="UserUpdate" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-userdbmodel[label="UserDB" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/models/"];
-usertablemodel[label="UserTable" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/"];
-usermanagermodel[label="UserManager" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/user-manager/"];
+usermodel[label="User" shape=rect];
+usercreatemodel[label="UserCreate" shape=rect];
+userupdatemodel[label="UserUpdate" shape=rect];
+userdbmodel[label="UserDB" shape=rect];
+usertablemodel[label="UserTable" shape=rect];
+usermanagermodel[label="UserManager" shape=rect];
 
-userdbfunc[label="create_user_db_func" shape=rect style=rounded URL=""];
-usermanagerfunc[label="create_user_manager_func" shape=rect style=rounded URL=""];
+fastapifunc[label="create_fastapi_users_objects" shape=rect style=rounded];
+userdbfunc[label="create_user_db_func" shape=rect style=rounded];
+usermanagerfunc[label="create_user_manager_func" shape=rect style=rounded];
+getusersrouter[label="get_users_router" shape=rect style=rounded];
 
-jwtauth[label="JWTAuthentication" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/"];
-cookieauth[label="CookieAuthentication" shape=rect URL="https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/"];
+jwtauth[label="JWTAuthentication" shape=rect];
+cookieauth[label="CookieAuthentication" shape=rect];
 
-baseapi[label="msdss-base-api" URL="https://rrwen.github.io/msdss-base-api/" style=filled];
-basedb[label="msdss-base-database" URL="https://rrwen.github.io/msdss-base-database/" style=filled];
-databases[label="databases" URL="https://pypi.org/project/databases/" style=filled];
-fastapiusers[label="FastAPI Users" URL="https://fastapi-users.github.io/fastapi-users/" style=filled];
+baseapi[label="msdss-base-api" style=filled];
+basedb[label="msdss-base-database" style=filled];
+databases[label="databases" style=filled];
+fastapiusers[label="FastAPI Users" style=filled];
 
 subgraph cluster0 {
    label=&lt; &lt;B&gt;msdss_users_api.core.UsersAPI&lt;/B&gt; &gt;;
@@ -325,7 +327,7 @@ subgraph cluster0 {
 
    subgraph cluster1 {
       label=&lt; &lt;B&gt;msdss_users_api.tools&lt;/B&gt; &gt;;
-      userdbfunc -&gt; usermanagerfunc;
+      userdbfunc -&gt; usermanagerfunc -&gt; fastapifunc;
    }
    {basedb;databases} -&gt; userdbfunc[lhead=cluster1 ltail=cluster1];
    usermanagerfunc -&gt; fastapiusers[lhead=cluster1 ltail=cluster1];
@@ -340,32 +342,18 @@ subgraph cluster0 {
       usermanagermodel;
    };
    usermanagermodel -&gt; usermanagerfunc[lhead=cluster1 ltail=cluster2];
-   userdbmodel -&gt; fastapiusers[lhead=cluster2 ltail=cluster2];
 
    subgraph cluster3 {
        label=&lt; &lt;B&gt;fastapi_users.authentication&lt;/B&gt; &gt;;
       jwtauth;
       cookieauth;
    }
-   cookieauth -&gt; fastapiusers[lhead=cluster3 ltail=cluster3];
+   cookieauth -&gt; usermanagerfunc[lhead=cluster1 ltail=cluster3];
 
-   fastapiusers -&gt; baseapi;
+   fastapiusers -&gt; getusersrouter -&gt; baseapi;
 }
-}' class="graphviz" src="_images/graphviz-1f55f4c446e418fb338522e46ae43986f705e688.png" usemap="#methods"/></div>
-<map id="methods" name="methods">
-<area alt="" coords="1001,268,1073,316" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" id="node1" shape="rect" title="User"/>
-<area alt="" coords="871,268,977,316" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" id="node2" shape="rect" title="UserCreate"/>
-<area alt="" coords="737,268,847,316" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" id="node3" shape="rect" title="UserUpdate"/>
-<area alt="" coords="629,268,712,316" href="https://fastapi-users.github.io/fastapi-users/configuration/models/" id="node4" shape="rect" title="UserDB"/>
-<area alt="" coords="538,580,534,573,521,566,502,561,479,557,452,556,425,557,402,561,383,566,370,573,366,580,370,587,383,594,402,599,425,603,452,604,479,603,502,599,521,594,534,587" href="https://fastapi-users.github.io/fastapi-users/" id="node14" shape="poly" title="FastAPI Users"/>
-<area alt="" coords="507,268,605,316" href="https://fastapi-users.github.io/fastapi-users/configuration/databases/sqlalchemy/" id="node5" shape="rect" title="UserTable"/>
-<area alt="" coords="361,268,482,316" href="https://fastapi-users.github.io/fastapi-users/configuration/user-manager/" id="node6" shape="rect" title="UserManager"/>
-<area alt="" coords="567,412,734,460" href="https://fastapi-users.github.io/fastapi-users/configuration/authentication/jwt/" id="node9" shape="rect" title="JWTAuthentication"/>
-<area alt="" coords="361,412,543,460" href="https://fastapi-users.github.io/fastapi-users/configuration/authentication/cookie/" id="node10" shape="rect" title="CookieAuthentication"/>
-<area alt="" coords="542,724,538,717,525,710,505,705,480,701,452,700,424,701,399,705,379,710,366,717,362,724,366,731,379,738,399,743,424,747,452,748,480,747,505,743,525,738,538,731" href="https://rrwen.github.io/msdss-base-api/" id="node11" shape="poly" title="msdss-base-api"/>
-<area alt="" coords="507,148,501,141,485,134,459,129,426,125,389,124,353,125,320,129,294,134,277,141,271,148,277,155,294,162,320,167,353,171,389,172,426,171,459,167,485,162,501,155" href="https://rrwen.github.io/msdss-base-database/" id="node12" shape="poly" title="msdss-base-database"/>
-<area alt="" coords="247,148,244,141,235,134,221,129,204,125,185,124,166,125,149,129,136,134,127,141,124,148,127,155,136,162,149,167,166,171,185,172,204,171,221,167,235,162,244,155" href="https://pypi.org/project/databases/" id="node13" shape="poly" title="databases"/>
-</map><p>The command line uses methods from the <a class="reference external" href="https://github.com/fastapi-users/fastapi-users/blob/master/fastapi_users/manager.py">FastAPI UsersManager</a> to <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/cookbook/create-user-programmatically/">programmatically manage users</a>.</p>
+}' class="graphviz" src="_images/graphviz-d25bc855443d4c777a0c6f378d896e45d8e441f0.png"/></div>
+<p>The command line uses methods from the <a class="reference external" href="https://github.com/fastapi-users/fastapi-users/blob/master/fastapi_users/manager.py">FastAPI UsersManager</a> to <a class="reference external" href="https://fastapi-users.github.io/fastapi-users/cookbook/create-user-programmatically/">programmatically manage users</a>.</p>
 <p>Most of these are implemented under the <a class="reference internal" href="reference/tools.html#module-msdss_users_api.tools" title="msdss_users_api.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">msdss_users_api.tools</span></code></a> module, and run using <a class="reference internal" href="reference/cli.html#msdss_users_api.cli.run" title="msdss_users_api.cli.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">msdss_users_api.cli.run()</span></code></a>.</p>
 <div class="graphviz"><img alt='digraph methods {
 rankdir=TB;
